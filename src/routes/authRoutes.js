@@ -3,16 +3,8 @@ const router = express.Router();
 const auth = require('../middleware/auth');
 const User = require('../models/UserModel');
 const bcrypt = require("bcryptjs");
-
-// GET register
-router.get("/register",(req,res)=>{
-    res.render('register');
-})
-
-// GET login
-router.get("/login",(req,res)=>{
-    res.render('login');
-})
+const createError = require('http-errors');
+const { sendForgotPassMail } = require('../helpers/sendmail')
 
 // POST register
 router.post("/register",async(req,res)=>{
@@ -42,24 +34,26 @@ router.post("/register",async(req,res)=>{
 })
     
 // POST login
-router.post("/login",async(req,res)=>{
+router.post("/login",async(req, res, next)=>{
     try {
         const email = req.body.email;
         const password = req.body.password;
         const userEmail = await User.findOne({email:email});
+        if (!userEmail) {
+            return next(createError.BadRequest('Invalid email'))
+        }
         const isMatch = await bcrypt.compare(password, userEmail.password);
+        if (!isMatch) {
+            return next(createError.BadRequest('Invalid passsword'))
+        }
         const token = await userEmail.generateAuthToken();
         console.log("the token part" + token);
         res.cookie("jwt",token,{
         expires:new Date(Date.now()+ 600000),
         httpOnly:true,
         // secure:true
-    });
-    if(isMatch){
+        });
         res.status(201).render("index");
-    }else{
-        res.send("invalid login details");
-    }
     } catch (error) {
         console.log(error);
         res.status(400).send(error.message);
@@ -86,7 +80,7 @@ router.get("/logout", auth, async(req,res) => {
 })
 
 // GET logoutAll
-router.get("/logoutAll", auth, async (req,res) => {
+router.get("/logoutall", auth, async (req,res) => {
     try {
         console.log(req.user);
 
@@ -99,6 +93,36 @@ router.get("/logoutAll", auth, async (req,res) => {
     } catch (error) {
         res.status(500).send(error);
     }
+})
+
+// Forgot Pass
+router.get("/forgot_pass", async (req, res, next) => {
+    res.render("forgot_pass",{
+        title:  "Forgot password"
+    });
+})
+router.post("/forgot_pass", async (req, res, next) => {
+    // generate pass
+    let pass = (Math.random() + 1).toString(36).substring(5);
+    console.log("random: ", pass);
+
+    // set pass
+    const email = req.body.email
+    console.log("email: " + email);
+    const user = await User.findOne({email})
+    if (!user) {
+        return next(createError.BadRequest('Please enter your registered emailId.'))
+    }
+    user.password = pass;
+    await user.save();
+
+    // send mail
+    sendForgotPassMail(email, pass)
+    console.log('pass :'+ pass);
+    res.status(200).send({
+        status: "success",
+        message: "check your mail"
+    })
 })
 
 module.exports = router;

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
+const validator = require("validator");
 const createError = require('http-errors');
 
 const userSchema = new mongoose.Schema ({
@@ -14,7 +15,12 @@ const userSchema = new mongoose.Schema ({
     email : {
         type:String,
         required:true,
-        unique:true
+        unique:true,
+        validate(value){
+            if(!validator.isEmail(value)){
+                throw new Error("email is invalid")
+            }
+        }
     },
     password : {
         type:String,
@@ -42,7 +48,7 @@ userSchema.methods.generateAuthToken = async function(){
         console.log(token);
         return token;
     } catch (error) {
-        next(createError.BadRequest(error));
+        createError.BadRequest(error);
         console.log("error: "+error);      
     }
 }
