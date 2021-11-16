@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://admin:admin123@cluster0.jxdqx.mongodb.net/grocery?retryWrites=true&w=majority',{
+mongoose.connect(process.env.MONGO_URI ,{
     useNewURlParser:true,
     useUnifiedTopology:true,
     // useCreateIndex:true
