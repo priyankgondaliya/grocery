@@ -21,6 +21,23 @@
 		</div>
 	</section>
 
+	<!-- errors -->
+	<% if(typeof alert != 'undefined') { %>
+	<div class="w-75 p-3" style="margin: auto;">
+		<% alert.forEach(function(error) { %>
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<%= error.msg %>
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+			</div>
+			<% }) %>
+		</div>
+	<% } %>
+	<div class="w-75 p-3" style="margin: auto;">
+		<%- messages('messages', locals) %>
+	</div>
+
 	<!-- content page -->
 	<div class="bg0 p-t-95 p-b-50">
 		<div class="container">
@@ -34,10 +51,10 @@
 						<form method="POST" action="/login" class="how-bor3 p-rl-30 p-tb-32">
 							<div class="p-b-24">
 								<div class="txt-s-101 cl6 p-b-10">
-									Username or email address <span class="cl12">*</span>
+									Email address <span class="cl12">*</span>
 								</div>
 
-								<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-15 focus1" type="text" name="username">
+								<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-15 focus1" type="text" name="email">
 							</div>
 
 							<div class="p-b-24">
@@ -63,7 +80,24 @@
 									Lost your password?
 								</a>
 							</div>
-
+							<div class="row">
+								<div class="col-md-3">
+									<a class="btn btn-outline-dark" href="/google" role="button" style="text-transform:none">
+									<img width="20px" style="margin-bottom:3px; margin-right:5px" alt="Google sign-in" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
+									Login with Google
+									</a>
+								</div>
+							</div>
+							
+							<!-- Minified CSS and JS -->
+							<link   rel="stylesheet" 
+								href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
+								integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" 
+								crossorigin="anonymous">
+							<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" 
+								integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" 
+								crossorigin="anonymous">
+							</script>
 						</form>
 					</div>
 				</div>
@@ -77,24 +111,24 @@
 						<form method="POST" action="/register" class="how-bor3 p-rl-30 p-t-32 p-b-66">
 							<div class="p-b-24">
 								<div class="txt-s-101 cl6 p-b-10">
-									First Name
+									First Name <span class="cl12">*</span>
 								</div>
 
 								<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-15 focus1" type="text" name="firstname">
 							</div>
 							<div class="p-b-24">
 								<div class="txt-s-101 cl6 p-b-10">
-									Last Name
+									Last Name <span class="cl12">*</span>
 								</div>
 
-								<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-15 focus1" type="text" name="Last">
+								<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-15 focus1" type="text" name="lastname">
 							</div>
 							<div class="p-b-24">
 								<div class="txt-s-101 cl6 p-b-10">
-									Email address
+									Email address <span class="cl12">*</span>
 								</div>
 
-								<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-15 focus1" type="text" name="username">
+								<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-15 focus1" type="text" name="email">
 							</div>
 
 							<div class="p-b-24">
@@ -105,13 +139,13 @@
 								<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-15 focus1" type="password" name="password">
 							</div>
 
-							<div class="p-b-24">
+							<!-- <div class="p-b-24">
 								<div class="txt-s-101 cl6 p-b-10">
 									Mobile Number
 								</div>
 
-								<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-15 focus1" type="text" name="mobilenumber">
-							</div>
+								<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-15 focus1" type="text" name="number">
+							</div> -->
 
 							<div class="flex-w flex-m p-t-15">
 								<button type="submit" class="flex-c-m txt-s-105 cl0 bg10 size-a-39 hov-btn2 trans-04 p-rl-10 m-r-18">

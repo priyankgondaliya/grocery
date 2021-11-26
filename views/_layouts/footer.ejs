@@ -1,31 +1,3 @@
-		
-	<!-- Subscribe -->
-	<section class="sec-subscribe bg13 p-t-65 p-b-65">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-5 p-tb-15">
-					<div class="h-full flex-col-m">
-						<h4 class="txt-m-110 cl3 p-b-4">
-							Subscribe Newsletter.
-						</h4>
-
-						<p class="txt-s-101 cl6">
-							Get e-mail updates about our latest shop and special offers.
-						</p>
-					</div>
-				</div>
-
-				<div class="col-md-7 p-tb-15">
-					<form class="flex-w flex-m h-full">
-						<input class="size-a-6 txt-s-106 cl6 plh0 p-rl-30 w-full-sm" type="text" name="email" placeholder="Your email address">
-						<button class="bg10 size-a-5 txt-s-107 cl0 p-rl-15 trans-04 hov-btn2 mt-4 mt-sm-0">
-							Subscribe
-						</button>
-					</form>
-				</div>
-			</div>
-		</div>
-	</section>
 
         <!-- Footer -->
         <footer class="bg12">
@@ -49,7 +21,11 @@
                                 </span>
                                 
                                 <span class="size-w-12 p-t-1">
-                                    markrussell@example.com
+                                    <% if (locals.contact) { %>
+                                        <%= contact.email %>
+                                    <% } else { %>
+                                        error@example.com
+                                    <% } %>
                                 </span>
                             </li>
     
@@ -59,7 +35,11 @@
                                 </span>
                                 
                                 <span class="size-w-12 p-t-1">
-                                    No 40 Baria Sreet 133/2, NewYork
+                                    <% if (locals.contact) { %>
+                                        <%= contact.address %>
+                                    <% } else { %>
+                                        No 40 Baria Sreet 133/2, Error
+                                    <% } %>
                                 </span>
                             </li>
     
@@ -69,7 +49,11 @@
                                 </span>
                                 
                                 <span class="size-w-12 p-t-1">
-                                    (785) 977 5767
+                                    <% if (locals.contact) { %>
+                                        <%= contact.phone %>
+                                    <% } else { %>
+                                        (785) 977 5767
+                                    <% } %>
                                 </span>
                             </li>
                         </ul>
@@ -84,20 +68,32 @@
     
                         <ul>
                             <li class="p-b-16">
-                                <a href="about.html" class="txt-s-101 cl6 hov-cl10 trans-04 p-tb-5">
+                                <a href="/about_us" class="txt-s-101 cl6 hov-cl10 trans-04 p-tb-5">
                                     About Us
                                 </a>
                             </li>
     
                             <li class="p-b-16">
-                                <a href="contact.html" class="txt-s-101 cl6 hov-cl10 trans-04 p-tb-5">
+                                <a href="/contact" class="txt-s-101 cl6 hov-cl10 trans-04 p-tb-5">
                                     Contact Us
                                 </a>
                             </li>
     
                             <li class="p-b-16">
-                                <a href="blog-grid-01.html" class="txt-s-101 cl6 hov-cl10 trans-04 p-tb-5">
-                                    Our blog
+                                <a href="/faqs" class="txt-s-101 cl6 hov-cl10 trans-04 p-tb-5">
+                                    FAQs
+                                </a>
+                            </li>						
+    
+                            <li class="p-b-16">
+                                <a href="/terms_con" class="txt-s-101 cl6 hov-cl10 trans-04 p-tb-5">
+                                    Terms & Condition
+                                </a>
+                            </li>						
+    
+                            <li class="p-b-16">
+                                <a href="/privacy_policy" class="txt-s-101 cl6 hov-cl10 trans-04 p-tb-5">
+                                    Privacy Policy
                                 </a>
                             </li>						
                         </ul>
@@ -112,19 +108,19 @@
     
                         <ul>
                             <li class="p-b-16">
-                                <a href="account.html" class="txt-s-101 cl6 hov-cl10 trans-04 p-tb-5">
+                                <a href="/account" class="txt-s-101 cl6 hov-cl10 trans-04 p-tb-5">
                                     My account
                                 </a>
                             </li>
     
                             <li class="p-b-16">
-                                <a href="wishlist.html" class="txt-s-101 cl6 hov-cl10 trans-04 p-tb-5">
+                                <a href="/wishlist" class="txt-s-101 cl6 hov-cl10 trans-04 p-tb-5">
                                     Wishlist
                                 </a>
                             </li>
     
                             <li class="p-b-16">
-                                <a href="shop-cart.html" class="txt-s-101 cl6 hov-cl10 trans-04 p-tb-5">
+                                <a href="/cart" class="txt-s-101 cl6 hov-cl10 trans-04 p-tb-5">
                                     Shopping Cart
                                 </a>
                             </li>						

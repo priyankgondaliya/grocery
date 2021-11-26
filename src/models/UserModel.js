@@ -5,51 +5,80 @@ const validator = require("validator");
 const createError = require('http-errors');
 
 const userSchema = new mongoose.Schema ({
-    firstname : {
-        type:String,
-        required:true
+    googleid: {
+        type: String
     },
-    lastname : {
-        type:String
+    firstname: {
+        type: String,
+        required: true
     },
-    email : {
-        type:String,
-        required:true,
-        unique:true,
+    lastname: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
         validate(value){
             if(!validator.isEmail(value)){
                 throw new Error("email is invalid")
             }
         }
     },
-    password : {
+    password: {
         type:String,
-        required:true
     },
-    phone : {
+    phone: {
         type:Number,
     },
-    tokens:[{
-        token:{
-            type:String,
-            required:true
+    admin: {
+        type:Boolean,
+        default:0
+    },
+    address: {
+        house: {
+            type: String,
+        },
+        apartment: {
+            type: String,
+        },
+        landmark: {
+            type: String
+        },
+        city: {
+            type: String,
+        },
+        state: {
+            type: String,
+        },
+        country: {
+            type: String,
+        },
+        postal: {
+            type: Number,
+        }
+    },
+    tokens: [{
+        token: {
+            type: String,
+            required: true
         }
     }]
-
 })
 
 // generating tokens
 userSchema.methods.generateAuthToken = async function(){
     try {
-        console.log(this._id);
-        const token = jwt.sign({_id:this._id.toString()}, process.env.SECRET_KEY);
+        // console.log(this._id);
+        const token = jwt.sign({_id:this._id.toString()}, process.env.SECRET_KEY, { expiresIn: '90d' });
         this.tokens = this.tokens.concat({token:token})
         await this.save();
-        console.log(token);
+        // console.log(token);
         return token;
     } catch (error) {
         createError.BadRequest(error);
-        console.log("error: "+error);      
+        console.log("error: "+error);
     }
 }
 
