@@ -39,7 +39,8 @@ app.use(cookieParser(process.env.SESSION_SECRET));
 
 // session
 // const { body } = require('express-validator');
-app.use(session({
+// app.use(session({
+app.use(require('cookie-session')({
     secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: true,
