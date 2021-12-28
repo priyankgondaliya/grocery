@@ -52,36 +52,51 @@
 		</div>
 	<% } %>
 
-			<form id="contact-form" class="validate-form" method="POST" action="/contact" name="contact">
+			<form id="contact-form" onsubmit="return validateContact()" class="validate-form" action="/contact" name="contact">
 				<div class="row">
 					<div class="col-sm-6 p-b-30">
 						<div class="validate-input" data-validate = "Name is required">
-							<input class="txt-s-101 cl3 plh1 size-a-46 bo-all-1 bocl15 focus1 p-rl-20" type="text" name="name" placeholder="Your Full Name *">
+							<input class="txt-s-101 cl3 plh1 size-a-46 bo-all-1 bocl15 focus1 p-rl-20" type="text" name="name" placeholder="Your Full Name *" id="contactName">
+						</div>
+						<div class="txt-s-101 cl6 p-b-10">
+							<span class="cl12" id="contactErrName"></span>
 						</div>
 					</div>
 
 					<div class="col-sm-6 p-b-30">
 						<div class="validate-input" data-validate = "Valid email is: ex@abc.xyz">
-							<input class="txt-s-101 cl3 plh1 size-a-46 bo-all-1 bocl15 focus1 p-rl-20" type="text" name="email" placeholder="Your Email *">
+							<input class="txt-s-101 cl3 plh1 size-a-46 bo-all-1 bocl15 focus1 p-rl-20" type="text" name="email" placeholder="Your Email *" id="contactEmail">
+						</div>
+						<div class="txt-s-101 cl6 p-b-10">
+							<span class="cl12" id="contactErrEmail"></span>
 						</div>
 					</div>
 
 					<div class="col-sm-6 p-b-30">
 						<div>
-							<input class="txt-s-101 cl3 plh1 size-a-46 bo-all-1 bocl15 focus1 p-rl-20" type="text" name="address" placeholder="Your Address">
+							<input class="txt-s-101 cl3 plh1 size-a-46 bo-all-1 bocl15 focus1 p-rl-20" type="text" name="address" placeholder="Your Address *" id="contactAddress">
+						</div>
+						<div class="txt-s-101 cl6 p-b-10">
+							<span class="cl12" id="contactErrAddress"></span>
 						</div>
 					</div>
 
 					<div class="col-sm-6 p-b-30">
 						<div class="validate-input" data-validate = "Phone is required">
-							<input class="txt-s-101 cl3 plh1 size-a-46 bo-all-1 bocl15 focus1 p-rl-20" type="text" name="phone" placeholder="Your Phone *">
+							<input class="txt-s-101 cl3 plh1 size-a-46 bo-all-1 bocl15 focus1 p-rl-20" type="text" name="phone" placeholder="Your Phone *" id="contactPhone">
+						</div>
+						<div class="txt-s-101 cl6 p-b-10">
+							<span class="cl12" id="contactErrPhone"></span>
 						</div>
 					</div>
 
 					<div class="col-12 p-b-30">
 						<div class="validate-input" data-validate = "Message is required">
-							<textarea class="txt-s-101 cl3 plh1 size-a-47 bo-all-1 bocl15 focus1 p-rl-20 p-tb-10" name="message" placeholder="Your Message"></textarea>
-						</div>	
+							<textarea class="txt-s-101 cl3 plh1 size-a-47 bo-all-1 bocl15 focus1 p-rl-20 p-tb-10" name="message" placeholder="Your Message *" id="contactMsg"></textarea>
+						</div>
+						<div class="txt-s-101 cl6 p-b-10">
+							<span class="cl12" id="contactErrMsg"></span>
+						</div>
 					</div>
 				</div>
 
@@ -190,4 +205,86 @@
 		</div>
 	</section>
 	
+	<script>
+		const formC = document.getElementById('contact-form');
+		const nameC = document.getElementById('contactName');
+		const emailC = document.getElementById('contactEmail');
+		const addressC = document.getElementById('contactAddress');
+		const phoneC = document.getElementById('contactPhone');
+		const msgC = document.getElementById('contactMsg');
+
+		// loginform
+		formC.addEventListener('submit', (e) => {
+			e.preventDefault();
+		})
+		function validateContact(){
+			let returnVal = true;
+
+			const nameValue = nameC.value.trim();
+			const emailValue = emailC.value.trim();
+			const addressValue = addressC.value.trim();
+			const phoneValue = phoneC.value.trim();
+			const msgValue = msgC.value.trim();
+
+			if (nameValue == '') {
+				setError('contactErrName','Please enter name.')
+				returnVal = false;
+			} else {
+				removeError('contactErrName')
+			}
+
+			if (emailValue == '') {
+				setError('contactErrEmail','Please enter email.')
+				returnVal = false;
+			} else if (!validateEmail(emailValue)) {
+				setError('contactErrEmail','Please enter valid email.')
+				returnVal = false;
+			} else {
+				removeError('contactErrEmail')
+			}
+
+			if (addressValue == '') {
+				setError('contactErrAddress','Please enter address.')
+				returnVal = false;
+			} else {
+				removeError('contactErrAddress')
+			}
+
+			if (phoneValue == '') {
+				setError('contactErrPhone','Please enter phone number.')
+				returnVal = false;
+			} else {
+				removeError('contactErrPhone')
+			}
+
+			if (msgValue == '') {
+				setError('contactErrMsg','Please enter message.')
+				returnVal = false;
+			} else {
+				removeError('contactErrMsg')
+			}
+
+			// return false;
+			if (returnVal) {
+				formC.submit();
+			}
+		}
+
+		function setError(id, error) {
+			// set error msg
+			const element = document.getElementById(id);
+			element.innerHTML = '* ' + error;
+		}
+		function removeError(id) {
+			// remove error msg
+			const element = document.getElementById(id);
+			element.innerHTML = '';
+		}
+		
+		function validateEmail(email){
+			return email.match(
+				/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+			);
+		}
+	</script>
 <%- include('_layouts/footer') %>

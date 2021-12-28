@@ -28,7 +28,6 @@ Contact.findOne({}, function(err,contact){
     if(err){
         console.log(err);
     }else{
-        // console.log(contact);
         app.locals.contact = contact;
     }
 });
@@ -77,15 +76,25 @@ app.use(passport.session());
 // });
 
 // Routes
+app.use('/admin/category', require('./routes/adminCategories'));
+app.use('/admin/subcategory', require('./routes/adminSubCategories'));
+app.use('/admin/unit', require('./routes/adminUnit'));
+app.use('/admin/newsletter', require('./routes/adminNewsletter'));
+app.use('/admin/user', require('./routes/adminUserRoutes'));
+app.use('/admin', require('./routes/adminRoutes'));
+app.use('/admin', require('./routes/adminPagesRoutes'));
+app.use('/admin', require('./routes/adminVendor'));
+
+app.use('/vendor/product', require('./routes/vendorProducts'));
+app.use('/vendor/offer', require('./routes/vendorOffers'));
+app.use('/vendor', require('./routes/vendorRoutes'));
+
 app.use('/', require('./routes/authRoutes'));
 app.use('/', require('./routes/cmsPages'));
 app.use('/', require('./routes/accountRoutes'));
 app.use('/', require('./routes/messageRoutes'));
 app.use('/wishlist', require('./routes/wishlistRoutes'));
 app.use('/newsletter', require('./routes/newsletterRoutes'));
-
-app.use('/admin', require('./routes/adminRoutes'));
-app.use('/admin', require('./routes/adminPagesRoutes'));
 
 app.use('/google', require('./routes/googleAuthRoutes'));
 
@@ -108,6 +117,7 @@ app.all('*', (req, res, next) => {
 
 // error handler
 app.use((err, req, res, next) =>{
+    console.log(err);
     res.status(err.status || 500).json({
         status: "fail",
         message: err.message,
@@ -120,7 +130,23 @@ app.listen(port,()=>{
 })
 
 // NOTE
-// req.flash('type', msg)
 
 // REPORT
-// 
+
+
+// All offers
+// edit offer view
+// edit offer api
+// delete offer
+
+// (admin)all products and delete product
+// (admin)all offers and delete offer
+// casterror handling
+// vendors page(ongoing)
+// add vendor page
+// add vendor api
+
+
+// TODO
+// offer model
+// subcat in product

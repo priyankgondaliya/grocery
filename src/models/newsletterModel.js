@@ -11,6 +11,11 @@ const newsletterSchema = new mongoose.Schema ({
                 throw new Error("email is invalid")
             }
         }
+    },
+    date:{
+        type: Date,
+        default: Date.now,
+        required:true
     }
 })
 

@@ -1,0 +1,277 @@
+<%-include('../_layouts/admin_header')-%>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-info">
+                    <div class="panel-wrapper collapse in" aria-expanded="true">
+                        <form onsubmit="validate()" method="POST" action="/admin/vendor/add" id="addVendorForm" enctype="multipart/form-data">
+                            <div class="panel-body">
+                                <div class="form-body">
+                                    <h2 class="page-title m-b-20"> Add Vendor </h2>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label">Store Name</label>
+                                                <input type="text" id="storeName" class="form-control" name="storename" placeholder="Store name">
+                                                <div class="txt-s-101 cl6 p-b-10" style="color: red;">
+                                                    <span class="cl12" id="ErrstoreName"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label">Owner Name</label>
+                                                <input type="text" id="ownerName" class="form-control" name="ownername" placeholder="Owner name">
+                                                <div class="txt-s-101 cl6 p-b-10" style="color: red;">
+                                                    <span class="cl12" id="ErrownerName"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label">Email</label>
+                                                <input type="text" id="email" class="form-control" name="email" placeholder="Email">
+                                                <div class="txt-s-101 cl6 p-b-10" style="color: red;">
+                                                    <span class="cl12" id="Erremail"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label">Password</label>
+                                                <input type="password" id="password" class="form-control" name="password" placeholder="Password">
+                                                <div class="txt-s-101 cl6 p-b-10" style="color: red;">
+                                                    <span class="cl12" id="Errpassword"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label">Contact No</label>
+                                                <input type="text" id="contact" class="form-control" name="contact" placeholder="Contact No">
+                                                <div class="txt-s-101 cl6 p-b-10" style="color: red;">
+                                                    <span class="cl12" id="Errcontact"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="control-label">Delivery Charge</label>
+                                                <input type="text" id="delivery" class="form-control" name="deliverycharge" placeholder="Delivery Charge" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                                                <div class="txt-s-101 cl6 p-b-10" style="color: red;">
+                                                    <span class="cl12" id="Errdelivery"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="control-label">Address</label>
+                                                <input type="text" id="address" class="form-control" name="address" placeholder="Address">
+                                                <div class="txt-s-101 cl6 p-b-10" style="color: red;">
+                                                    <span class="cl12" id="Erraddress"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <h3 class="box-title">Upload image</h3>
+                                        <input type="file" id="input-file-now" name="image" class="dropify" required/>
+                                        <div class="txt-s-101 cl6 p-b-10" style="color: red;">
+                                            <span class="cl12" id="catErrFile"></span>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                    <a href="/admin/vendor" class="btn btn-danger" style="color: white;">Cancel</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const form = document.getElementById('addVendorForm');
+
+    // loginform
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+    })
+    function validate(){
+        let returnVal = true;
+
+        const storeValue = document.getElementById('storeName').value.trim();
+        const ownerValue = document.getElementById('ownerName').value.trim();
+        const emailValue = document.getElementById('email').value.trim();
+        const passValue = document.getElementById('password').value.trim();
+        const contactValue = document.getElementById('contact').value.trim();
+        const deliveryValue = document.getElementById('delivery').value.trim();
+        const addressValue = document.getElementById('address').value.trim();
+        const filevalue = document.getElementById('input-file-now').value;
+        const ext = filevalue.substring(filevalue.lastIndexOf('.') + 1);
+
+        if (storeValue == '') {
+            setError('ErrstoreName','Please enter Store Name.')
+            returnVal = false;
+        } else {
+            removeError('ErrstoreName')
+        }
+
+        if (ownerValue == '') {
+            setError('ErrownerName','Please enter Owner name.')
+            returnVal = false;
+        } else {
+            removeError('ErrownerName')
+        }
+
+        if (emailValue == '') {
+            setError('Erremail','Please enter email.')
+            returnVal = false;
+        } else if (!validateEmail(emailValue)) {
+            setError('Erremail','Please enter valid email.')
+            returnVal = false;
+        } else {
+            console.log(emailValue);
+            removeError('Erremail')
+        }
+
+        if (passValue == '') {
+            setError('Errpassword','Please enter password.')
+            returnVal = false;
+        } else if (passValue.length < 6) {
+            setError('Errpassword','Password should atleast 6 characters long.')
+            returnVal = false;
+        } else {
+            removeError('Errpassword')
+        }
+
+        if (contactValue == '') {
+            setError('Errcontact','Please enter Contact number.')
+            returnVal = false;
+        } else {
+            removeError('Errcontact')
+        }
+
+        if (deliveryValue == '') {
+            setError('Errdelivery','Please enter Delivery charge.')
+            returnVal = false;
+        } else {
+            removeError('Errdelivery')
+        }
+
+        if (addressValue == '') {
+            setError('Erraddress','Please enter Address.')
+            returnVal = false;
+        } else {
+            removeError('Erraddress')
+        }
+
+        if (ext=='png' || ext=='jpeg' || ext=='jpg') {
+            removeError('catErrFile')
+        } else {
+            setError('catErrFile','Wrong file type!')
+            returnVal = false;
+        }
+        
+        if (returnVal) {
+            form.submit();
+        }
+    }
+
+    function setError(id, error) {
+        // set error msg
+        const element = document.getElementById(id);
+        element.innerHTML = '* ' + error;
+    }
+    function removeError(id) {
+        // remove error msg
+        const element = document.getElementById(id);
+        element.innerHTML = '';
+    }
+
+    function validateEmail(email){
+        return email.match(
+            /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
+    }
+</script>
+<footer class="footer t-a-c">
+    © 2017 Cubic Admin
+</footer>
+</div>
+<!-- ===== Page-Content-End ===== -->
+</div>
+<!-- ===== Main-Wrapper-End ===== -->
+<!-- ==============================
+Required JS Files
+=============================== -->
+<!-- ===== jQuery ===== -->
+<script src="/plugins/components/jquery/dist/jquery.min.js"></script>
+<!-- ===== Bootstrap JavaScript ===== -->
+<script src="/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- ===== Slimscroll JavaScript ===== -->
+<script src="/js/jquery.slimscroll.js"></script>
+<!-- ===== Wave Effects JavaScript ===== -->
+<script src="/js/waves.js"></script>
+<!-- ===== Menu Plugin JavaScript ===== -->
+<script src="/js/sidebarmenu.js"></script>
+<!-- ===== Custom JavaScript ===== -->
+<script src="/js/custom.js"></script>
+<!-- ===== ckeditor JavaScript ===== -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="//cdn.ckeditor.com/4.7.1/standard/ckeditor.js"></script>
+<script src="/js/ckeditor.js"></script>
+<!-- ===== Plugin JS ===== -->
+<script src="/plugins/components/chartist-js/dist/chartist.min.js"></script>
+<script src="/plugins/components/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.min.js"></script>
+<script src='/plugins/components/moment/moment.js'></script>
+<script src='/plugins/components/fullcalendar/fullcalendar.js'></script>
+<script src="/js/db2.js"></script>
+<!-- jQuery file upload -->
+<script src="/plugins/components/dropify/dist/js/dropify.min.js"></script>
+<script>
+$(function() {
+    // Basic
+    $('.dropify').dropify();
+    // Translated
+    $('.dropify-fr').dropify({
+        messages: {
+            default: 'Glissez-déposez un fichier ici ou cliquez',
+            replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
+        }
+    });
+    // Used events
+    var drEvent = $('#input-file-events').dropify();
+    drEvent.on('dropify.beforeClear', function(event, element) {
+        return confirm("Do you really want to delete \"" + element.file.name + "\" ?");
+    });
+    drEvent.on('dropify.afterClear', function(event, element) {
+        alert('File deleted');
+    });
+    drEvent.on('dropify.errors', function(event, element) {
+        console.log('Has Errors');
+    });
+    var drDestroy = $('#input-file-to-destroy').dropify();
+    drDestroy = drDestroy.data('dropify')
+    $('#toggleDropify').on('click', function(e) {
+        e.preventDefault();
+        if (drDestroy.isDropified()) {
+            drDestroy.destroy();
+        } else {
+            drDestroy.init();
+        }
+    })
+});
+</script>
+<!-- ===== Style Switcher JS ===== -->
+<script src="/plugins/components/styleswitcher/jQuery.style.switcher.js"></script>
+</body>
+
+</html>

@@ -152,15 +152,16 @@ router.get("/logoutall", auth, async (req,res) => {
 
 // Change Pass
 router.post("/changepass",[
-    check('currentpass','Please enter password!').notEmpty(),
-    check('newpass','Please enter password!').notEmpty(),
-    check('cfnewpass','Please enter password!').notEmpty(),
+    check('currentpass','Please enter current password!').notEmpty(),
+    check('newpass','Please enter new password!').notEmpty(),
+    check('cfnewpass','Please enter confirm new password!').notEmpty(),
   ], checkUser, async (req, res, next) => {
     const validationErrors = validationResult(req)
     if (validationErrors.errors.length > 0) {
         const alert = validationErrors.array()
         return res.render('my_account', {
             title: 'My account',
+            user: req.user,
             alert
         })
     }

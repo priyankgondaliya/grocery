@@ -8,20 +8,22 @@
     <meta name="keywords" content="">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" type="image/png" sizes="16x16" href="../plugins/images/favicon.png">
-    <title>Admin</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="/plugins/images/favicon.png">
+    <title> <%= title %> </title>
     <!-- ===== Bootstrap CSS ===== -->
     <link href="/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- ===== Plugin CSS ===== -->
-    <link href="../plugins/components/chartist-js/dist/chartist.min.css" rel="stylesheet">
-    <link href="../plugins/components/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.css" rel="stylesheet">
-    <link href='../plugins/components/fullcalendar/fullcalendar.css' rel='stylesheet'>
+    <link href="/plugins/components/chartist-js/dist/chartist.min.css" rel="stylesheet">
+    <link href="/plugins/components/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.css" rel="stylesheet">
+    <link href="/plugins/components/datatables/jquery.dataTables.min.css" rel="stylesheet">
     <!-- ===== Animation CSS ===== -->
     <link href="/css/animate.css" rel="stylesheet">
     <!-- ===== Custom CSS ===== -->
     <link href="/css/style.css" rel="stylesheet">
     <!-- ===== Color CSS ===== -->
     <link href="/css/colors/default.css" id="theme" rel="stylesheet">
+    <!-- ===== Plugin CSS ===== -->
+    <link rel="stylesheet" href="/plugins/components/dropify/dist/css/dropify.min.css">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -43,12 +45,12 @@
                     <i class="fa fa-bars"></i>
                 </a>
                 <div class="top-left-part">
-                    <a class="logo" href="/dashboard">
+                    <a class="logo" href="/admin">
                         <b>
-                            <img src="../plugins/images/logo.png" alt="home" />
+                            <img src="/plugins/images/logo.png" alt="home" />
                         </b>
                         <span>
-                            <img src="../plugins/images/logo-text.png" alt="homepage" class="dark-logo" />
+                            <img src="/plugins/images/logo-text.png" alt="homepage" class="dark-logo" />
                         </span>
                     </a>
                 </div>
@@ -72,7 +74,7 @@
                 <div class="user-profile">
                     <div class="dropdown user-pro-body">
                         <div class="profile-image">
-                            <img src="../plugins/images/users/hanna.jpg" alt="user-img" class="img-circle">
+                            <img src="/plugins/images/users/hanna.jpg" alt="user-img" class="img-circle">
                             <a href="javascript:void(0);" class="dropdown-toggle u-dropdown text-blue" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                 <span class="badge badge-danger">
                                     <i class="fa fa-angle-down"></i>
@@ -101,13 +103,13 @@
 						<li>
                             <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="icon-grid fa-fw"></i> <span class="hide-menu"> Manage <span class="label label-rounded label-primary pull-right"><i class="fa fa-angle-down"></i></span></span></a>
                             <ul aria-expanded="false" class="collapse">
-                                <li><a href="basic-table.html">Categories</a></li>
-                                <li><a href="table-layouts.html">Sub Categories</a></li>
-                                <!-- <li><a href="data-table.html">Banners</a></li> -->
-                                <li><a href="bootstrap-tables.html">Unit</a></li>
-                                <li><a href="responsive-tables.html">Products</a></li>
-                                <li><a href="editable-tables.html">Offers</a></li>
-                                <li><a href="editable-tables.html">Promocode</a></li>
+                                <li><a href="/admin/category">Categories</a></li>
+                                <li><a href="/admin/subcategory">Sub Categories</a></li>
+                                <!-- <li><a href="/admin/banner">Banners</a></li> -->
+                                <li><a href="/admin/unit">Unit</a></li>
+                                <li><a href="/admin/product">Products</a></li>
+                                <li><a href="/admin/offer">Offers</a></li>
+                                <li><a href="/admin/promo">Promocode</a></li>
                             </ul>
                         </li>
                         <li>
@@ -130,7 +132,7 @@
                             <a class="waves-effect" aria-expanded="false"><span class="hide-menu"> User Pages </span></a>
                         </li>
                         <li>
-                            <a href="#" aria-expanded="false"><i class="icon-people fa-fw"></i> <span class="hide-menu"> User Management </span></a>
+                            <a href="/admin/user" aria-expanded="false"><i class="icon-people fa-fw"></i> <span class="hide-menu"> User Management </span></a>
                         </li>
                         <li>
                             <a href="#" aria-expanded="false"><i class="icon-credit-card fa-fw"></i> <span class="hide-menu"> Transactions </span></a>
@@ -148,7 +150,7 @@
                             <a class="waves-effect" aria-expanded="false"><span class="hide-menu"> Vendor Pages </span></a>
                         </li>
                         <li>
-                            <a href="#" aria-expanded="false"><i class="icon-people fa-fw"></i> <span class="hide-menu"> Vendor Management </span></a>
+                            <a href="/admin/vendor" aria-expanded="false"><i class="icon-people fa-fw"></i> <span class="hide-menu"> Vendor Management </span></a>
                         </li>
                         <li>
                             <a href="#" aria-expanded="false"><i class="icon-credit-card fa-fw"></i> <span class="hide-menu"> Vendor Contact Report </span></a>
@@ -160,4 +162,4 @@
         </aside>
         <!-- ===== Left-Sidebar-End ===== -->
         <!-- ===== Page-Content ===== -->
-        <div class="page-wrapper">        
+        <div class="page-wrapper">
