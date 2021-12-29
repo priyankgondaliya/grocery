@@ -1,18 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
+const sharp = require('sharp');
 const multer  = require('multer');
 const fs = require('fs-extra');
 
-const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-      cb(null, './public/uploads/product/');
-    },
-    filename: function(req, file, cb) {
-      cb(null, new Date().toISOString().replace(/:/g, '-') + file.originalname);
-    }
-});
-
+const storage = multer.memoryStorage();
 const fileFilter = (req, file, cb) => {
     // reject a file
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
@@ -21,7 +14,6 @@ const fileFilter = (req, file, cb) => {
       cb(null, false);
     }
 };
-
 const upload = multer({
     storage: storage,
     limits: {
@@ -81,7 +73,7 @@ router.post("/add", upload.single('image'), [
                 alert
             })
         }
-        const image = req.file.path.replace(/\\/g,"/").replace('public','');
+        const filename = new Date().toISOString().replace(/:/g, '-') + req.file.originalname;
         const product = new Product({
             category : req.body.category,
             subcategory : req.body.subCategory,
@@ -93,7 +85,7 @@ router.post("/add", upload.single('image'), [
             costprice : req.body.costPrice,
             saleprice : req.body.salePrice,
             totalprice : req.body.totalPrice,
-            image : image,
+            image : '/uploads/product/' + filename,
             title1 : req.body.title1,
             title2 : req.body.title2,
             title3 : req.body.title3,
@@ -103,6 +95,10 @@ router.post("/add", upload.single('image'), [
             description3 : req.body.description3,
             description4 : req.body.description4,
         })
+        fs.access('./public/uploads/product', (err) => { if (err) fs.mkdirSync('./public/uploads/product'); });
+        await sharp(req.file.buffer)
+            .resize({ width:1000, height:723 })
+            .toFile('./public/uploads/product/'+filename);
         await product.save();
         req.flash('success',`Product added successfully`);
         res.redirect('/vendor/product');
@@ -184,8 +180,12 @@ router.post('/edit/:id', upload.single('image'), [
             fs.remove(oldImage, function (err) {
                 if (err) { console.log(err); }
             })
-            const image = req.file.path.replace(/\\/g,"/").replace('public','');
-            product.image = image;
+            const filename = new Date().toISOString().replace(/:/g, '-') + req.file.originalname;
+            product.image = '/uploads/product/' + filename;
+            fs.access('./public/uploads/product', (err) => { if (err) fs.mkdirSync('./public/uploads/product'); });
+            await sharp(req.file.buffer)
+                .resize({ width:1000, height:723 })
+                .toFile('./public/uploads/product/'+filename);
         }
         await product.save();
         req.flash('success',`Product Edited successfully`);

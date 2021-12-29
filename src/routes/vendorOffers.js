@@ -1,18 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
+const sharp = require('sharp');
 const multer  = require('multer');
 const fs = require('fs-extra');
 
-const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-      cb(null, './public/uploads/offer/');
-    },
-    filename: function(req, file, cb) {
-      cb(null, new Date().toISOString().replace(/:/g, '-') + file.originalname);
-    }
-});
-
+const storage = multer.memoryStorage();
 const fileFilter = (req, file, cb) => {
     // reject a file
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
@@ -21,7 +14,6 @@ const fileFilter = (req, file, cb) => {
       cb(null, false);
     }
 };
-
 const upload = multer({
     storage: storage,
     limits: {
@@ -81,7 +73,7 @@ router.post("/add", upload.single('image'), [
                 alert
             })
         }
-        const image = req.file.path.replace(/\\/g,"/").replace('public','');
+        const filename = new Date().toISOString().replace(/:/g, '-') + req.file.originalname;
         const offer = new Offer({
             category : req.body.category,
             subcategory : req.body.subCategory,
@@ -95,7 +87,7 @@ router.post("/add", upload.single('image'), [
             discount : req.body.discount,
             nondisc : req.body.nondisc,
             totalprice : req.body.totalPrice,
-            image : image,
+            image : '/uploads/offer/' + filename,
             title1 : req.body.title1,
             title2 : req.body.title2,
             title3 : req.body.title3,
@@ -105,6 +97,10 @@ router.post("/add", upload.single('image'), [
             description3 : req.body.description3,
             description4 : req.body.description4,
         })
+        fs.access('./public/uploads/offer', (err) => { if (err) fs.mkdirSync('./public/uploads/offer'); });
+        await sharp(req.file.buffer)
+            .resize({ width:1000, height:723 })
+            .toFile('./public/uploads/offer/'+filename);
         await offer.save();
         req.flash('success',`Offer added successfully`);
         res.redirect('/vendor/offer');
@@ -189,8 +185,12 @@ router.post('/edit/:id', upload.single('image'), [
             fs.remove(oldImage, function (err) {
                 if (err) { console.log(err); }
             })
-            const image = req.file.path.replace(/\\/g,"/").replace('public','');
-            offer.image = image;
+            const filename = new Date().toISOString().replace(/:/g, '-') + req.file.originalname;
+            offer.image = '/uploads/offer/' + filename;
+            fs.access('./public/uploads/offer', (err) => { if (err) fs.mkdirSync('./public/uploads/offer'); });
+            await sharp(req.file.buffer)
+                .resize({ width:1000, height:723 })
+                .toFile('./public/uploads/offer/'+filename);
         }
         await offer.save();
         req.flash('success',`Offer Edited successfully`);

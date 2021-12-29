@@ -1,6 +1,5 @@
 const express = require("express");
 require('dotenv').config();
-// const session = require('express-session');
 const passport = require('passport');
 
 const path = require("path");
@@ -37,17 +36,10 @@ app.use(express.json());
 app.use(cookieParser(process.env.SESSION_SECRET));
 
 // session
-// const { body } = require('express-validator');
-// app.use(session({
 app.use(require('cookie-session')({
     secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: true,
-    // cookie:{
-    //     httpOnly: true,
-    //     secure: false,  // true for https
-    //     // expires: new Date(Date.now()+ 60*60*1000)
-    // }
 }));
 
 //Express Messages middleware
@@ -63,17 +55,6 @@ require('./helpers/googleAuth')
 //Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
-
-// contact details
-// const Contact = require('./models/contactDetailModel');
-// app.all('*', async (req, res, next) => {
-//     let t1 = new Date()
-//     const contact = await Contact.findOne()
-//     let t2 = new Date()
-//     console.log(t2-t1);
-//     req.contact = contact;
-//     next();
-// });
 
 // Routes
 app.use('/admin/category', require('./routes/adminCategories'));
@@ -93,16 +74,11 @@ app.use('/', require('./routes/authRoutes'));
 app.use('/', require('./routes/cmsPages'));
 app.use('/', require('./routes/accountRoutes'));
 app.use('/', require('./routes/messageRoutes'));
+app.use('/', require('./routes/homeRoute'));
 app.use('/wishlist', require('./routes/wishlistRoutes'));
 app.use('/newsletter', require('./routes/newsletterRoutes'));
 
 app.use('/google', require('./routes/googleAuthRoutes'));
-
-app.get("/",(req,res)=>{
-    res.render("index",{
-        title:  "Home"
-    });
-});
 
 // 404
 app.all('/404', (req, res, next) => {
@@ -132,13 +108,9 @@ app.listen(port,()=>{
 // NOTE
 
 // REPORT
-
-
-// All offers
 // edit offer view
-// edit offer api
-// delete offer
 
+// edit offer api
 // (admin)all products and delete product
 // (admin)all offers and delete offer
 // casterror handling

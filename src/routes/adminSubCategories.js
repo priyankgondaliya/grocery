@@ -3,17 +3,10 @@ const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const formatDate = require('../helpers/formateDate');
 const fs = require('fs-extra');
+const sharp = require('sharp');
 const multer  = require('multer');
 
-const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-      cb(null, './public/uploads/subcategory/');
-    },
-    filename: function(req, file, cb) {
-      cb(null, new Date().toISOString().replace(/:/g, '-') + file.originalname);
-    }
-});
-
+const storage = multer.memoryStorage();
 const fileFilter = (req, file, cb) => {
     // reject a file
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
@@ -22,7 +15,6 @@ const fileFilter = (req, file, cb) => {
       cb(null, false);
     }
 };
-
 const upload = multer({
     storage: storage,
     limits: {
@@ -85,14 +77,16 @@ router.post('/add', upload.single('image'), [
                 cats
             })
         }
-        // const myArray = category.split("-");
-        const image = req.file.path.replace(/\\/g,"/").replace('public','');
+        const filename = new Date().toISOString().replace(/:/g, '-') + req.file.originalname;
         const subcat = new Subcategory({
             name,
             category,
-            // categoryName: myArray[1],
-            image
+            image: '/uploads/subcategory/' + filename
         })
+        fs.access('./public/uploads/subcategory', (err) => { if (err) fs.mkdirSync('./public/uploads/subcategory'); });
+        await sharp(req.file.buffer)
+            .resize({ width:1000, height:723 })
+            .toFile('./public/uploads/subcategory/'+filename);
         await subcat.save();
         req.flash('success',`Sub Category added successfully`);
         res.redirect('/admin/subcategory')
@@ -148,18 +142,20 @@ router.post('/edit/:id', upload.single('image'), [
             })
         }
         const id = req.params.id;
-        // const myArray = category.split("-");
         const subcat = await Subcategory.findById(id);
         subcat.name = name;
         subcat.category = category;
-        // subcat.categoryName = myArray[1];
         if (typeof req.file !== 'undefined') {
             oldImage = "public" + subcat.image;
             fs.remove(oldImage, function (err) {
                 if (err) { console.log(err); }
             })
-            const image = req.file.path.replace(/\\/g,"/").replace('public','');
-            subcat.image = image;
+            const filename = new Date().toISOString().replace(/:/g, '-') + req.file.originalname;
+            subcat.image = '/uploads/subcategory/' + filename;
+            fs.access('./public/uploads/subcategory', (err) => { if (err) fs.mkdirSync('./public/uploads/subcategory'); });
+            await sharp(req.file.buffer)
+                .resize({ width:1000, height:723 })
+                .toFile('./public/uploads/subcategory/'+filename);
         }
         await subcat.save();
         req.flash('success',`Sub Category Edited successfully`);

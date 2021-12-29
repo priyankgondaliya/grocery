@@ -1,18 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
+const sharp = require('sharp');
 const multer  = require('multer');
 const fs = require('fs-extra');
 const formatDate = require('../helpers/formateDate');
 
-const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-      cb(null, './public/uploads/category/');
-    },
-    filename: function(req, file, cb) {
-      cb(null, new Date().toISOString().replace(/:/g, '-') + file.originalname);
-    }
-});
+const storage = multer.memoryStorage();
 const fileFilter = (req, file, cb) => {
     // reject a file
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
@@ -74,23 +68,26 @@ router.post('/add', upload.single('image'), [
                 alert
             })
         }
-        const image = req.file.path.replace(/\\/g,"/").replace('public','');
+        const filename = new Date().toISOString().replace(/:/g, '-') + req.file.originalname;
         const cat = new Category({
             name,
             tax,
-            image
+            image: '/uploads/category/' + filename
         })
+        fs.access('./public/uploads/category', (err) => { if (err) fs.mkdirSync('./public/uploads/category'); });
+        await sharp(req.file.buffer)
+            .resize({ width:1000, height:723 })
+            .toFile('./public/uploads/category/'+filename);
         await cat.save();
         req.flash('success',`Category added successfully`);
         res.redirect('/admin/category')
     } catch (error) {
-        console.log(error.message);
         if (error.code == 11000) {
             req.flash('danger',`Category name '${req.body.name}' already exist!`);
             res.redirect('/admin/category');
         } else {
-            res.send(error.message);
             console.log(error);
+            res.send(error.message);
         }
     }   
 });
@@ -139,8 +136,12 @@ router.post('/edit/:id', upload.single('image'), [
             fs.remove(oldImage, function (err) {
                 if (err) { console.log(err); }
             })
-            const image = req.file.path.replace(/\\/g,"/").replace('public','');
-            cat.image = image;
+            const filename = new Date().toISOString().replace(/:/g, '-') + req.file.originalname;
+            cat.image = '/uploads/category/' + filename;
+            fs.access('./public/uploads/category', (err) => { if (err) fs.mkdirSync('./public/uploads/category'); });
+            await sharp(req.file.buffer)
+                .resize({ width:1000, height:723 })
+                .toFile('./public/uploads/category/'+filename);
         }
         await cat.save();
         req.flash('success',`Category Edited successfully`);
