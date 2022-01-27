@@ -1,0 +1,4 @@
+view details link in users table
+user info page
+promocode per category
+vendor

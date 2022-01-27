@@ -27,7 +27,7 @@
     <div class="row">
 
         <% for( let i = 0; i < cats.length; i++ ) { %>
-            <div class="col-md-4 col-sm-6 col-xs-12">
+            <div class="card col-md-4 col-sm-6 col-xs-12">
                 <div class="white-box">
                     <div class="product-img">
                         <img src="<%= cats[i].image %>" class="img-responsive" />
@@ -109,12 +109,4 @@
     </div>
     <!-- ===== Right-Sidebar-End ===== -->
 </div>
-<script>
-    $(function(){
-        $('a.confirmDeletion').on('click',function(){
-            if(!confirm('Confirm deletion'))
-                return false;
-        });
-    });
-</script>
 <%-include('../_layouts/admin_footer')-%>

@@ -86,14 +86,8 @@ router.post("/add", upload.single('image'), [
             saleprice : req.body.salePrice,
             totalprice : req.body.totalPrice,
             image : '/uploads/product/' + filename,
-            title1 : req.body.title1,
-            title2 : req.body.title2,
-            title3 : req.body.title3,
-            title4 : req.body.title4,
-            description1 : req.body.description1,
-            description2 : req.body.description2,
-            description3 : req.body.description3,
-            description4 : req.body.description4,
+            title : req.body.title,
+            description : req.body.description
         })
         fs.access('./public/uploads/product', (err) => { if (err) fs.mkdirSync('./public/uploads/product'); });
         await sharp(req.file.buffer)
@@ -167,14 +161,8 @@ router.post('/edit/:id', upload.single('image'), [
         product.costprice = req.body.costPrice;
         product.saleprice = req.body.salePrice;
         product.totalprice = req.body.totalPrice;
-        product.title1 = req.body.title1;
-        product.title2 = req.body.title2;
-        product.title3 = req.body.title3;
-        product.title4 = req.body.title4;
-        product.description1 = req.body.description1;
-        product.description2 = req.body.description2;
-        product.description3 = req.body.description3;
-        product.description4 = req.body.description4;
+        product.title = req.body.title;
+        product.description = req.body.description;
         if (typeof req.file !== 'undefined') {
             oldImage = "public" + product.image;
             fs.remove(oldImage, function (err) {

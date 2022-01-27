@@ -1,8 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const fs = require('fs-extra');
+
 const Product = require('../models/productModel');
 const Offer = require('../models/offerModel');
-const fs = require('fs-extra');
+const Category = require('../models/category');
+const Subcategory = require('../models/subcategory');
+const Unit = require('../models/unitModel');
 
 // const formatDate = require('../helpers/formateDate');
 
@@ -20,6 +24,32 @@ router.get("/product", async (req,res)=>{
         title: 'Product List',
         products
     });
+});
+
+// GET product detail
+router.get("/product/detail/:id", async (req,res)=>{
+    try {
+        const id = req.params.id;
+        const product = await Product.findById(id);
+        const category = await Category.findById(product.category);
+        const subcategory = await Subcategory.findById(product.subcategory);
+        const unit = await Unit.findById(product.unit);
+        res.status(201).render("admin/product_detail", {
+            title: 'Product Details',
+            product,
+            cat: category.name,
+            subcat: subcategory.name,
+            unit: unit.name
+        });
+    } catch (error) {
+        if (error.name === 'CastError') {
+            req.flash('danger',`Product not found!`);
+            res.redirect('/admin/product');
+        } else {
+            console.log(error);
+            res.send(error)
+        }
+    }
 });
 
 // GET delete product
@@ -53,7 +83,33 @@ router.get("/offer", async (req,res)=>{
     });
 });
 
-// GET delete product
+// GET product detail
+router.get("/offer/detail/:id", async (req,res)=>{
+    try {
+        const id = req.params.id;
+        const offer = await Offer.findById(id);
+        const category = await Category.findById(offer.category);
+        const subcategory = await Subcategory.findById(offer.subcategory);
+        const unit = await Unit.findById(offer.unit);
+        res.status(201).render("admin/offer_detail", {
+            title: 'Offer Details',
+            offer,
+            cat: category.name,
+            subcat: subcategory.name,
+            unit: unit.name
+        });
+    } catch (error) {
+        if (error.name === 'CastError') {
+            req.flash('danger',`Offer not found!`);
+            res.redirect('/admin/offer');
+        } else {
+            console.log(error);
+            res.send(error)
+        }
+    }
+});
+
+// GET delete offer
 router.get("/offer/delete/:id", async (req,res)=>{
     try {
         const id = req.params.id;
@@ -73,13 +129,6 @@ router.get("/offer/delete/:id", async (req,res)=>{
             res.send(error)
         }
     }
-});
-
-// GET promo
-router.get("/promo", (req,res)=>{
-    res.status(201).render("admin/promo",{
-        title: 'Promocode',
-    });
 });
 
 // GET order

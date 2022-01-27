@@ -54,28 +54,28 @@
                         </span>
                     </a>
                 </div>
-                <!-- <ul class="nav navbar-top-links navbar-left hidden-xs">
+                <ul class="nav navbar-top-links navbar-left hidden-xs">
                     <li>
                         <a href="javascript:void(0)" class="sidebartoggler font-20 waves-effect waves-light"><i class="icon-arrow-left-circle"></i></a>
                     </li>
                     <li>
                         <form role="search" class="app-search hidden-xs">
                             <i class="icon-magnifier"></i>
-                            <input type="text" placeholder="Search..." class="form-control">
+                            <input id="searchBar" type="text" placeholder="Search..." class="form-control">
                         </form>
                     </li>
-                </ul> -->
+                </ul>
             </div>
         </nav>
         <!-- ===== Top-Navigation-End ===== -->
         <!-- ===== Left-Sidebar ===== -->
         <aside class="sidebar">
-            <div class="scroll-sidebar">
+            <div class="scroll-sidebar"> 
                 <div class="user-profile">
                     <div class="dropdown user-pro-body">
                         <div class="profile-image">
                             <img src="/plugins/images/users/hanna.jpg" alt="user-img" class="img-circle">
-                            <a href="javascript:void(0);" class="dropdown-toggle u-dropdown text-blue" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <a href="javascript:void(0);" class="dropdown-toggle u-dropdown text-blue" type="button" id="dropdownMenuButton" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                 <span class="badge badge-danger">
                                     <i class="fa fa-angle-down"></i>
                                 </span>
@@ -86,7 +86,7 @@
                                 <li role="separator" class="divider"></li>
                                 <li><a href="javascript:void(0);"><i class="fa fa-cog"></i> Account Settings</a></li>
                                 <li role="separator" class="divider"></li> -->
-                                <li><a href=""><i class="fa fa-power-off"></i> Logout</a></li>
+                                <li><a href="#"><i class="fa fa-power-off"></i> Logout</a></li>
                             </ul>
                         </div>
                         <p class="profile-text m-t-15 font-16"><a href="javascript:void(0);"> Hanna Gover</a></p>
@@ -105,7 +105,7 @@
                             <ul aria-expanded="false" class="collapse">
                                 <li><a href="/admin/category">Categories</a></li>
                                 <li><a href="/admin/subcategory">Sub Categories</a></li>
-                                <!-- <li><a href="/admin/banner">Banners</a></li> -->
+                                <li><a href="/admin/banner">Banners</a></li>
                                 <li><a href="/admin/unit">Unit</a></li>
                                 <li><a href="/admin/product">Products</a></li>
                                 <li><a href="/admin/offer">Offers</a></li>
@@ -118,11 +118,11 @@
                         <li>
                             <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="icon-grid fa-fw"></i> <span class="hide-menu"> Content pages <span class="label label-rounded label-primary pull-right"><i class="fa fa-angle-down"></i></span></span></a>
                             <ul aria-expanded="false" class="collapse">
-                                <li><a href="privacy_policy">Privacy Policy</a></li>
-                                <li><a href="faqs">FAQs</a></li>
-                                <li><a href="terms_con">Terms & Conditions</a></li>
-                                <li><a href="about_us">About Us</a></li>
-                                <li><a href="contact">Contact Us</a></li>
+                                <li><a href="/admin/privacy_policy">Privacy Policy</a></li>
+                                <li><a href="/admin/faqs">FAQs</a></li>
+                                <li><a href="/admin/terms_con">Terms & Conditions</a></li>
+                                <li><a href="/admin/about_us">About Us</a></li>
+                                <li><a href="/admin/contact">Contact Us</a></li>
                             </ul>
                         </li>
                         <li>
@@ -153,7 +153,7 @@
                             <a href="/admin/vendor" aria-expanded="false"><i class="icon-people fa-fw"></i> <span class="hide-menu"> Vendor Management </span></a>
                         </li>
                         <li>
-                            <a href="#" aria-expanded="false"><i class="icon-credit-card fa-fw"></i> <span class="hide-menu"> Vendor Contact Report </span></a>
+                            <a href="/admin/vendor/contact" aria-expanded="false"><i class="icon-credit-card fa-fw"></i> <span class="hide-menu"> Vendor Contact Report </span></a>
                         </li>
                         
                     </ul>

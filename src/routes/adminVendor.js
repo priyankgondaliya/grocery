@@ -1,18 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
-const Vendor = require('../models/vendorModel');
+const sharp = require('sharp');
 const multer  = require('multer');
 const fs = require('fs-extra');
 
-const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-      cb(null, './public/uploads/vendor/');
-    },
-    filename: function(req, file, cb) {
-      cb(null, new Date().toISOString().replace(/:/g, '-') + file.originalname);
-    }
-});
+const Vendor = require('../models/vendorModel');
+
+const storage = multer.memoryStorage();
 const fileFilter = (req, file, cb) => {
     // reject a file
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
@@ -30,7 +25,7 @@ const upload = multer({
 });
 
 // GET vendors
-router.get("/vendor", async (req,res)=>{
+router.get("/", async (req,res)=>{
     try {
         const vendors = await Vendor.find();
         res.status(201).render("admin/vendor", {
@@ -44,7 +39,7 @@ router.get("/vendor", async (req,res)=>{
 });
 
 // GET add vendors
-router.get("/vendor/add", async (req,res)=>{
+router.get("/add", async (req,res)=>{
     try {
         res.status(201).render("admin/add_vendor", {
             title: 'Add Vendor',
@@ -56,7 +51,7 @@ router.get("/vendor/add", async (req,res)=>{
 });
 
 // POST add vendor
-router.post("/vendor/add", upload.single('image'), [
+router.post("/add", upload.single('image'), [
     check('storename','Please enter Store name.').notEmpty(),
     check('ownername','Please enter Owner name.').notEmpty(),
     check('email','Please enter valid email.').isEmail(),
@@ -81,7 +76,7 @@ router.post("/vendor/add", upload.single('image'), [
                 alert: [{msg:'Vendor is already registerd with this Email.'}]
             })
         }
-        const image = req.file.path.replace(/\\/g,"/").replace('public','');
+        const filename = new Date().toISOString().replace(/:/g, '-') + req.file.originalname;
         const vendor = new Vendor({
             storename : req.body.storename,
             ownername : req.body.ownername,
@@ -90,8 +85,12 @@ router.post("/vendor/add", upload.single('image'), [
             contact : req.body.contact,
             address : req.body.address,
             deliverycharge : req.body.deliverycharge,
-            image
+            image: '/uploads/vendor/' + filename
         })
+        fs.access('./public/uploads/vendor', (err) => { if (err) fs.mkdirSync('./public/uploads/vendor'); });
+        await sharp(req.file.buffer)
+            // .resize({ width:1000, height:723 })
+            .toFile('./public/uploads/vendor/'+filename);
         await vendor.save();
         req.flash('success','Vendor added successfully')
         res.redirect('/admin/vendor');
@@ -101,5 +100,87 @@ router.post("/vendor/add", upload.single('image'), [
     }
 })
 
+// GET edit vendor
+router.get("/edit/:id", async (req,res)=>{
+    try {
+        const id = req.params.id;
+        const vendor = await Vendor.findById(id);
+        res.status(201).render("admin/edit_vendor", {
+            title: 'Edit Vendor',
+            vendor
+        });
+    } catch (error) {
+        if (error.name === 'CastError') {
+            req.flash('danger',`Vendor not found!`);
+            res.redirect('/admin/vendor');
+        } else {
+            console.log(error);
+            res.send(error)
+        }
+    }
+});
+
+// POST edit vendor
+router.post("/edit/:id", upload.single('image'), [
+    check('storename','Please enter Store name.').notEmpty(),
+    check('ownername','Please enter Owner name.').notEmpty(),
+    check('contact','Plaese enter contact number.').notEmpty(),
+    check('address','Plaese enter address.').notEmpty(),
+  ],async (req,res)=>{
+    try {
+        const validationErrors = validationResult(req)
+        if (validationErrors.errors.length > 0) {
+            const alert = validationErrors.array()
+            console.log(alert);
+            return res.render('edit_vendor', {
+                title: 'Edit Vendor',
+                alert
+            })
+        }
+        const id = req.params.id;
+        const vendor = await Vendor.findById(id);
+        vendor.storename = req.body.storename;
+        vendor.ownername = req.body.ownername;
+        vendor.contact = req.body.contact;
+        vendor.address = req.body.address;
+        vendor.deliverycharge = req.body.deliverycharge;
+        if (typeof req.file !== 'undefined') {
+            oldImage = "public" + vendor.image;
+            fs.remove(oldImage, function (err) {
+                if (err) { console.log(err); }
+            })
+            const filename = new Date().toISOString().replace(/:/g, '-') + req.file.originalname;
+            vendor.image = '/uploads/vendor/' + filename;
+            fs.access('./public/uploads/vendor', (err) => { if (err) fs.mkdirSync('./public/uploads/vendor'); });
+            await sharp(req.file.buffer)
+                // .resize({ width:1000, height:723 })
+                .toFile('./public/uploads/vendor/'+filename);
+        }
+        await vendor.save();
+        req.flash('success','Vendor edited successfully.')
+        res.redirect('/admin/vendor');
+    } catch (error) {
+        if (error.name === 'CastError') {
+            req.flash('danger',`Vendor not found!`);
+            res.redirect('/admin/vendor');
+        } else {
+            console.log(error);
+            res.send(error)
+        }
+    }
+});
+// GET vendors
+router.get("/contact", async (req,res)=>{
+    try {
+        const vendors = await Vendor.find();
+        res.status(201).render("admin/vendorcontact", {
+            title: 'Vendor List',
+            vendors
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("An error occured")
+    }
+});
 
 module.exports = router;

@@ -41,7 +41,6 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>Category Tax (%)</label>
-                                                <!-- <input type="text" id="catTax" class="form-control" name="email" placeholder="Category tax"> -->
                                                 <input type="text" id="catTax" class="form-control" value="<%= cat.tax %>" name="tax" placeholder="Category tax" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" />
 
                                                 <div class="txt-s-101 cl6 p-b-10" style="color: red;">

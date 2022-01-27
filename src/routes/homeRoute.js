@@ -8,7 +8,7 @@ const Category = require('../models/category');
 router.get("/",async (req,res)=>{
     const cats = await Category.find();
     res.render("index",{
-        title:  "Home",
+        title: "Home",
         cats
     });
 });

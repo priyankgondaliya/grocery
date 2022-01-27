@@ -6,7 +6,7 @@
             <div class="panel panel-info">
                 <div class="panel-wrapper collapse in" aria-expanded="true">
                     <div class="panel-body">
-                        <form onsubmit="validate()" method="POST" action="/admin/unit/add_unit" id="addUnitForm">
+                        <form onsubmit="validate()" method="POST" action="/admin/unit/add" id="addUnitForm">
                             <div class="form-body">
                                 <h2 class="page-title m-b-20"> Add Unit </h2>
                                 <hr>
@@ -34,7 +34,6 @@
 <script>
     const form = document.getElementById('addUnitForm');
 
-    // loginform
     form.addEventListener('submit', (e) => {
         e.preventDefault();
     })

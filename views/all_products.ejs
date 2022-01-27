@@ -1,0 +1,211 @@
+<%- include('_layouts/header') %>
+	
+	<!-- Title page -->
+	<section class="how-overlay2 bg-img1" style="background-image: url(/images/bg-07.jpg);">
+		<div class="container">
+			<div class="txt-center p-t-160 p-b-165">
+				<h2 class="txt-l-101 cl0 txt-center p-b-14 respon1">
+					shop
+				</h2>
+
+				<span class="txt-m-201 cl0 flex-c-m flex-w">
+					<a href="/" class="txt-m-201 cl0 hov-cl10 trans-04 m-r-6">
+						Home
+					</a>
+
+					<span>
+						/ Products
+					</span>
+				</span>
+			</div>
+		</div>
+	</section>
+	
+	<!-- Content page -->
+	<section class="bg0 p-t-85 p-b-45">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-10 col-md-4 col-lg-3 m-rl-auto p-b-50">
+					<div class="leftbar p-t-15">
+						<!--  -->
+						<!-- <div class="size-a-21 pos-relative">
+							<input class="s-full bo-all-1 bocl15 p-rl-20" type="text" name="search" placeholder="Search products...">
+							<button class="flex-c-m fs-18 size-a-22 ab-t-r hov11">
+								<img class="hov11-child trans-04" src="/images/icons/icon-search.png" alt="ICON">
+							</button>
+						</div> -->
+							
+						<!-- cats -->
+						<div>
+							<h4 class="txt-m-101 cl3 p-b-37">
+								Categories
+							</h4>
+
+							<ul class="main_cat_list">
+								<!-- <li class="nav-item dropdown">
+									<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									  Dropdown
+									</a>
+									<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+									  <a class="dropdown-item" href="#">Action</a>
+									  <a class="dropdown-item" href="#">Another action</a>
+									  <div class="dropdown-divider"></div>
+									  <a class="dropdown-item" href="#">Something else here</a>
+									</div>
+								  </li> -->
+								<% for( let i = 0; i < cats.length; i++ ) { %>
+									<li class="p-b-5">
+										<a href="/products/<%= cats[i].id %>" class="flex-sb-m flex-w txt-s-101 cl6 hov-cl10 trans-04 p-tb-3">
+											<span class="m-r-10">
+												<%= cats[i].name %>
+											</span>
+										</a>
+									</li>
+								<% } %>
+								
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-10 col-md-8 col-lg-9 m-rl-auto p-b-50 m-t-15">
+					<div>
+						<!-- <div class="flex-w flex-r-m p-b-45 flex-row-rev m-t-10">
+							<span class="txt-m-101 cl3 p-b-37">
+								Fruits
+							</span>
+						</div> -->
+						<!-- Shop grid -->
+						<div class="shop-grid">
+							<div class="row">
+								<!-- - -->
+								<% for( let i = 0; i < subcats.length; i++ ) { %>
+									<div class="col-sm-6 col-lg-4 p-b-30">
+										<!-- <div class="block1">
+											<div class="block1-bg wrap-pic-w bo-all-1 bocl12 hov3 trans-04">
+												<img src="/images/product-02.jpg" alt="IMG">
+	
+												<div class="block1-content flex-col-c-m p-b-46">
+													<a href="product-single.html" class="txt-m-103 cl3 txt-center hov-cl10 trans-04 js-name-b1">
+														Strawberry
+													</a>
+	
+													<span class="block1-content-more txt-m-104 cl9 p-t-21 trans-04">
+														23$
+													</span>
+
+												</div>
+											</div>
+										</div> -->
+										<div class="block1">
+											<div class="block1-bg wrap-pic-w bo-all-1 bocl12 hov3 trans-04">
+												<div>
+													<img src="<%= subcats[i].image %>" alt="IMG" width="200px" style="margin: 20px;">
+												</div>
+	
+												<div class="block1-content flex-col-c-m p-b-20">
+													<a href="#" class="txt-m-103 cl3 txt-center hov-cl10 trans-04 js-name-b1">
+														<%= subcats[i].name %>
+													</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								<% } %>
+							</div>
+						</div>
+						<!-- Shop grid -->
+						<!-- <div class="shop-grid">
+							<div class="row">
+								
+								<div class="col-sm-6 col-lg-4 p-b-30">
+									
+									<div class="block1">
+										<div class="block1-bg wrap-pic-w bo-all-1 bocl12 hov3 trans-04">
+											<img src="/images/product-02.jpg" alt="IMG">
+
+											<div class="block1-content flex-col-c-m p-b-46">
+												<a href="product-single.html" class="txt-m-103 cl3 txt-center hov-cl10 trans-04 js-name-b1">
+													Strawberry
+												</a>
+
+												<span class="block1-content-more txt-m-104 cl9 p-t-21 trans-04">
+													23$
+												</span>
+
+												<div class="block1-wrap-icon flex-c-m flex-w trans-05">
+													<a href="product-single.html" class="block1-icon flex-c-m wrap-pic-max-w">
+														<img src="/images/icons/icon-view.png" alt="ICON">
+													</a>
+
+													<a href="#" class="block1-icon flex-c-m wrap-pic-max-w js-addcart-b1">
+														<img src="/images/icons/icon-cart.png" alt="ICON">
+													</a>
+
+													<a href="wishlist.html" class="block1-icon flex-c-m wrap-pic-max-w js-addwish-b1">
+														<img class="icon-addwish-b1" src="/images/icons/icon-heart.png" alt="ICON">
+														<img class="icon-addedwish-b1" src="/images/icons/icon-heart2.png" alt="ICON">
+													</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-sm-6 col-lg-4 p-b-30">
+									<div class="block1">
+										<div class="block1-bg wrap-pic-w bo-all-1 bocl12 hov3 trans-04">
+											<img src="/images/product-36.jpg" alt="IMG">
+
+											<div class="block1-content flex-col-c-m p-b-46">
+												<a href="product-single.html" class="txt-m-103 cl3 txt-center hov-cl10 trans-04 js-name-b1">
+													Onion
+												</a>
+
+												<span class="block1-content-more txt-m-104 cl9 p-t-21 trans-04">
+													28$
+												</span>
+
+												<div class="block1-wrap-icon flex-c-m flex-w trans-05">
+													<a href="product-single.html" class="block1-icon flex-c-m wrap-pic-max-w">
+														<img src="/images/icons/icon-view.png" alt="ICON">
+													</a>
+
+													<a href="#" class="block1-icon flex-c-m wrap-pic-max-w js-addcart-b1">
+														<img src="/images/icons/icon-cart.png" alt="ICON">
+													</a>
+
+													<a href="wishlist.html" class="block1-icon flex-c-m wrap-pic-max-w js-addwish-b1">
+														<img class="icon-addwish-b1" src="/images/icons/icon-heart.png" alt="ICON">
+														<img class="icon-addedwish-b1" src="/images/icons/icon-heart2.png" alt="ICON">
+													</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div> -->
+
+						<!-- Pagination -->
+						<!-- <div class="flex-w flex-c-m p-t-47">
+							<a href="#" class="flex-c-m txt-s-115 cl6 size-a-23 bo-all-1 bocl15 hov-btn1 trans-04 m-all-3 active-pagi1">
+								1
+							</a>
+
+							<a href="#" class="flex-c-m txt-s-115 cl6 size-a-23 bo-all-1 bocl15 hov-btn1 trans-04 m-all-3">
+								2
+							</a>
+
+							<a href="#" class="flex-c-m txt-s-115 cl6 size-a-24 how-btn1 bo-all-1 bocl15 hov-btn1 trans-04 m-all-3 p-b-1">
+								Next
+								<span class="lnr lnr-chevron-right m-t-3 m-l-7"></span>
+								<span class="lnr lnr-chevron-right m-t-3"></span>
+							</a>
+						</div> -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	
+<%- include('_layouts/footer') %>

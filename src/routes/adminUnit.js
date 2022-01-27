@@ -20,7 +20,7 @@ router.get("/", async (req,res)=>{
         units: updated
     });
 });
-
+    
 // GET add units
 router.get("/add_unit", (req,res)=>{
     res.status(201).render("admin/add_unit", {
@@ -34,7 +34,7 @@ router.post("/add_unit", async (req,res)=>{
         const unit = new Unit({ name: req.body.name });
         await unit.save();
         req.flash('success','Unit added successfully')
-        res.redirect('/admin/unit');
+        res.redirect('/admin/unit');y
     } catch (error) {
         if (error.code == 11000) {
             req.flash('danger',`Unit name '${req.body.name}' already exist!`);

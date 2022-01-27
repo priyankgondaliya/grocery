@@ -29,6 +29,4 @@ const messageSchema = new mongoose.Schema ({
     }
 })
 
-// we need to create a collection of messages
-const Message = new mongoose.model("Message", messageSchema);
-module.exports= Message;
+module.exports= new mongoose.model("Message", messageSchema);

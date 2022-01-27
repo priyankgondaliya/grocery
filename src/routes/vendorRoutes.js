@@ -7,4 +7,11 @@ router.get("/", (req,res)=>{
     });
 });
 
+// GET orders
+router.get("/orders", (req,res)=>{
+    res.status(201).render("vendor/orders",{
+        title: 'Order List',
+    });
+});
+
 module.exports = router;

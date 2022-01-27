@@ -66,7 +66,7 @@ router.post('/faqs', [
     try {
         const page = await Page.findOne({ title:'FAQs'})
         page.content = req.body.content;
-        await page.save()
+        await page.save();
         req.flash('success','FAQs details updated successfully.')
         res.redirect('/admin/faqs')
     } catch (error) {
@@ -161,7 +161,6 @@ router.get("/contact", async (req,res)=>{
         res.status(500).send("An error occured")
     }
 });
-
 
 router.post('/contact', [
     // check('content','Content must have a value').notEmpty(),

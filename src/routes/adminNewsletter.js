@@ -15,8 +15,8 @@ router.get("/", async (req,res) => {
                 date: formatDate(new Date(newsletters[i].date))
             }
             updated.push(e)
-        }
-        res.render("admin/newsletter", {
+        }b
+        res.render("admin/newsletter", {        
             title: "Newsletter",
             newsletters: updated
         })
@@ -24,6 +24,6 @@ router.get("/", async (req,res) => {
         res.status(400).send(error.message);
         console.log(error);
     }
-})
+})                  
 
 module.exports = router;
