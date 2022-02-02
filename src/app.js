@@ -56,6 +56,12 @@ require('./helpers/googleAuth')
 app.use(passport.initialize());
 app.use(passport.session());
 
+// app.use('*', (req,res,next)=>{
+//     // req.session.redirectToUrl = undefined;
+//     console.log(req.originalUrl + ":" + req.session.redirectToUrl);
+//     next()
+// })
+
 // Routes
 app.use('/admin/category', require('./routes/adminCategories'));
 app.use('/admin/subcategory', require('./routes/adminSubCategories'));
@@ -111,12 +117,7 @@ app.listen(port,()=>{
 
 // REPORT
 
-// vendors page(ongoing)
-// add vendor page
-// add vendor api
-// promocode
-// search 6
-// 2 detail page
-
-// TODO
-// watch rec 
+// redirect back to wishlist after login
+// banner
+// product description page view
+// product description page api

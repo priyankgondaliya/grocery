@@ -53,6 +53,13 @@
 									  <a class="dropdown-item" href="#">Something else here</a>
 									</div>
 								  </li> -->
+								<li class="p-b-5">
+									<a href="/products/all" class="flex-sb-m flex-w txt-s-101 cl6 hov-cl10 trans-04 p-tb-3">
+										<span class="m-r-10">
+											All Products
+										</span>
+									</a>
+								</li>
 								<% for( let i = 0; i < cats.length; i++ ) { %>
 									<li class="p-b-5">
 										<a href="/products/<%= cats[i].id %>" class="flex-sb-m flex-w txt-s-101 cl6 hov-cl10 trans-04 p-tb-3">
@@ -62,7 +69,6 @@
 										</a>
 									</li>
 								<% } %>
-								
 							</ul>
 						</div>
 					</div>
@@ -80,22 +86,6 @@
 								<!-- - -->
 								<% for( let i = 0; i < subcats.length; i++ ) { %>
 									<div class="col-sm-6 col-lg-4 p-b-30">
-										<!-- <div class="block1">
-											<div class="block1-bg wrap-pic-w bo-all-1 bocl12 hov3 trans-04">
-												<img src="/images/product-02.jpg" alt="IMG">
-	
-												<div class="block1-content flex-col-c-m p-b-46">
-													<a href="product-single.html" class="txt-m-103 cl3 txt-center hov-cl10 trans-04 js-name-b1">
-														Strawberry
-													</a>
-	
-													<span class="block1-content-more txt-m-104 cl9 p-t-21 trans-04">
-														23$
-													</span>
-
-												</div>
-											</div>
-										</div> -->
 										<div class="block1">
 											<div class="block1-bg wrap-pic-w bo-all-1 bocl12 hov3 trans-04">
 												<div>
@@ -103,7 +93,7 @@
 												</div>
 	
 												<div class="block1-content flex-col-c-m p-b-20">
-													<a href="#" class="txt-m-103 cl3 txt-center hov-cl10 trans-04 js-name-b1">
+													<a href="/products/<%= subcats[i].category %>/<%= subcats[i].id %>" class="txt-m-103 cl3 txt-center hov-cl10 trans-04 js-name-b1">
 														<%= subcats[i].name %>
 													</a>
 												</div>
@@ -203,6 +193,44 @@
 							</a>
 						</div> -->
 					</div>
+				</div>
+			</div>
+			<div class="shop-grid">
+				<div class="row">
+					<!-- - -->
+					<% for( let i = 0; i < prods.length; i++ ) { %>
+						<!-- <div class="col-sm-6 col-lg-4 p-b-30"> -->
+						<div class="col-sm-6 col-md-4 col-lg-3 p-b-30">
+							<div class="block1">
+								<div class="block1-bg wrap-pic-w bo-all-1 bocl12 hov3 trans-04">
+									<img src="<%= prods[i].image %>" alt="IMG" width="200px" style="margin: 20px;">
+
+									<div class="block1-content flex-col-c-m p-b-46">
+										<a href="product-single.html" class="txt-m-103 cl3 txt-center hov-cl10 trans-04 js-name-b1">
+											<%= prods[i].productname %>
+										</a>
+
+										<span class="block1-content-more txt-m-104 cl9 p-t-21 trans-04">
+											<%= prods[i].totalprice %>&#8377;
+										</span>
+										<div class="block1-wrap-icon flex-c-m flex-w trans-05">
+											<a href="/products/detail/<%= prods[i].id %>" class="block1-icon flex-c-m wrap-pic-max-w">
+												<img src="/images/icons/icon-view.png" alt="ICON">
+											</a>
+											<a href="#" class="block1-icon flex-c-m wrap-pic-max-w js-addcart-b1">
+												<img src="/images/icons/icon-cart.png" alt="ICON">
+											</a>
+											<a href="#" class="block1-icon flex-c-m wrap-pic-max-w js-addwish-b1">
+											<!-- <a id="myLink" href="#" onclick="MyFunction();">link text</a> -->
+												<img class="icon-addwish-b1" src="/images/icons/icon-heart.png" alt="ICON">
+												<img class="icon-addedwish-b1" src="/images/icons/icon-heart2.png" alt="ICON">
+											</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					<% } %>
 				</div>
 			</div>
 		</div>

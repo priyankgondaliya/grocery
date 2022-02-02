@@ -5,7 +5,7 @@ const checkUser = require('../middleware/authMiddleware');
 
 router.get("/signup", checkUser, (req,res)=>{
     if(req.user){
-        return res.redirect('/dashboard');
+        return res.redirect('/account');
     }
     res.status(201).render("account", {
         title: 'Signup | Signin',

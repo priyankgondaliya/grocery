@@ -1,7 +1,7 @@
 <%- include('_layouts/header') %>
 
 	<!-- Title page -->
-	<section class="how-overlay2 bg-img1" style="background-image: url(images/bg-07.jpg);">
+	<section class="how-overlay2 bg-img1" style="background-image: url(/images/bg-07.jpg);">
 		<div class="container">
 			<div class="txt-center p-t-160 p-b-165">
 				<h2 class="txt-l-101 cl0 txt-center p-b-14 respon1">
@@ -29,53 +29,55 @@
 					<tr class="table_head bg12">
 						<th class="column-1 p-l-30">Product Name</th>
 						<th class="column-2">Unit Price</th>
-						<th class="column-3">Stock Status</th>
-						<th class="column-4">Add to cart</th>
+						<!-- <th class="column-3">Stock Status</th> -->
+						<th class="column-3">Add to cart</th>
 					</tr>
 
-					<tr class="table_row">
+					<% for( let i = 0; i < items.length; i++ ) { %>
+						<tr class="table_row">
+							<td class="column-1">
+								<div class="flex-w flex-m">
+									<div class="wrap-pic-w size-w-50 bo-all-1 bocl12 m-r-30">
+										<img src="<%= items[i].image %>" alt="IMG">
+									</div>
+	
+									<span>
+										<%= items[i].productname %>
+									</span>
+								</div>
+							</td>
+							<td class="column-2">
+								&#8377; <%= items[i].totalprice %>
+							</td>
+							<!-- <td class="column-3">
+								<div class="flex-t">
+									<img class="m-t-4 m-r-8" src="/images/icons/icon-list3.png" alt="IMG">
+									<span class="size-w-53 txt-m-104 cl6">
+										In Stock
+									</span>
+								</div>
+							</td> -->
+							<td class="column-3">
+								<div class="flex-w flex-sb-m">
+									<a href="#" class="flex-c-m txt-s-103 cl6 size-a-2 how-btn1 bo-all-1 bocl11 hov-btn1 trans-04">
+										Shop now
+										<span class="lnr lnr-chevron-right m-l-7"></span>
+										<span class="lnr lnr-chevron-right"></span>
+									</a>
+	
+									<div class="fs-15 hov-cl10 pointer">
+										<a href="/wishlist/remove/<%= items[i].id %>"><span class="lnr lnr-cross"></span></a>
+									</div>
+								</div>
+							</td>
+						</tr>
+					<% } %>
+
+					<!-- <tr class="table_row">
 						<td class="column-1">
 							<div class="flex-w flex-m">
 								<div class="wrap-pic-w size-w-50 bo-all-1 bocl12 m-r-30">
-									<img src="images/best-sell-01.jpg" alt="IMG">
-								</div>
-
-								<span>
-									Cheery
-								</span>
-							</div>
-						</td>
-						<td class="column-2">
-							$ 18.00
-						</td>
-						<td class="column-3">
-							<div class="flex-t">
-								<img class="m-t-4 m-r-8" src="images/icons/icon-list3.png" alt="IMG">
-								<span class="size-w-53 txt-m-104 cl6">
-									In Stock
-								</span>
-							</div>
-						</td>
-						<td class="column-4">
-							<div class="flex-w flex-sb-m">
-								<a href="#" class="flex-c-m txt-s-103 cl6 size-a-2 how-btn1 bo-all-1 bocl11 hov-btn1 trans-04">
-									Shop now
-									<span class="lnr lnr-chevron-right m-l-7"></span>
-									<span class="lnr lnr-chevron-right"></span>
-								</a>
-
-								<div class="fs-15 hov-cl10 pointer">
-									<span class="lnr lnr-cross"></span>
-								</div>
-							</div>
-						</td>
-					</tr>
-
-					<tr class="table_row">
-						<td class="column-1">
-							<div class="flex-w flex-m">
-								<div class="wrap-pic-w size-w-50 bo-all-1 bocl12 m-r-30">
-									<img src="images/best-sell-02.jpg" alt="IMG">
+									<img src="/images/best-sell-02.jpg" alt="IMG">
 								</div>
 
 								<span>
@@ -88,7 +90,7 @@
 						</td>
 						<td class="column-3">
 							<div class="flex-t">
-								<img class="m-t-4 m-r-8" src="images/icons/icon-list3.png" alt="IMG">
+								<img class="m-t-4 m-r-8" src="/images/icons/icon-list3.png" alt="IMG">
 								<span class="size-w-53 txt-m-104 cl6">
 									In Stock
 								</span>
@@ -107,22 +109,22 @@
 								</div>
 							</div>
 						</td>
-					</tr>
+					</tr> -->
 				</table>
 			</div>
 
 			<div class="flex-w flex-sb-m p-t-30">
 				<div class="flex-w flex-m m-r-50 m-tb-10">
 					<div class="flex-c-m txt-s-103 cl6 size-h-9 how-btn1 bo-all-1 bocl11 hov-btn1 trans-04 pointer p-rl-29 m-tb-10 m-r-30">
-						Clear wishlist
+						<a href="/wishlist/remove/all">Clear wishlist</a>
 					</div>
 
-					<div class="flex-c-m txt-s-103 cl6 size-h-9 how-btn1 bo-all-1 bocl11 hov-btn1 trans-04 pointer p-rl-29 m-tb-10">
+					<!-- <div class="flex-c-m txt-s-103 cl6 size-h-9 how-btn1 bo-all-1 bocl11 hov-btn1 trans-04 pointer p-rl-29 m-tb-10">
 						Update wishlist
-					</div>
+					</div> -->
 				</div>
 
-				<a href="shop-sidebar-grid.html" class="flex-c-m txt-s-103 cl0 bg10 size-h-9 hov-btn2 trans-04 pointer p-rl-29 m-tb-10">
+				<a href="/products/all" class="flex-c-m txt-s-103 cl0 bg10 size-h-9 hov-btn2 trans-04 pointer p-rl-29 m-tb-10">
 					Continue shopping
 				</a>
 			</div>

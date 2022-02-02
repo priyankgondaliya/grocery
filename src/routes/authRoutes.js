@@ -107,7 +107,9 @@ router.post("/login", [
             httpOnly:true,
             // secure:true
         });
-        res.redirect('/account');
+        const redirect = req.session.redirectToUrl;
+        req.session.redirectToUrl = undefined;
+        res.redirect(redirect || '/account');
     } catch (error) {
         console.log(error);
         res.status(400).send(error.message);

@@ -59,6 +59,10 @@ const userSchema = new mongoose.Schema ({
             type: Number,
         }
     },
+    wishlist: [{
+        type: mongoose.Schema.ObjectId,
+        ref: 'Product',
+    }],
     tokens: [{
         token: {
             type: String,
