@@ -15,8 +15,8 @@ router.get("/", async (req,res) => {
                 date: formatDate(new Date(newsletters[i].date))
             }
             updated.push(e)
-        }b
-        res.render("admin/newsletter", {        
+        }
+        res.render("admin/newsletter", {
             title: "Newsletter",
             newsletters: updated
         })

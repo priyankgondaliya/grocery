@@ -58,7 +58,7 @@
 						
 					<div class="center-header">
 						<!-- Menu desktop -->
-						<div class="menu-desktop">
+						<!-- <div class="menu-desktop">
 							<ul class="main-menu">								
 								<li>
 									<a href="/">Home</a>									
@@ -69,16 +69,37 @@
 
 								<li><a href="/wishlist">Wishlist</a></li>
 							</ul>
-						</div>
+						</div> -->
 					</div>
 						
 					<div class="right-header">
 						<!-- Icon header -->
 						<div class="wrap-icon-header flex-w flex-r-m h-full wrap-menu-click p-t-8">
-							<div class="h-full flex-m">
-								<div class="icon-header-item flex-c-m trans-04 js-show-modal-search">
-									<img src="/images/icons/icon-search.png" alt="SEARCH">
+							
+							<% if (user) { %>
+								<div class="menu-desktop">
+									<ul class="main-menu">
+										<li>
+											<a href="/account"> Account</a>
+										</li>
+									</ul>
 								</div>
+							<% } else { %>
+								<div class="menu-desktop">
+									<ul class="main-menu">
+										<li>
+											<a href="/signup">LogIn/SignUp</a>
+										</li>
+									</ul>
+								</div>
+							<% } %>
+
+							<div class="menu-desktop">
+								<ul class="main-menu">
+									<li>
+										<a href="/wishlist"><i class="fa fa-heart-o"></i></a>
+									</li>
+								</ul>
 							</div>
 								
 							<div class="wrap-cart-header h-full flex-m m-l-10 menu-click">

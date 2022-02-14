@@ -388,121 +388,34 @@
 		</div>
 	</section>
 
-	<!-- Welcome -->
-	<section class="sec-welcome bg0 p-t-145 p-b-95">
-		<div class="container">
-			<div class="size-a-1 flex-col-c-m p-b-90">
-				<div class="txt-center txt-m-201 cl10 how-pos1-parent m-b-14">
-					Green Agriculture
+	<div class="size-a-1 flex-col-c-m p-b-48">
+		<div class="txt-center txt-m-201 cl10 how-pos1-parent m-b-14">
+			Featured Categories
 
-					<div class="how-pos1">
-						<img src="images/icons/symbol-02.png" alt="IMG">
-					</div>
-				</div>
-
-				<h3 class="txt-center txt-l-101 cl3 respon1">
-					welcome to organive
-				</h3>
-			</div>
-
-			<div class="wrap-pic-max-w flex-c-t flex-w p-t-255 item-welcome-parent">
-				<img class="size-w-1" src="images/other-01.jpg" alt="IMG">
-
-				<!-- item welcome -->
-				<div class="item-welcome one">
-					<div class="item-welcome-pic pos-relative">
-						<div class="wrap-pic-max-w flex-c-m item-welcome-pic-dark trans-04">
-							<img src="images/icons/icon1.png" alt="IMG">
-						</div>
-
-						<div class="wrap-pic-max-w flex-c-m s-full ab-t-l item-welcome-pic-light trans-04">
-							<img src="images/icons/icon1.1.png" alt="IMG">
-						</div>
-					</div>
-
-					<div class="item-welcome-txt p-t-27">
-						<h4 class="txt-m-101 cl3 txt-center p-b-11">
-							100% Organic
-						</h4>
-
-						<p class="txt-s-101 cl6 txt-center">
-							Lorem Ipsum is simply dummy text of the printing and typesetting .
-						</p>
-					</div>
-				</div>
-
-				<!-- item welcome -->
-				<div class="item-welcome two">
-					<div class="item-welcome-pic pos-relative">
-						<div class="wrap-pic-max-w flex-c-m item-welcome-pic-dark trans-04">
-							<img src="images/icons/icon2.png" alt="IMG">
-						</div>
-
-						<div class="wrap-pic-max-w flex-c-m s-full ab-t-l item-welcome-pic-light trans-04">
-							<img src="images/icons/icon2.2.png" alt="IMG">
-						</div>
-					</div>
-
-					<div class="item-welcome-txt p-t-27">
-						<h4 class="txt-m-101 cl3 txt-center p-b-11">
-							family healthy
-						</h4>
-
-						<p class="txt-s-101 cl6 txt-center">
-							Lorem Ipsum is simply dummy text of the printing and typesetting .
-						</p>
-					</div>
-				</div>
-
-				<!-- item welcome -->
-				<div class="item-welcome three">
-					<div class="item-welcome-pic pos-relative">
-						<div class="wrap-pic-max-w flex-c-m item-welcome-pic-dark trans-04">
-							<img src="images/icons/icon3.png" alt="IMG">
-						</div>
-
-						<div class="wrap-pic-max-w flex-c-m s-full ab-t-l item-welcome-pic-light trans-04">
-							<img src="images/icons/icon3.3.png" alt="IMG">
-						</div>
-					</div>
-
-					<div class="item-welcome-txt p-t-27">
-						<h4 class="txt-m-101 cl3 txt-center p-b-11">
-							Always Fresh
-						</h4>
-
-						<p class="txt-s-101 cl6 txt-center">
-							Lorem Ipsum is simply dummy text of the printing and typesetting .
-						</p>
-					</div>
-				</div>
-
-				<!-- item welcome -->
-				<div class="item-welcome four">
-					<div class="item-welcome-pic pos-relative">
-						<div class="wrap-pic-max-w flex-c-m item-welcome-pic-dark trans-04">
-							<img src="images/icons/icon4.png" alt="IMG">
-						</div>
-
-						<div class="wrap-pic-max-w flex-c-m s-full ab-t-l item-welcome-pic-light trans-04">
-							<img src="images/icons/icon4.4.png" alt="IMG">
-						</div>
-					</div>
-
-					<div class="item-welcome-txt p-t-27">
-						<h4 class="txt-m-101 cl3 txt-center p-b-11">
-							Food safety
-						</h4>
-
-						<p class="txt-s-101 cl6 txt-center">
-							Lorem Ipsum is simply dummy text of the printing and typesetting .
-						</p>
-					</div>
-				</div>
-
+			<div class="how-pos1">
+				<img src="images/icons/symbol-02.png" alt="IMG">
 			</div>
 		</div>
-	</section>
+
+		<h3 class="txt-center txt-l-101 cl3 respon1">
+			Our Categories
+		</h3>
+	</div>
+	<!-- Item -->
+	<div class="sec-item flex-w" style="margin-bottom: 5em;">
+		<% for( let i = 0; i < cats.length; i++ ) { %>
+			<div class="of-hidden size-w-2 respon2">
+				<div class="hov-img1 pos-relative">
+					<img src="<%= cats[i].image %>" alt="IMG">
+					<a href="/products/<%= cats[i].id %>" class="s-full ab-t-l flex-col-c-m bg11 p-all-15 hov1-parent">
+						<span class="txt-l-102 cl0 txt-center p-t-30 p-b-13">
+							<%= cats[i].name %>
+						</span>
+					</a>
+				</div>
+			</div>
+		<% } %>
+	</div>
 
 	<div class="size-a-1 flex-col-c-m p-b-48">
 		<div class="txt-center txt-m-201 cl10 how-pos1-parent m-b-14">
@@ -514,21 +427,40 @@
 		</div>
 
 		<h3 class="txt-center txt-l-101 cl3 respon1">
-			Our products
+			Our Products
 		</h3>
 	</div>
 	<!-- Item -->
 	<div class="sec-item flex-w" style="margin-bottom: 5em;">
-		<!--  -->
-		<% for( let i = 0; i < cats.length; i++ ) { %>
-			<div class="of-hidden size-w-2 respon2">
-				<div class="hov-img1 pos-relative">
-					<img src="<%= cats[i].image %>" alt="IMG">
-					<a href="/products/<%= cats[i].id %>" class="s-full ab-t-l flex-col-c-m bg11 p-all-15 hov1-parent">
-						<span class="txt-l-102 cl0 txt-center p-t-30 p-b-13">
-							<%= cats[i].name %>
-						</span>
-					</a>
+		<% for( let i = 0; i < prods.length; i++ ) { %>
+			<div class="col-sm-6 col-md-4 col-lg-3 p-b-30">
+				<div class="block1">
+					<div class="block1-bg wrap-pic-w bo-all-1 bocl12 hov3 trans-04">
+						<img src="<%= prods[i].image %>" alt="IMG" width="200px" style="margin: 20px;">
+
+						<div class="block1-content flex-col-c-m p-b-46">
+							<a href="product-single.html" class="txt-m-103 cl3 txt-center hov-cl10 trans-04 js-name-b1">
+								<%= prods[i].productname %>
+							</a>
+
+							<span class="block1-content-more txt-m-104 cl9 p-t-21 trans-04">
+								<%= prods[i].totalprice %>&#8377;
+							</span>
+							<div class="block1-wrap-icon flex-c-m flex-w trans-05">
+								<a href="/products/detail/<%= prods[i].id %>" class="block1-icon flex-c-m wrap-pic-max-w">
+									<img src="/images/icons/icon-view.png" alt="ICON">
+								</a>
+								<a href="#" class="block1-icon flex-c-m wrap-pic-max-w js-addcart-b1">
+									<img src="/images/icons/icon-cart.png" alt="ICON">
+								</a>
+								<a href="#" class="block1-icon flex-c-m wrap-pic-max-w js-addwish-b1">
+								<!-- <a id="myLink" href="#" onclick="MyFunction();">link text</a> -->
+									<img class="icon-addwish-b1" src="/images/icons/icon-heart.png" alt="ICON">
+									<img class="icon-addedwish-b1" src="/images/icons/icon-heart2.png" alt="ICON">
+								</a>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		<% } %>

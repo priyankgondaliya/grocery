@@ -12,7 +12,10 @@ router.get('/callback', passport.authenticate('google', { failureRedirect: '/fai
             httpOnly:true,
             // secure:true
         });
-        res.redirect('/account');
+        const redirect = req.session.redirectToUrl;
+        req.session.redirectToUrl = undefined;
+        res.redirect(redirect || '/account');
+        // res.redirect('/account'); //old
     }
 );
 

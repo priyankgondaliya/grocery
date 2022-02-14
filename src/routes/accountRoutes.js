@@ -9,6 +9,7 @@ router.get("/signup", checkUser, (req,res)=>{
     }
     res.status(201).render("account", {
         title: 'Signup | Signin',
+        user: req.user
     });
 });
 
@@ -18,7 +19,7 @@ router.get("/account", checkUser, (req,res)=>{
     }
     res.render('my_account',{
         title: 'My account',
-        user: req.user
+        user: req.user,
     });
 });
 

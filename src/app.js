@@ -56,12 +56,6 @@ require('./helpers/googleAuth')
 app.use(passport.initialize());
 app.use(passport.session());
 
-// app.use('*', (req,res,next)=>{
-//     // req.session.redirectToUrl = undefined;
-//     console.log(req.originalUrl + ":" + req.session.redirectToUrl);
-//     next()
-// })
-
 // Routes
 app.use('/admin/category', require('./routes/adminCategories'));
 app.use('/admin/subcategory', require('./routes/adminSubCategories'));
@@ -70,6 +64,7 @@ app.use('/admin/newsletter', require('./routes/adminNewsletter'));
 app.use('/admin/promo', require('./routes/adminPromo'));
 app.use('/admin/user', require('./routes/adminUserRoutes'));
 app.use('/admin/vendor', require('./routes/adminVendor'));
+app.use('/admin/driver', require('./routes/adminDriverRoutes'));
 app.use('/admin', require('./routes/adminRoutes'));
 app.use('/admin', require('./routes/adminPagesRoutes'));
 app.use('/admin/banner', require('./routes/adminBanner'));
@@ -91,12 +86,13 @@ app.use('/google', require('./routes/googleAuthRoutes'));
 // 404
 app.all('/404', (req, res, next) => {
     res.render("error",{
-        title:  "404 | Not Found"
+        title:  "404 | Not Found",
+        user: req.user
     });
 });
 app.all('*', (req, res, next) => {
     console.log(req.url);
-    res.redirect('/404')
+    res.redirect('/404');
 });
 
 // error handler
@@ -117,7 +113,7 @@ app.listen(port,()=>{
 
 // REPORT
 
-// redirect back to wishlist after login
-// banner
-// product description page view
-// product description page api
+// featured products
+// banner edit view
+// banner edit api
+// banner delete

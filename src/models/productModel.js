@@ -44,7 +44,11 @@ const productSchema = new mongoose.Schema ({
     },
     description: {
         type:String
-    }, 
+    },
+    featured: {
+        type: Boolean,
+        default: false
+    }
 })
 
 module.exports = new mongoose.model("Product", productSchema);

@@ -34,7 +34,7 @@ router.post("/add_unit", async (req,res)=>{
         const unit = new Unit({ name: req.body.name });
         await unit.save();
         req.flash('success','Unit added successfully')
-        res.redirect('/admin/unit');y
+        res.redirect('/admin/unit');
     } catch (error) {
         if (error.code == 11000) {
             req.flash('danger',`Unit name '${req.body.name}' already exist!`);

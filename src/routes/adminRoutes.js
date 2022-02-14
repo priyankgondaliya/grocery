@@ -52,6 +52,31 @@ router.get("/product/detail/:id", async (req,res)=>{
     }
 });
 
+// featured product
+router.post("/product/edit/:id", async (req,res) => {
+    try {
+        const id = req.params.id;
+        const product = await Product.findById(id);
+        if (req.body.featured) {
+            product.featured = true;
+        } else {
+            product.featured = false;
+        }
+        await product.save();
+        req.flash('success','Product edited successfully.')
+        res.redirect('/admin/product');
+    } catch (error) {
+        if (error.name === 'CastError') {
+            console.log(error);
+            req.flash('danger',`Product not found!`);
+            res.redirect('/admin/Product');
+        } else {
+            console.log(error);
+            res.send(error.message)
+        }
+    }
+})
+
 // GET delete product
 router.get("/product/delete/:id", async (req,res)=>{
     try {

@@ -74,6 +74,10 @@ router.post('/add', upload.single('image'), [
             tax,
             image: '/uploads/category/' + filename
         })
+        if (req.body.featured) {
+            console.log(req.body.featured);
+            cat.featured = true
+        }
         fs.access('./public/uploads/category', (err) => { if (err) fs.mkdirSync('./public/uploads/category'); });
         await sharp(req.file.buffer)
             .resize({ width:1000, height:723 })
@@ -131,6 +135,12 @@ router.post('/edit/:id', upload.single('image'), [
         const cat = await Category.findById(id);
         cat.name = name;
         cat.tax = tax;
+        if (req.body.featured) {
+            console.log(req.body.featured);
+            cat.featured = true;
+        } else {
+            cat.featured = false;
+        }
         if (typeof req.file !== 'undefined') {
             oldImage = "public" + cat.image;
             fs.remove(oldImage, function (err) {

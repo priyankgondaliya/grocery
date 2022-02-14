@@ -4,19 +4,23 @@ const mongoose = require('mongoose');
 const CategorySchema = mongoose.Schema({
     name: {
         type: String,
-        required:true,
-        unique:true
+        required: true,
+        unique: true
     },
     tax: {
         type: Number,
     },
-    image:{
+    image: {
         type: String,
     },
-    date:{
+    featured: {
+        type: Boolean,
+        default: false
+    },
+    date: {
         type: Date,
         default: Date.now,
-        required:true
+        required: true
     }
 });
 

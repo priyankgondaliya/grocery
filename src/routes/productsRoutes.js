@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
+const checkUser = require('../middleware/authMiddleware');
+
 // models
 const Category = require('../models/category');
 const Subcategory = require('../models/subcategory');
@@ -8,18 +10,19 @@ const Product = require('../models/productModel');
 const Unit = require('../models/unitModel');
 
 //GET all products
-router.get('/',async function(req,res){
+router.get('/', checkUser, async function(req,res){
     const cats = await Category.find();
     const subcats = await Subcategory.find();
     res.render('all_products',{
         title:'All products',
         subcats,
-        cats
+        cats,
+        user: req.user
     });
 });
 
 // product detail
-router.get('/detail/:id',async function(req,res){
+router.get('/detail/:id', checkUser, async function(req,res){
     try {
         const id = req.params.id;
         const product = await Product.findById(id);
@@ -32,7 +35,8 @@ router.get('/detail/:id',async function(req,res){
             product,
             cat: category.name,
             subcat: subcategory.name,
-            unit: unit.name
+            unit: unit.name,
+            user: req.user
         });
     } catch (error) {
         console.log(error);        
@@ -40,7 +44,7 @@ router.get('/detail/:id',async function(req,res){
 });
 
 //GET products by category
-router.get('/:cat/:sub?',async function(req,res){
+router.get('/:cat/:sub?', checkUser, async function(req,res){
     const {cat, sub} = req.params;
     if (sub == undefined) {
         if (cat == 'all') {
@@ -59,7 +63,8 @@ router.get('/:cat/:sub?',async function(req,res){
         title:'All products',
         subcats,
         cats,
-        prods
+        prods,
+        user: req.user
     });
 });
 

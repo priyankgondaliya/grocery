@@ -8,7 +8,7 @@ const { sendForgotPassMail } = require('../helpers/sendmail')
 const { check, validationResult } = require('express-validator');
 
 // POST register
-router.post("/register", [
+router.post("/register", checkUser, [
     check('firstname','Please enter firstname.').notEmpty(),
     check('lastname','Please enter lastname.').notEmpty(),
     check('email','Please enter valid email.').isEmail(),
@@ -23,6 +23,7 @@ router.post("/register", [
             console.log(alert);
             return res.render('account', {
                 title: 'Account',
+                user: req.user,
                 alert
             })
         }
@@ -33,12 +34,14 @@ router.post("/register", [
             await userExist.save();
             return res.render('account', {
                 title: 'Account',
+                user: req.user,
                 alert: [{msg:'Registered.'}]
             })
         }
         if (userExist) {
             return res.render('account', {
                 title: 'account',
+                user: req.user,
                 alert: [{msg:'Email is already registerd, Try logging in.'}]
             })
         }
@@ -57,6 +60,7 @@ router.post("/register", [
         await user.save();
         res.status(201).render("account", {
             title: 'My account',
+            user: req.user,
             alert: [{msg:'Registered successfully, Now you can login.'}]
         });
     } catch (error) {
@@ -66,7 +70,7 @@ router.post("/register", [
 })
 
 // POST login
-router.post("/login", [
+router.post("/login", checkUser, [
     check('email','Please enter valid email.').isEmail(),
     check('password','Please enter password!').notEmpty(),
   ],async(req, res)=>{
@@ -76,6 +80,7 @@ router.post("/login", [
             const alert = validationErrors.array()
             return res.render('account', {
                 title: 'account',
+                user: req.user,
                 alert
             })
         }
@@ -153,7 +158,7 @@ router.get("/logoutall", auth, async (req,res) => {
 })
 
 // Change Pass
-router.post("/changepass",[
+router.post("/changepass", checkUser, [
     check('currentpass','Please enter current password!').notEmpty(),
     check('newpass','Please enter new password!').notEmpty(),
     check('cfnewpass','Please enter confirm new password!').notEmpty(),
@@ -202,9 +207,10 @@ router.post("/changepass",[
 })
 
 // Forgot Pass
-router.get("/forgot_pass", async (req, res, next) => {
+router.get("/forgot_pass", checkUser, async (req, res, next) => {
     res.render("forgot_pass",{
-        title:  "Forgot password"
+        title:  "Forgot password",
+        user: req.user
     });
 })
 
@@ -218,6 +224,7 @@ router.post("/forgot_pass", async (req, res, next) => {
     if (!user) {
         return res.render("forgot_pass",{
             title:  "Forgot password",
+            usre: req.user,
             alert: [{msg:'Please enter registered email id.'}]
         });
     }
@@ -229,6 +236,7 @@ router.post("/forgot_pass", async (req, res, next) => {
     console.log('pass : '+ pass);
     res.status(201).render("account", {
         title: 'My account',
+        user: req.user,
         alert: [{msg:'A new password sent to your mail. Check your mail and Try logging in.'}],
     });
 })

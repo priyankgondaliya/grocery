@@ -20,7 +20,8 @@ router.get("/", checkUser, async (req,res)=>{
     }
     res.status(201).render("wishlist", {
         title: 'Wishlist',
-        items
+        items,
+        user: req.user
     });
 });
 

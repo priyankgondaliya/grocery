@@ -58,6 +58,21 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="white-box">
+                    <form method="POST" action="/admin/product/edit/<%= product.id %>">
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="checkbox checkbox-primary" style="padding-left: 7px; margin-bottom: 20px;">
+                                    <input id="checkbox33" type="checkbox" name="featured" <%= product.featured == true ? 'checked' : '' %>>
+                                    <label for="checkbox33">Featured ?</label>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <a href="/admin/product" class="btn btn-danger" style="color: white;">Cancel</a>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
