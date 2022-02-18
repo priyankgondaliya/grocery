@@ -77,6 +77,7 @@ app.use('/', require('./routes/authRoutes'));
 app.use('/', require('./routes/cmsPages'));
 app.use('/', require('./routes/accountRoutes'));
 app.use('/', require('./routes/homeRoute'));
+app.use('/cart', require('./routes/cartRoutes'));
 app.use('/products', require('./routes/productsRoutes'));
 app.use('/wishlist', require('./routes/wishlistRoutes'));
 app.use('/newsletter', require('./routes/newsletterRoutes'));
@@ -112,8 +113,10 @@ app.listen(port,()=>{
 // NOTE
 
 // REPORT
+// clear cart api // todo
 
-// featured products
-// banner edit view
-// banner edit api
-// banner delete
+// session get cart
+// session addd cart
+// session update cart 3
+// session show total unique products in header
+// show msg if cart is empty

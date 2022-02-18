@@ -5,3 +5,8 @@ user info page
 promocode per category
 vendor
 elastic search (elasticsearch mongo river)
+
+<form>
+    <input type="text" placeholder="Enter your delivery location" id="house_no" class="pac-target-input">
+    <button>Find Store</button>                                                
+</form>

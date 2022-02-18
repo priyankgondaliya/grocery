@@ -5094,3 +5094,9 @@ input.num-product::-webkit-inner-spin-button {
 .main_cat_list .dropdown-menu.show {
   width: 100%;
 }
+
+img.product_img_set {
+  max-width: 100% !important;
+  margin: 0 0px 10px !important;
+  padding: 15px;
+}

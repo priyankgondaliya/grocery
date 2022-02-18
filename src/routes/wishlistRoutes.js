@@ -5,13 +5,16 @@ const checkUser = require('../middleware/authMiddleware');
 
 const User = require('../models/userModel');
 const Product = require('../models/productModel');
+const Cart = require('../models/cartModel');
 
 // GET wishlist
 router.get("/", checkUser, async (req,res)=>{
-    if(!req.user){
+    if (!req.user) {
         req.session.redirectToUrl = req.originalUrl;
         return res.redirect('/signup');
     }
+    var cart = await Cart.findOne({ userId: req.user.id});
+    var cartLength = cart.products.length;
     const wishlist = req.user.wishlist;
     let items = [];
     for (let i = 0; i < wishlist.length; i++) {
@@ -21,6 +24,7 @@ router.get("/", checkUser, async (req,res)=>{
     res.status(201).render("wishlist", {
         title: 'Wishlist',
         items,
+        cartLength,
         user: req.user
     });
 });
@@ -50,7 +54,7 @@ router.get("/add/:id", checkUser, async (req,res)=>{
 
 // GET remove wishlist
 router.get("/remove/:id", checkUser, async (req,res)=>{
-    if(!req.user){
+    if (!req.user) {
         return res.redirect('/signup');
     }
     try {

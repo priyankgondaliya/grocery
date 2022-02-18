@@ -1,11 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
-const User = require('../models/userModel');
 const bcrypt = require("bcryptjs");
 const checkUser = require('../middleware/authMiddleware');
 const { sendForgotPassMail } = require('../helpers/sendmail')
 const { check, validationResult } = require('express-validator');
+
+const User = require('../models/userModel');
+const Cart = require('../models/cartModel');
 
 // POST register
 router.post("/register", checkUser, [
@@ -16,6 +18,12 @@ router.post("/register", checkUser, [
     // check('number','Plaese enter mobile number').notEmpty(),
   ],async(req,res)=>{
     try {
+        if (req.user) {
+            var cart = await Cart.findOne({ userId: req.user.id});
+            var cartLength = cart.products.length;
+        } else {
+            var cartLength = req.session.cart.products.length;
+        }
         const validationErrors = validationResult(req)
         // console.log(validationErrors.errors);
         if (validationErrors.errors.length > 0) {
@@ -24,6 +32,7 @@ router.post("/register", checkUser, [
             return res.render('account', {
                 title: 'Account',
                 user: req.user,
+                cartLength,
                 alert
             })
         }
@@ -35,6 +44,7 @@ router.post("/register", checkUser, [
             return res.render('account', {
                 title: 'Account',
                 user: req.user,
+                cartLength,
                 alert: [{msg:'Registered.'}]
             })
         }
@@ -42,6 +52,7 @@ router.post("/register", checkUser, [
             return res.render('account', {
                 title: 'account',
                 user: req.user,
+                cartLength,
                 alert: [{msg:'Email is already registerd, Try logging in.'}]
             })
         }
@@ -61,6 +72,7 @@ router.post("/register", checkUser, [
         res.status(201).render("account", {
             title: 'My account',
             user: req.user,
+            cartLength,
             alert: [{msg:'Registered successfully, Now you can login.'}]
         });
     } catch (error) {
@@ -75,12 +87,19 @@ router.post("/login", checkUser, [
     check('password','Please enter password!').notEmpty(),
   ],async(req, res)=>{
     try {
+        if (req.user) {
+            var cart = await Cart.findOne({ userId: req.user.id});
+            var cartLength = cart.products.length;
+        } else {
+            var cartLength = req.session.cart.products.length;
+        }
         const validationErrors = validationResult(req)
         if (validationErrors.errors.length > 0) {
             const alert = validationErrors.array()
             return res.render('account', {
                 title: 'account',
                 user: req.user,
+                cartLength,
                 alert
             })
         }
@@ -89,12 +108,16 @@ router.post("/login", checkUser, [
         if (!userExist) {
             return res.status(201).render("account", {
                 title: 'My account',
+                user: req.user,
+                cartLength,
                 alert: [{msg:'Invalid email or password!'}]
             });
         }
         if (!userExist.password) {
             return res.status(201).render("account", {
                 title: 'My account',
+                user: req.user,
+                cartLength,
                 alert: [{msg:'Please login with google.'}]
             });
         }
@@ -102,6 +125,8 @@ router.post("/login", checkUser, [
         if (!isMatch) {
             return res.status(201).render("account", {
                 title: 'My account',
+                user: req.user,
+                cartLength,
                 alert: [{msg:'Invalid email or password!'}]
             });
         }
@@ -163,12 +188,19 @@ router.post("/changepass", checkUser, [
     check('newpass','Please enter new password!').notEmpty(),
     check('cfnewpass','Please enter confirm new password!').notEmpty(),
   ], checkUser, async (req, res, next) => {
+    if (req.user) {
+        var cart = await Cart.findOne({ userId: req.user.id});
+        var cartLength = cart.products.length;
+    } else {
+        var cartLength = req.session.cart.products.length;
+    }
     const validationErrors = validationResult(req)
     if (validationErrors.errors.length > 0) {
         const alert = validationErrors.array()
         return res.render('my_account', {
             title: 'My account',
             user: req.user,
+            cartLength,
             alert
         })
     }
@@ -179,6 +211,7 @@ router.post("/changepass", checkUser, [
         return res.status(201).render("my_account", {
             title: "My account",
             user: req.user,
+            cartLength,
             alert: [{msg:'Password you entered is wrong.'}]
         });
     }
@@ -186,6 +219,7 @@ router.post("/changepass", checkUser, [
         return res.status(201).render("my_account", {
             title: "My account",
             user: req.user,
+            cartLength,
             alert: [{msg:'New password can not be same as current password.'}]
         });
     }
@@ -193,6 +227,7 @@ router.post("/changepass", checkUser, [
         return res.status(201).render("my_account", {
             title: "My account",
             user: req.user,
+            cartLength,
             alert: [{msg:'Password and confirm password does not match!'}]
         });
     }
@@ -202,19 +237,33 @@ router.post("/changepass", checkUser, [
     return res.status(201).render("my_account", {
         title: "My account",
         user: req.user,
+        cartLength,
         alert: [{msg:'Password changed.'}]
     });
 })
 
 // Forgot Pass
 router.get("/forgot_pass", checkUser, async (req, res, next) => {
+    if (req.user) {
+        var cart = await Cart.findOne({ userId: req.user.id});
+        var cartLength = cart.products.length;
+    } else {
+        var cartLength = req.session.cart.products.length;
+    }
     res.render("forgot_pass",{
         title:  "Forgot password",
-        user: req.user
+        user: req.user,
+        cartLength,
     });
 })
 
 router.post("/forgot_pass", async (req, res, next) => {
+    if (req.user) {
+        var cart = await Cart.findOne({ userId: req.user.id});
+        var cartLength = cart.products.length;
+    } else {
+        var cartLength = req.session.cart.products.length;
+    }
     // generate pass
     let pass = (Math.random() + 1).toString(36).substring(5);
 
@@ -225,6 +274,7 @@ router.post("/forgot_pass", async (req, res, next) => {
         return res.render("forgot_pass",{
             title:  "Forgot password",
             usre: req.user,
+            cartLength,
             alert: [{msg:'Please enter registered email id.'}]
         });
     }
@@ -237,6 +287,7 @@ router.post("/forgot_pass", async (req, res, next) => {
     res.status(201).render("account", {
         title: 'My account',
         user: req.user,
+        cartLength,
         alert: [{msg:'A new password sent to your mail. Check your mail and Try logging in.'}],
     });
 })
@@ -252,6 +303,12 @@ router.post("/address", [
     check('postal','Please enter Postal code!').isNumeric()
   ], checkUser, async (req, res, next) => {
     try {
+        if (req.user) {
+            var cart = await Cart.findOne({ userId: req.user.id});
+            var cartLength = cart.products.length;
+        } else {
+            var cartLength = req.session.cart.products.length;
+        }
         const user = req.user;
         const validationErrors = validationResult(req)
         if (validationErrors.errors.length > 0) {
@@ -259,6 +316,7 @@ router.post("/address", [
             return res.render('my_account', {
                 title: 'My account',
                 alert,
+                cartLength,
                 user
             })
         }
@@ -275,6 +333,7 @@ router.post("/address", [
         return res.render('my_account', {
             title: 'My account',
             alert: [{msg:'Address added successfully.'}],
+            cartLength,
             user
         })
     } catch (error) {

@@ -2,16 +2,27 @@ const express = require('express');
 const router = express.Router();
 const Page = require('../models/pageModel');
 const { check, validationResult } = require('express-validator');
+
 // const Contact = require('../models/contactDetailModel');
 const Message = require('../models/messageModel');
+const checkUser = require('../middleware/authMiddleware');
+const Cart = require('../models/cartModel');
 
 // about us
-router.get("/about_us", async (req,res)=>{
+router.get("/about_us", checkUser, async (req,res)=>{
     try {
+        if (req.user) {
+            var cart = await Cart.findOne({ userId: req.user.id});
+            var cartLength = cart.products.length;
+        } else {
+            var cartLength = req.session.cart.products.length;
+        }
         const page = await Page.findOne({ title:'About Us'})
         const content = page.content;
         res.status(201).render("cms", {
             title: 'About Us',
+            user: req.user,
+            cartLength,
             content
         });
     } catch (error) {
@@ -21,12 +32,20 @@ router.get("/about_us", async (req,res)=>{
 });
 
 // faqs
-router.get("/faqs", async (req,res)=>{
+router.get("/faqs", checkUser, async (req,res)=>{
     try {
+        if (req.user) {
+            var cart = await Cart.findOne({ userId: req.user.id});
+            var cartLength = cart.products.length;
+        } else {
+            var cartLength = req.session.cart.products.length;
+        }
         const page = await Page.findOne({ title:'FAQs'})
         const content = page.content;
         res.status(201).render("cms", {
             title: 'FAQs',
+            user: req.user,
+            cartLength,
             content
         });
     } catch (error) {
@@ -36,12 +55,20 @@ router.get("/faqs", async (req,res)=>{
 });
 
 // terms
-router.get("/terms_con", async (req,res)=>{
+router.get("/terms_con", checkUser, async (req,res)=>{
     try {
-        const page = await Page.findOne({ title:'Terms & Conditions'})
+        if (req.user) {
+            var cart = await Cart.findOne({ userId: req.user.id });
+            var cartLength = cart.products.length;
+        } else {
+            var cartLength = req.session.cart.products.length;
+        }
+        const page = await Page.findOne({ title: 'Terms & Conditions' })
         const content = page.content;
         res.status(201).render("cms", {
-            title:'Terms & Conditions',
+            title: 'Terms & Conditions',
+            user: req.user,
+            cartLength,
             content
         });
     } catch (error) {
@@ -51,12 +78,20 @@ router.get("/terms_con", async (req,res)=>{
 });
 
 // privacy
-router.get("/privacy_policy", async (req,res)=>{
+router.get("/privacy_policy", checkUser, async (req,res)=>{
     try {
+        if (req.user) {
+            var cart = await Cart.findOne({ userId: req.user.id});
+            var cartLength = cart.products.length;
+        } else {
+            var cartLength = req.session.cart.products.length;
+        }
         const page = await Page.findOne({ title:'Privacy Policy'})
         const content = page.content;
         res.status(201).render("cms", {
             title:'Privacy Policy',
+            user: req.user,
+            cartLength,
             content
         });
     } catch (error) {
@@ -66,13 +101,21 @@ router.get("/privacy_policy", async (req,res)=>{
 });
 
 // contact
-router.get("/contact", async (req,res)=>{
+router.get("/contact", checkUser, async (req,res)=>{
     try {
+        if (req.user) {
+            var cart = await Cart.findOne({ userId: req.user.id});
+            var cartLength = cart.products.length;
+        } else {
+            var cartLength = req.session.cart.products.length;
+        }
         const page = await Page.findOne({ title:'Contact'})
         const content = page.content;
         // const contact = await Contact.findOne()
         res.status(201).render("contact", {
             title: 'Contact Us',
+            user: req.user,
+            cartLength,
             content,
             // contact
         });
@@ -89,8 +132,14 @@ router.post("/contact",[
     check('address','Please enter address.').notEmpty(),
     check('phone','Please enter phone number.').notEmpty(),
     check('message','Please enter a message.').notEmpty(),
-  ],async(req,res)=>{
+  ], checkUser, async(req,res)=>{
     try {
+        if (req.user) {
+            var cart = await Cart.findOne({ userId: req.user.id});
+            var cartLength = cart.products.length;
+        } else {
+            var cartLength = req.session.cart.products.length;
+        }
         const page = await Page.findOne({ title:'Contact'})
         const content = page.content;
         const validationErrors = validationResult(req)
@@ -99,6 +148,8 @@ router.post("/contact",[
             return res.render('contact', {
                 title: 'Contact Us',
                 alert,
+                user: req.user,
+                cartLength,
                 content
             })
         }

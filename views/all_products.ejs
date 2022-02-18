@@ -203,7 +203,7 @@
 						<div class="col-sm-6 col-md-4 col-lg-3 p-b-30">
 							<div class="block1">
 								<div class="block1-bg wrap-pic-w bo-all-1 bocl12 hov3 trans-04">
-									<img src="<%= prods[i].image %>" alt="IMG" width="200px" style="margin: 20px;">
+									<img src="<%= prods[i].image %>" class="product_img_set" alt="IMG" width="200px">
 
 									<div class="block1-content flex-col-c-m p-b-46">
 										<a href="product-single.html" class="txt-m-103 cl3 txt-center hov-cl10 trans-04 js-name-b1">
@@ -217,7 +217,7 @@
 											<a href="/products/detail/<%= prods[i].id %>" class="block1-icon flex-c-m wrap-pic-max-w">
 												<img src="/images/icons/icon-view.png" alt="ICON">
 											</a>
-											<a href="#" class="block1-icon flex-c-m wrap-pic-max-w js-addcart-b1">
+											<a href="/cart/add/<%= prods[i].id %>" class="block1-icon flex-c-m wrap-pic-max-w">
 												<img src="/images/icons/icon-cart.png" alt="ICON">
 											</a>
 											<a href="#" class="block1-icon flex-c-m wrap-pic-max-w js-addwish-b1">
