@@ -177,19 +177,18 @@ router.get('/update/:product', checkUser, async (req,res) => {
 });
 
 // GET clear cart
-// router.get('/clear', checkUser, async (req,res) => {
-//     if (req.user) {
-//         var cart = await Cart.findOne({ userId: req.user.id});
-//         cart.products = [];
-//         await cart.save();
-//     } else {
-//         delete req.session.cart;
-//     }
-//     // req.flash('success','Cart cleared!');
-//     // res.redirect('/cart');
+router.get('/clear', checkUser, async (req,res) => {
+    if (req.user) {
+        var cart = await Cart.findOne({ userId: req.user.id});
+        cart.products = [];
+        await cart.save();
+    } else {
+        delete req.session.cart;
+    }
+    console.log("CART CLEARED.");
+    req.flash('success','Cart cleared!');
+    res.redirect('/cart');
 
-//     console.log("CART CLEARED.");
-//     res.send('ok')
-// });
+});
 
 module.exports = router;

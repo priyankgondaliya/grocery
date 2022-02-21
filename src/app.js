@@ -56,6 +56,13 @@ require('./helpers/googleAuth')
 app.use(passport.initialize());
 app.use(passport.session());
 
+// app.get('*', function(req,res,next){
+//     if (typeof req.session.cart == "undefined") {
+//         req.session.cart.products = [];
+//     }
+//     next();
+// })
+
 // Routes
 app.use('/admin/category', require('./routes/adminCategories'));
 app.use('/admin/subcategory', require('./routes/adminSubCategories'));
