@@ -15,12 +15,6 @@ router.get("/", checkUser, async (req,res)=>{
         var cart = await Cart.findOne({ userId: req.user.id});
         var cartLength = cart.products.length;
     } else {
-        // if (typeof req.session.cart == "undefined") {
-        //     var cartLength = 0;
-        // } else {
-        //     var cartLength = req.session.cart.products.length;
-        // }
-        console.log(req.session.cart);
         var cartLength = req.session.cart.products.length;
     }
     req.session.redirectToUrl = req.originalUrl;
