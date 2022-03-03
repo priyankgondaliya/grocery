@@ -163,6 +163,8 @@ router.post("/contact",[
         await message.save();
         res.status(201).render("contact", {
             title: 'Contact Us',
+            user: req.user,
+            cartLength,
             alert: [{msg:'Message sent successfully.'}],
             content
         });

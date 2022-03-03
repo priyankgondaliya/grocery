@@ -111,7 +111,7 @@ app.all('/404', checkUser, (req, res, next) => {
     });
 });
 app.all('*', (req, res, next) => {
-    console.log(req.url);
+    // console.log(req.url);
     res.redirect('/404');
 });
 
