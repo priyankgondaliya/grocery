@@ -22,14 +22,14 @@ router.get("/", async (req,res)=>{
 });
     
 // GET add units
-router.get("/add_unit", (req,res)=>{
+router.get("/add", (req,res)=>{
     res.status(201).render("admin/add_unit", {
         title: 'Add Unit',
     });
 });
 
 // POST add units
-router.post("/add_unit", async (req,res)=>{
+router.post("/add", async (req,res)=>{
     try {
         const unit = new Unit({ name: req.body.name });
         await unit.save();
@@ -66,7 +66,7 @@ router.get("/edit/:id", async (req,res)=>{
 });
 
 // POST edit units
-router.post("/edit_unit/:id", async (req,res)=>{
+router.post("/edit/:id", async (req,res)=>{
     try {
         const id = req.params.id;
         await Unit.findByIdAndUpdate(id, { name: req.body.name});

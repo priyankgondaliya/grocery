@@ -234,6 +234,14 @@ router.post("/changepass", checkUser, [
     }
     const {currentpass, newpass, cfnewpass} = req.body;
     const user = req.user;
+    if (user.password == undefined) {
+        return res.status(201).render("my_account", {
+            title: "My account",
+            user: req.user,
+            cartLength,
+            alert: [{msg:'You have logged in with google.'}]
+        });
+    }
     const isMatch = await bcrypt.compare(currentpass, user.password);
     if (!isMatch) {
         return res.status(201).render("my_account", {
@@ -360,7 +368,7 @@ router.post("/address", [
         await user.save();
         return res.render('my_account', {
             title: 'My account',
-            alert: [{msg:'Address added successfully.'}],
+            alert: [{msg:'Address updated successfully.'}],
             cartLength,
             user
         })
