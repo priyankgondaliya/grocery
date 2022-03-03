@@ -1,6 +1,7 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth2').Strategy;
 const User = require('../models/userModel.js');
+const Cart = require('../models/cartModel');
 
 passport.serializeUser(function(user, done) {
     /*
@@ -43,6 +44,15 @@ passport.use(new GoogleStrategy({
         email : profile.email
       })
       await user.save();
+      // create cart
+      const cartExist = await Cart.findOne({ userId: user.id })
+      if (!cartExist) {
+        const cart = new Cart({
+          userId: user.id,
+          products: []
+        })
+        await cart.save();
+      }
       req.myUser = user;
     }
     // token?

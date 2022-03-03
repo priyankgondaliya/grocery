@@ -182,19 +182,16 @@ router.post("/login", checkUser, [
 // GET logout
 router.get("/logout", auth, async(req,res) => {
     try {
-        // for single device logout
-        req.user.tokens = req.user.tokens.filter((currElement)=>{
-            return currElement.token !== req.token
-        })
-        // logout from all device
-        // req.user.tokens = [];
+        if (req.user) {
+            req.user.tokens = req.user.tokens.filter((currElement)=>{
+                return currElement.token !== req.token
+            })
+            await req.user.save();
+        }
         res.clearCookie("jwt");
-        await req.user.save();
         res.redirect('/signup');
-        // res.status(201).render("account", {
-        //     title: 'My account',
-        // });
     } catch (error) {
+        console.log(error);
         res.status(500).send(error.message);
     }
 })
@@ -202,8 +199,6 @@ router.get("/logout", auth, async(req,res) => {
 // GET logoutAll
 router.get("/logoutall", auth, async (req,res) => {
     try {
-        // console.log(req.user);
-
         // logout from all device
         req.user.tokens = [];
         res.clearCookie("jwt");

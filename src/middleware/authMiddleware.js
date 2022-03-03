@@ -12,6 +12,7 @@ const checkUser = function (req, res, next) {
                 return res.status(201).render("account", {
                     title: 'My account',
                     user: null,
+                    cartLength: 0,
                     alert: [{msg:'Invalid token! Please login again.'}]
                 });
             } else {
@@ -22,6 +23,7 @@ const checkUser = function (req, res, next) {
                         return res.status(201).render("account", {
                             title: 'My account',
                             user: null,
+                            cartLength: 0,
                             alert: [{msg:'Oops! An error occurred.'}]
                         });
                     }
@@ -29,6 +31,7 @@ const checkUser = function (req, res, next) {
                         return res.status(201).render("account", {
                             title: 'My account',
                             user: null,
+                            cartLength: 0,
                             alert: [{msg:'Please login first.'}]
                         });
                     }
