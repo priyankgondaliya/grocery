@@ -13,6 +13,8 @@ const Cart = require('../models/cartModel');
 router.get("/", checkUser, async (req,res)=>{
     if (req.user) {
         var cart = await Cart.findOne({ userId: req.user.id});
+        console.log("cart: ");
+        console.log(cart);
         var cartLength = cart.products.length;
     } else {
         var cartLength = req.session.cart.products.length;
