@@ -23,6 +23,7 @@ app.locals.errors=null;
 
 //get all pages to pass to header.ejs
 const Contact = require('./models/contactDetailModel');
+const checkUser = require("./middleware/authMiddleware");
 Contact.findOne({}, function(err,contact){
     if(err){
         console.log(err);
@@ -56,12 +57,20 @@ require('./helpers/googleAuth')
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get('*', function(req,res,next){
+app.get('*', function (req, res, next) {
     if (typeof req.session.cart == "undefined") {
         req.session.cart = { products: [] };
     }
     next();
 })
+
+app.get('/store', (req, res, next) => {
+    res.render("store",{
+        title:  "Store Page",
+        user: req.user,
+        cartLength: 0
+    });
+});
 
 // Routes
 app.use('/admin/category', require('./routes/adminCategories'));
@@ -85,6 +94,7 @@ app.use('/', require('./routes/cmsPages'));
 app.use('/', require('./routes/accountRoutes'));
 app.use('/', require('./routes/homeRoute'));
 app.use('/cart', require('./routes/cartRoutes'));
+app.use('/checkout', require('./routes/checkout'));
 app.use('/products', require('./routes/productsRoutes'));
 app.use('/wishlist', require('./routes/wishlistRoutes'));
 app.use('/newsletter', require('./routes/newsletterRoutes'));
@@ -92,10 +102,11 @@ app.use('/newsletter', require('./routes/newsletterRoutes'));
 app.use('/google', require('./routes/googleAuthRoutes'));
 
 // 404
-app.all('/404', (req, res, next) => {
+app.all('/404', checkUser, (req, res, next) => {
     res.render("error",{
         title:  "404 | Not Found",
-        user: req.user
+        user: req.user,
+        cartLength: 0
     });
 });
 app.all('*', (req, res, next) => {
@@ -120,10 +131,9 @@ app.listen(port,()=>{
 // NOTE
 
 // REPORT
-// clear cart api // todo
 
-// session get cart
-// session addd cart
-// session update cart 3
-// session show total unique products in header
-// show msg if cart is empty
+// vendor forgot pass api
+// vendor register view
+// vendor register form validation
+// vendor register api
+// google api for auto complete address field

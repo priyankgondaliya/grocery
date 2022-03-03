@@ -93,7 +93,7 @@
 										</span>
 									</div>
 
-									<a href="shop-sidebar-grid.html" class="flex-c-m txt-s-105 cl0 bg10 size-a-42 hov-btn2 trans-04 p-rl-10 m-tb-8">
+									<a href="/products/all" class="flex-c-m txt-s-105 cl0 bg10 size-a-42 hov-btn2 trans-04 p-rl-10 m-tb-8">
 										go shop
 									</a>
 								</div>
@@ -187,7 +187,7 @@
 															Postal Code <span class="cl12">*</span>
 														</div>
 		
-														<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.address.postal %>" name="postal" id="caPostal">
+														<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.address.postal %>" name="postal" id="caPostal"onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
 														<div class="txt-s-101 cl6 p-b-10">
 															<span class="cl12" id="caErrPostal"></span>
 														</div>

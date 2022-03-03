@@ -1,7 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const fs = require('fs-extra');
+const { check, validationResult } = require('express-validator');
+const bcrypt = require("bcryptjs");
 
+const checkAdmin = require('../middleware/authAdminMiddleware');
+
+const User = require('../models/userModel');
 const Product = require('../models/productModel');
 const Offer = require('../models/offerModel');
 const Category = require('../models/category');
@@ -11,10 +16,52 @@ const Unit = require('../models/unitModel');
 // const formatDate = require('../helpers/formateDate');
 
 // GET dashboard
-router.get("/", async (req,res)=>{
+router.get("/", checkAdmin, async (req,res)=>{
     res.render('admin/admin_dashboard',{
         title: 'Dashboard'
     })
+})
+
+// GET login
+router.get('/login', (req, res)=>{
+    res.render('admin/login',{
+        title: 'Admin Login'
+    })
+})
+
+// POST login
+router.post("/login", [
+    check('email','Please enter valid email.').isEmail(),
+    check('password','Please enter password!').notEmpty(),
+  ],async(req, res)=>{
+    try {
+        const validationErrors = validationResult(req)
+        if (validationErrors.errors.length > 0) {
+            req.flash('danger','Invalid email or password!');
+            return res.redirect('/admin/login');
+        }
+        const { email, password } = req.body;
+        const userExist = await User.findOne({email});
+        if (!userExist) {
+            req.flash('danger','Invalid email or password!');
+            return res.redirect('/admin/login');
+        }
+        const isMatch = await bcrypt.compare(password, userExist.password);
+        if (!isMatch) {
+            req.flash('danger','Invalid email or password!');
+            return res.redirect('/admin/login');
+        }
+        const token = await userExist.generateAuthToken();
+        res.cookie("jwt", token, {
+            expires:new Date( Date.now() + 90*24*60*60*1000 ),
+            httpOnly:true,
+            // secure:true
+        });
+        res.redirect('/admin');
+    } catch (error) {
+        console.log(error);
+        res.status(400).send(error.message);
+    }
 })
 
 // GET products

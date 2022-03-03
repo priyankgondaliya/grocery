@@ -1,6 +1,8 @@
-const mongoose = require('mongoose'); 
-const validator = require("validator");
+const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const jwt = require("jsonwebtoken");
+const validator = require("validator");
+const createError = require('http-errors');
 
 const vendorSchema = new mongoose.Schema ({
     storename: {
@@ -32,7 +34,16 @@ const vendorSchema = new mongoose.Schema ({
     deliverycharge: {
         type:String
     },
+    deliveryrange: {
+        type:String
+    },
     image: {
+        type:String
+    },
+    idimage: {
+        type:String
+    },
+    addressimage: {
         type:String
     },
     address: {
@@ -40,6 +51,21 @@ const vendorSchema = new mongoose.Schema ({
        required:true
     }
 })
+
+// generating tokens
+vendorSchema.methods.generateAuthToken = async function(){
+    try {
+        // console.log(this._id);
+        const token = jwt.sign({_id:this._id.toString()}, process.env.SECRET_KEY, { expiresIn: '90d' });
+        this.tokens = this.tokens.concat({token:token})
+        await this.save();
+        // console.log(token);
+        return token;
+    } catch (error) {
+        createError.BadRequest(error);
+        console.log("error: "+error);
+    }
+}
 
 // converting password into hash
 vendorSchema.pre("save",async function(next){

@@ -1,12 +1,11 @@
-admin/vendor login
+vendor forgot pass
+vendor register
+
+https://youtu.be/VKuY8QscZwY orders
+https://youtu.be/zZ0Cru5dK0E address field
+vendor delivery range
 
 view details link in users table
 user info page
 promocode per category
 vendor
-elastic search (elasticsearch mongo river)
-
-<form>
-    <input type="text" placeholder="Enter your delivery location" id="house_no" class="pac-target-input">
-    <button>Find Store</button>                                                
-</form>

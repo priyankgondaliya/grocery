@@ -61,7 +61,7 @@ router.post("/register", checkUser, [
             lastname : req.body.lastname,
             email : req.body.email,
             password : req.body.password,
-            // phone : req.body.phone
+            phone : req.body.phone
         })
         const token = await user.generateAuthToken();
         res.cookie("jwt", token, {
@@ -137,6 +137,32 @@ router.post("/login", checkUser, [
             httpOnly:true,
             // secure:true
         });
+        // CART: session to db
+        const dbCart = await Cart.findOne({ userId: userExist.id});
+        const sessionProducts = req.session.cart.products;
+        if ( sessionProducts.length != 0 ) {
+            for (let i = 0; i < sessionProducts.length; i++) {
+                let itemIndex = dbCart.products.findIndex(p => p.productId == sessionProducts[i].productId);
+
+                if (itemIndex > -1) {
+                    //product exists in the dbCart, update the quantity
+                    let productItem = dbCart.products[itemIndex];
+                    // productItem.quantity = sessionProducts[i].quantity;
+                    productItem.quantity = productItem.quantity + sessionProducts[i].quantity;
+                    dbCart.products[itemIndex] = productItem;
+                } else {
+                    //product does not exists in dbCart, add new item
+                    dbCart.products.push({
+                        productId: sessionProducts[i].productId,
+                        quantity: sessionProducts[i].quantity,
+                        price: sessionProducts[i].totalprice
+                    });
+                }
+            }
+            req.session.cart = undefined;
+            await dbCart.save();
+        }
+
         const redirect = req.session.redirectToUrl;
         req.session.redirectToUrl = undefined;
         res.redirect(redirect || '/account');
@@ -243,7 +269,7 @@ router.post("/changepass", checkUser, [
 })
 
 // Forgot Pass
-router.get("/forgot_pass", checkUser, async (req, res, next) => {
+router.get("/forgot_pass", checkUser, async (req, res) => {
     if (req.user) {
         var cart = await Cart.findOne({ userId: req.user.id});
         var cartLength = cart.products.length;

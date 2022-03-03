@@ -9,25 +9,22 @@ const checkAdmin = function (req, res, next) {
             if (err) {
                 console.log("ERROR: "+err.message);
                 req.user = null;
-                return res.status(201).render("account", {
-                    title: 'My account',
-                    alert: [{msg:'Invalid token! Please login again.'}]
-                });
+                req.flash('danger','Invalid token! Please login again.');
+                return res.redirect('/admin/login');
             } else {
                 User.findById(decodedToken._id, function (err, user) {
                     if (err) {
                         console.log("ERROR: "+err.message);
                         req.user = null;
-                        return res.status(201).render("account", {
-                            title: 'My account',
-                            alert: [{msg:'Oops! An error occurred.'}]
-                        });
+                        req.flash('danger','An error occoured!');
+                        return res.redirect('/admin/login');
                     }
                     if (!user) {
-                        return res.status(201).render("account", {
-                            title: 'My account',
-                            alert: [{msg:'Please login as admin first.'}]
-                        });
+                        req.flash('danger','Invalid Credentials!');
+                        return res.redirect('/admin/login');
+                    } else if (!user.isAdmin) {
+                        req.flash('danger','Invalid Credentials!');
+                        return res.redirect('/admin/login');
                     }
                     req.user = user;
                     next();
@@ -35,8 +32,8 @@ const checkAdmin = function (req, res, next) {
             }
         });
     } else {
-        req.user = null;
-        next();
+        req.flash('danger','Please Login as Admin first!');
+        res.redirect('/admin/login');
     }
 }
 

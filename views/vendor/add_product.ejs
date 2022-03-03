@@ -55,12 +55,6 @@
                                     <div class="row">
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label class="control-label">Company Name</label>
-                                                <input type="text" id="companyName" class="form-control" name="company" placeholder="Company Name">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
                                                 <label>Product Name</label>
                                                 <input type="text" id="productName" class="form-control" name="productName" placeholder="Product Name">
                                                 <div class="txt-s-101 cl6 p-b-10" style="color: red;">
@@ -68,6 +62,31 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Product Weight</label>
+                                                <input type="text" class="form-control" name="productWeight" placeholder="Product Weight" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label>Quantity Weight</label>
+                                                <input type="text" class="form-control" name="qtyWeight" placeholder="Quantity Weight" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="control-label">Unit</label>
+                                                <select class="selectpicker form-control" name="unit" data-style="form-control">
+                                                    <option>Select Unit</option>
+                                                    <% for( let i = 0; i < units.length; i++ ) { %>
+                                                        <option value="<%= units[i]._id %>"><%= units[i].name %></option>
+                                                    <% } %>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">                                       
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label class="control-label">Type</label>
@@ -84,30 +103,8 @@
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label>Product Weight</label>
-                                                <input type="text" class="form-control" name="productWeight" placeholder="Product Weight" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label class="control-label">Unit</label>
-                                                <select class="selectpicker form-control" name="unit" data-style="form-control">
-                                                    <option>Select Unit</option>
-                                                    <% for( let i = 0; i < units.length; i++ ) { %>
-                                                        <option value="<%= units[i]._id %>"><%= units[i].name %></option>
-                                                    <% } %>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label>Cost Price</label>
-                                                <input type="text" id="cost" class="form-control" name="costPrice" placeholder="Cost Price" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
-                                                <div class="txt-s-101 cl6 p-b-10" style="color: red;">
-                                                    <span class="cl12" id="costErr"></span>
-                                                </div>
+                                                <label class="control-label">Company Name</label>
+                                                <input type="text" id="companyName" class="form-control" name="company" placeholder="Company Name">
                                             </div>
                                         </div>
                                         <div class="col-md-3">
@@ -209,7 +206,6 @@
         const subcatValue = document.getElementById('selectSubCat').value.trim();
         const productValue = document.getElementById('productName').value.trim();
         const typeValue = document.getElementById('type').value.trim();
-        const costValue = document.getElementById('cost').value.trim();
         const saleValue = document.getElementById('sale').value.trim();
         const filevalue = document.getElementById('input-file-now').value;
         const ext = filevalue.substring(filevalue.lastIndexOf('.') + 1);
@@ -240,13 +236,6 @@
             returnVal = false;
         } else {
             removeError('typeErr')
-        }
-
-        if (costValue == '') {
-            setError('costErr','Please enter Cost Price.')
-            returnVal = false;
-        } else {
-            removeError('costErr')
         }
 
         if (saleValue == '') {

@@ -10,7 +10,7 @@ const sendForgotPassMail = function (to, pass) {
     subject: 'Forgot Password',
     // text: 'and easy to do anywhere, even with Node.js',
     html: `Dear user you have requested forgot password in Halalo.<br>
-    <strong>User details:</strong><br>
+    <strong>Credentials:</strong><br>
     Email:  ${to}<br>
     Password: ${pass}<br>`,
     }

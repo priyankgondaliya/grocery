@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema ({
         type:String,
     },
     phone: {
-        type:Number,
+        type:String,
     },
     admin: {
         type:Boolean,
@@ -68,7 +68,11 @@ const userSchema = new mongoose.Schema ({
             type: String,
             required: true
         }
-    }]
+    }],
+    isAdmin: {
+        type: Boolean,
+        default: false
+    }
 })
 
 // generating tokens

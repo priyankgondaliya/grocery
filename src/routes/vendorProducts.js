@@ -61,14 +61,13 @@ router.post("/add", upload.single('image'), [
     check('category','Please enter category.').notEmpty(),
     check('productName','Please enter productName.').notEmpty(),
     check('type','Please enter valid type.').notEmpty(),
-    check('costPrice','Please enter valid costPrice.').notEmpty(),
     check('salePrice','Please enter valid salePrice.').notEmpty(),
   ], async (req,res)=>{
     try {
         const validationErrors = validationResult(req)
         if (validationErrors.errors.length > 0) {
             const alert = validationErrors.array()
-            return res.render('vendor/add_products', {
+            return res.render('vendor/add_product', {
                 title: 'Add Product',
                 alert
             })
@@ -81,8 +80,8 @@ router.post("/add", upload.single('image'), [
             productname : req.body.productName,
             type : req.body.type,
             productweight : req.body.productWeight,
+            qtyweight : req.body.qtyWeight,
             unit : req.body.unit,
-            costprice : req.body.costPrice,
             saleprice : req.body.salePrice,
             totalprice : req.body.totalPrice,
             image : '/uploads/product/' + filename,
@@ -137,14 +136,13 @@ router.post('/edit/:id', upload.single('image'), [
     check('category','Please enter category.').notEmpty(),
     check('productName','Please enter productName.').notEmpty(),
     check('type','Please enter valid type.').notEmpty(),
-    check('costPrice','Please enter valid costPrice.').notEmpty(),
     check('salePrice','Please enter valid salePrice.').notEmpty(),
 ],async (req,res) => {
     try {
         const validationErrors = validationResult(req)
         if (validationErrors.errors.length > 0) {
             const alert = validationErrors.array()
-            return res.render('vendor/add_products', {
+            return res.render('vendor/add_product', {
                 title: 'Add Product',
                 alert
             })
@@ -157,8 +155,8 @@ router.post('/edit/:id', upload.single('image'), [
         product.productname = req.body.productName;
         product.type = req.body.type;
         product.productweight = req.body.productWeight;
+        product.qtyweight = req.body.qtyWeight;
         product.unit = req.body.unit;
-        product.costprice = req.body.costPrice;
         product.saleprice = req.body.salePrice;
         product.totalprice = req.body.totalPrice;
         product.title = req.body.title;

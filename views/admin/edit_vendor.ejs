@@ -58,11 +58,31 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group">
-                                        <h3 class="box-title">Upload image</h3>
-                                        <input type="file" id="input-file-now" name="image" class="dropify"  data-default-file="<%= vendor.image %>" />
-                                        <div class="txt-s-101 cl6 p-b-10" style="color: red;">
-                                            <span class="cl12" id="catErrFile"></span>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <h3 class="box-title">Upload Image</h3>
+                                            <input type="file" id="input-file-now1" name="image" class="dropify" data-default-file="<%= vendor.image %>" />
+                                            <div class="txt-s-101 cl6 p-b-10" style="color: red;">
+                                                <span class="cl12" id="catErrFile1"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <h3 class="box-title">ID Proof</h3>
+                                            <input type="file" id="input-file-now2" name="idImage" class="dropify" data-default-file="<%= vendor.idimage %>" />
+                                            <div class="txt-s-101 cl6 p-b-10" style="color: red;">
+                                                <span class="cl12" id="catErrFile2"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <h3 class="box-title">Address Proof</h3>
+                                            <input type="file" id="input-file-now3" name="addImage" class="dropify" data-default-file="<%= vendor.addressimage %>" />
+                                            <div class="txt-s-101 cl6 p-b-10" style="color: red;">
+                                                <span class="cl12" id="catErrFile3"></span>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -92,8 +112,12 @@
         const contactValue = document.getElementById('contact').value.trim();
         const deliveryValue = document.getElementById('delivery').value.trim();
         const addressValue = document.getElementById('address').value.trim();
-        const filevalue = document.getElementById('input-file-now').value;
-        const ext = filevalue.substring(filevalue.lastIndexOf('.') + 1);
+        const filevalue1 = document.getElementById('input-file-now1').value;
+        const filevalue2 = document.getElementById('input-file-now2').value;
+        const filevalue3 = document.getElementById('input-file-now3').value;
+        const ext1 = filevalue1.substring(filevalue1.lastIndexOf('.') + 1);
+        const ext2 = filevalue2.substring(filevalue2.lastIndexOf('.') + 1);
+        const ext3 = filevalue3.substring(filevalue3.lastIndexOf('.') + 1);
 
         if (storeValue == '') {
             setError('ErrstoreName','Please enter Store Name.')
@@ -130,12 +154,28 @@
             removeError('Erraddress')
         }
 
-        if (filevalue == '') {
-            removeError('catErrFile')
-        } else if (ext=='png' || ext=='jpeg' || ext=='jpg') {
-            removeError('catErrFile')
+        if (filevalue1 == '') {
+            removeError('catErrFile1')
+        } else if (ext1=='png' || ext1=='jpeg' || ext1=='jpg') {
+            removeError('catErrFile1')
         } else {
-            setError('catErrFile','Wrong file type!')
+            setError('catErrFile1','Wrong file type!')
+            returnVal = false;
+        }
+        if (filevalue2 == '') {
+            removeError('catErrFile2')
+        } else if (ext2=='png' || ext2=='jpeg' || ext2=='jpg') {
+            removeError('catErrFile2')
+        } else {
+            setError('catErrFile2','Wrong file type!')
+            returnVal = false;
+        }
+        if (filevalue3 == '') {
+            removeError('catErrFile3')
+        } else if (ext3=='png' || ext3=='jpeg' || ext3=='jpg') {
+            removeError('catErrFile3')
+        } else {
+            setError('catErrFile3','Wrong file type!')
             returnVal = false;
         }
         

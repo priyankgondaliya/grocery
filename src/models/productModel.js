@@ -22,12 +22,11 @@ const productSchema = new mongoose.Schema ({
     productweight: {
         type: String,
     },
-    unit: {
+    qtyweight: {
         type: String,
     },
-    costprice: {
+    unit: {
         type: String,
-        required:true
     },
     saleprice: {
         type: String,

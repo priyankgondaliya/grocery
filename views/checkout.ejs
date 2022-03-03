@@ -1,0 +1,495 @@
+<%- include('_layouts/header') %>
+	
+	<!-- Title page -->
+	<section class="how-overlay2 bg-img1" style="background-image: url(images/bg-07.jpg);">
+		<div class="container">
+			<div class="txt-center p-t-160 p-b-165">
+				<h2 class="txt-l-101 cl0 txt-center p-b-14 respon1">
+					Checkout
+				</h2>
+
+				<span class="txt-m-201 cl0 flex-c-m flex-w">
+					<a href="/" class="txt-m-201 cl0 hov-cl10 trans-04 m-r-6">
+						Home
+					</a>
+
+					<span>
+						/ Checkout
+					</span>
+				</span>
+			</div>
+		</div>
+	</section>
+
+	<!-- content page -->
+	<div class="bg0 p-t-95 p-b-50">
+		<div class="container">
+			<!-- Login -->
+			<!-- <div>
+				<div class="txt-s-101 txt-center">
+					<span class="cl3">
+						Returning customer?
+					</span>
+
+					<span class="cl10 hov12 js-toggle-panel1">
+						Click here to login
+					</span>
+				</div>
+
+				<div class="how-bor3 p-rl-15 p-tb-28 m-tb-33 dis-none js-panel1">
+					<form class="size-w-60 m-rl-auto">
+						<p class="txt-s-120 cl9 txt-center p-b-26">
+							If you have shopped with us before, please enter your details in the boxes below. If you are a new customer, please proceed to the Billing & Shipping section.
+						</p>
+
+						<div class="row">
+							<div class="col-sm-6 p-b-20">
+								<div>
+									<div class="txt-s-101 cl6 p-b-10">
+										Username or email <span class="cl12">*</span>
+									</div>
+
+									<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-15 focus1" type="text" name="username">
+								</div>
+							</div>
+
+							<div class="col-sm-6 p-b-20">
+								<div>
+									<div class="txt-s-101 cl6 p-b-10">
+										Password <span class="cl12">*</span>
+									</div>
+
+									<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-15 focus1" type="password" name="password">
+								</div>
+							</div>
+
+							<div class="col-12">
+								<button class="flex-c-m txt-s-105 cl0 bg10 size-a-21 hov-btn2 trans-04 p-rl-10">
+									Login
+								</button>
+
+								<div class="flex-w flex-m p-t-10 p-b-3">
+									<input id="check-creatacc" class="size-a-35 m-r-10" type="checkbox" name="creatacc">
+									<label for="check-creatacc" class="txt-s-101 cl9">
+										Create an account?
+									</label>
+								</div>
+
+								<a href="#" class="txt-s-101 cl9 hov-cl10 trans-04">
+									Lost your password?
+								</a>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div> -->
+
+			<!-- enter code -->
+			<!-- <div class="p-t-17 p-b-70">
+				<div class="txt-s-101 txt-center">
+					<span class="cl3">
+						Have a coupon?
+					</span>
+
+					<span class="cl10 hov12 js-toggle-panel1">
+						Click here to enter your code
+					</span>
+				</div> -->
+<!-- 
+				<div class="m-t-35 dis-none js-panel1">
+					<div class="size-w-60 flex-w m-rl-auto">
+						<input class="bo-all-1 bocl15 focus1 size-a-37 txt-s-120 cl3 plh2 p-rl-20 w-full-sm" type="text" name="coupon" placeholder="Coupon code">
+						<button class="bg10 size-a-36 txt-s-105 cl0 p-rl-15 trans-04 hov-btn2 mt-4 mt-sm-0 w-full-sm">
+							Apply coupon
+						</button>
+					</div>
+				</div>
+			</div> -->
+
+			<!-- errors -->
+			<% if(typeof alert != 'undefined') { %>
+				<div class="w-75 p-3" style="margin: auto;">
+					<% alert.forEach(function(error) { %>
+						<div class="alert alert-info alert-dismissible fade show" role="alert">
+							<%= error.msg %>
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">×</span>
+							</button>
+						</div>
+					<% }) %>
+				</div>
+			<% } %>
+			<div class="w-75 p-3" style="margin: auto;">
+				<%- messages('messages', locals) %>
+			</div>
+
+			<div class="row">
+				<div class="col-md-7 col-lg-8 p-b-50">
+					<div>
+						<h4 class="txt-m-124 cl3 p-b-28">
+							Billing details
+						</h4>
+
+						<form action="/checkout" method="post" id="form" onsubmit="validate()">
+							<div class="row p-b-50">
+								<div class="col-sm-6 p-b-23">
+									<div>
+										<div class="txt-s-101 cl6 p-b-10">
+											First Name
+										</div>
+	
+										<input id="fname" class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.firstname %>" name="first-name" readonly>
+										<div class="txt-s-101 cl6 p-b-10">
+											<span class="cl12" id="fnameErr"></span>
+										</div>
+									</div>
+								</div>
+	
+								<div class="col-sm-6 p-b-23">
+									<div>
+										<div class="txt-s-101 cl6 p-b-10">
+											Last Name
+										</div>
+	
+										<input id="lname" class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.lastname %>" name="last-name" readonly>
+										<div class="txt-s-101 cl6 p-b-10">
+											<span class="cl12" id="lnameErr"></span>
+										</div>
+									</div>
+								</div>
+	
+								<div class="col-sm-6 p-b-23">
+									<div>
+										<div class="txt-s-101 cl6 p-b-10">
+											Email Address
+										</div>
+	
+										<input id="email" class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.email %>" name="email" readonly>
+										<div class="txt-s-101 cl6 p-b-10">
+											<span class="cl12" id="emailErr"></span>
+										</div>
+									</div>
+								</div>
+	
+								<div class="col-sm-6 p-b-23">
+									<div>
+										<div class="txt-s-101 cl6 p-b-10">
+											Phone No <span class="cl12">*</span>
+										</div>
+	
+										<input id="phone" class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.phone %>" name="phone">
+										<div class="txt-s-101 cl6 p-b-10">
+											<span class="cl12" id="phoneErr"></span>
+										</div>
+									</div>
+								</div>
+	
+								<div class="col-12 p-b-23">
+									Address
+								</div>
+	
+								<div class="col-sm-6 p-b-23">
+									<div>
+										<div class="txt-s-101 cl6 p-b-10">
+											House No <span class="cl12">*</span>
+										</div>
+	
+										<input id="house" class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.address.house %>" name="house">
+										<div class="txt-s-101 cl6 p-b-10">
+											<span class="cl12" id="houseErr"></span>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-6 p-b-23">
+									<div>
+										<div class="txt-s-101 cl6 p-b-10">
+											Apartment Name <span class="cl12">*</span>
+										</div>
+	
+										<input id="apartment" class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.address.apartment %>" name="apartment">
+										<div class="txt-s-101 cl6 p-b-10">
+											<span class="cl12" id="apartmentErr"></span>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-6 p-b-23">
+									<div>
+										<div class="txt-s-101 cl6 p-b-10">
+											Landmark <span class="cl12">*</span>
+										</div>
+	
+										<input id="landmark" class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.address.country %>" name="landmark">
+										<div class="txt-s-101 cl6 p-b-10">
+											<span class="cl12" id="landmarkErr"></span>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-6 p-b-23">
+									<div>
+										<div class="txt-s-101 cl6 p-b-10">
+											City<span class="cl12">*</span>
+										</div>
+	
+										<input id="city" class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.address.city %>" name="city">
+										<div class="txt-s-101 cl6 p-b-10">
+											<span class="cl12" id="cityErr"></span>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-6 p-b-23">
+									<div>
+										<div class="txt-s-101 cl6 p-b-10">
+											State <span class="cl12">*</span>
+										</div>
+	
+										<input id="state" class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.address.state %>" name="state">
+										<div class="txt-s-101 cl6 p-b-10">
+											<span class="cl12" id="stateErr"></span>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-6 p-b-23">
+									<div>
+										<div class="txt-s-101 cl6 p-b-10">
+											County <span class="cl12">*</span>
+										</div>
+	
+										<input id="country" class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.address.country %>" name="country">
+										<div class="txt-s-101 cl6 p-b-10">
+											<span class="cl12" id="countryErr"></span>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-6 p-b-23">
+									<div>
+										<div class="txt-s-101 cl6 p-b-10">
+											Postal Code<span class="cl12">*</span>
+										</div>
+	
+										<input id="postal" class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.address.postal %>" name="postal" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
+										<div class="txt-s-101 cl6 p-b-10">
+											<span class="cl12" id="postalErr"></span>
+										</div>
+									</div>
+								</div>
+	
+								<button class="flex-c-m txt-s-105 cl0 bg10 size-a-21 hov-btn2 trans-04 p-rl-10" class="col-md-3" type="submit">
+									Save Address
+							   	</button>
+								
+							</div>
+						</form>
+
+					</div>
+				</div>
+
+				<div class="col-md-5 col-lg-4 p-b-50">
+					<div class="how-bor4 p-t-35 p-b-40 p-rl-30 m-t-5">
+						<h4 class="txt-m-124 cl3 p-b-11">
+							Your order
+						</h4>
+
+						<div class="flex-w flex-sb-m txt-m-103 cl6 bo-b-1 bocl15 p-b-21 p-t-18">
+							<span>
+								Product
+							</span>
+
+							<span>
+								Total
+							</span>
+						</div>
+						
+						<% for( let i = 0; i < myCart.length; i++ ) { %>
+							<div class="flex-w flex-sb-m txt-s-101 cl6 bo-b-1 bocl15 p-b-21 p-t-18">
+								<span>
+									<%= myCart[i].productname %>
+									<img class="m-rl-3" src="images/icons/icon-multiply.png" alt="icon">
+									<%= myCart[i].quantity %> 
+								</span>
+	
+								<span class="total">
+									&#8377; <%= myCart[i].totalprice * myCart[i].quantity %>
+								</span>
+							</div>
+						<% } %>
+
+						<!-- <div class="flex-w flex-m txt-m-103 bo-b-1 bocl15 p-tb-23">
+							<span class="size-w-61 cl6">
+								Subtotal
+							</span>
+
+							<span class="size-w-62 cl9">
+								48$
+							</span>
+						</div> -->
+
+						<div class="flex-w flex-m txt-m-103 p-tb-23">
+							<span class="size-w-61 cl6">
+								Total
+							</span>
+
+							<span class="size-w-62 cl10" id="grandTotal">
+								48$
+							</span>
+						</div>
+
+                        <div>
+                        <h4 class="txt-m-124 cl3 p-b-11">
+							Payment Method
+						</h4>
+                        </div>
+
+						<div class="bo-all-1 bocl15 p-b-25 m-b-30">
+							<div class="flex-w flex-m bo-b-1 bocl15 p-rl-20 p-tb-16">
+								<input class="m-r-15" id="radio1" type="radio" name="pay" value="payment" checked="checked">
+								<label class="txt-m-103 cl6" for="radio1">
+									Cash on delivery
+								</label>
+							</div>
+
+							<!-- <div class="content-payment bo-b-1 bocl15 p-rl-20 p-tb-15">
+								<p class="txt-s-120 cl9">
+									Please send a check to Store Name, Store Street, Store Town, Store State / County, Store Postcode.
+								</p>
+							</div> -->
+
+							<div class="flex-w flex-m p-rl-20 p-t-17 p-b-10">
+								<input class="m-r-15" id="radio2" type="radio" name="pay" value="razorpay">
+								<label class="txt-m-103 cl6" for="radio2">
+									Pay With Razorpay
+								</label>
+
+								<!-- <div class="w-full p-l-29 p-t-16">
+									<a href="#"><img src="images/icons/paypal.png" alt="IMG"></a>
+								</div> -->
+							</div> 
+
+							<!-- <div class="content-paypal bo-tb-1 bocl15 p-rl-20 p-tb-15 m-tb-10 dis-none">
+								<p class="txt-s-120 cl9">
+									Pay via PayPal; you can pay with your credit card if you don’t have a PayPal account.
+								</p>
+							</div> -->
+							 
+						</div>
+
+						<button class="flex-c-m txt-s-105 cl0 bg10 size-a-21 hov-btn2 trans-04 p-rl-10">
+							Place Order
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		const form = document.getElementById('form');
+
+		form.addEventListener('submit', (e) => {
+			e.preventDefault();
+		})
+		function validate(){
+			let returnVal = true;
+
+			const fname = document.getElementById('fname').value.trim();
+			const lname = document.getElementById('lname').value.trim();
+			const email = document.getElementById('email').value.trim();
+			const phone = document.getElementById('phone').value.trim();
+			const house = document.getElementById('house').value.trim();
+			const apartment = document.getElementById('apartment').value.trim();
+			const landmark = document.getElementById('landmark').value.trim();
+			const city = document.getElementById('city').value.trim();
+			const state = document.getElementById('state').value.trim();
+			const country = document.getElementById('country').value.trim();
+			const postal = document.getElementById('postal').value.trim();
+			
+			if (fname == '') {
+				setError('fnameErr','Please enter First Name.')
+				returnVal = false;
+			} else {
+				removeError('fnameErr')
+			}
+			if (lname == '') {
+				setError('lnameErr','Please enter Last Name.')
+				returnVal = false;
+			} else {
+				removeError('lnameErr')
+			}
+			if (email == '') {
+				setError('emailErr','Please enter email.')
+				returnVal = false;
+			} else if (!validateEmail(email)) {
+				setError('emailErr','Please enter valid email.')
+				returnVal = false;
+			} else {
+				removeError('emailErr')
+			}
+			if (phone == '') {
+				setError('phoneErr','Please enter Phone number.')
+				returnVal = false;
+			} else {
+				removeError('phoneErr')
+			}
+			if (house == '') {
+				setError('houseErr','Please enter House number.')
+				returnVal = false;
+			} else {
+				removeError('houseErr')
+			}
+			if (apartment == '') {
+				setError('apartmentErr','Please enter Apartment.')
+				returnVal = false;
+			} else {
+				removeError('apartmentErr')
+			}
+			if (landmark == '') {
+				setError('landmarkErr','Please enter Landmark.')
+				returnVal = false;
+			} else {
+				removeError('landmarkErr')
+			}
+			if (city == '') {
+				setError('cityErr','Please enter City.')
+				returnVal = false;
+			} else {
+				removeError('cityErr')
+			}
+			if (state == '') {
+				setError('stateErr','Please enter State.')
+				returnVal = false;
+			} else {
+				removeError('stateErr')
+			}
+			if (country == '') {
+				setError('countryErr','Please enter Country.')
+				returnVal = false;
+			} else {
+				removeError('countryErr')
+			}
+			if (postal == '') {
+				setError('postalErr','Please enter Postal code.')
+				returnVal = false;
+			} else {
+				removeError('postalErr')
+			}
+			if (returnVal) {
+				form.submit();
+			}
+		}
+
+		function setError(id, error) {
+			// set error msg
+			const element = document.getElementById(id);
+			element.innerHTML = '* ' + error;
+		}
+		function removeError(id) {
+			// remove error msg
+			const element = document.getElementById(id);
+			element.innerHTML = '';
+		}
+		function validateEmail(email){
+			return email.match(
+				/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+			);
+		}
+	</script>
+	<script src="/js/setGrandTotal.js"></script>
+<%- include('_layouts/footer') %>

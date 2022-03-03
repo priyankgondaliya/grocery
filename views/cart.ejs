@@ -21,6 +21,10 @@
 		</div>
 	</section>
 
+	<div class="w-75 p-3" style="margin: auto;">
+		<%- messages('messages', locals) %>
+	</div>
+	
 	<!-- content page -->
 	<div class="bg0 p-tb-100">
 		<div class="container">
@@ -92,6 +96,14 @@
 					</table>
 				</div>
 
+				<div class="flex-w flex-sb-m p-t-20">
+					<a href="/cart/clear">
+						<div class="flex-c-m txt-s-105 cl0 bg10 size-a-33 hov-btn2 trans-04 pointer p-rl-10 m-tb-10">
+							Clear CART
+						</div>
+					</a>
+				</div>
+
 				<!-- <div class="flex-w flex-sb-m p-t-20">
 					<div class="flex-w flex-m m-r-50 m-tb-10">
 						<input class="size-a-31 bo-all-1 bocl15 txt-s-123 cl6 plh1 p-rl-20 focus1 m-r-30 m-tb-10" type="text" name="coupon" placeholder="Coupon Code">
@@ -136,8 +148,8 @@
 			</form>
 		</div>
 	</div>
-
-    <script>
+	<script src="/js/setGrandTotal.js"></script>
+    <!-- <script>
         const array = document.getElementsByClassName("total");
         let grandTotal = 0;
         for (let i = 0; i < array.length; i++) {
@@ -145,6 +157,6 @@
             grandTotal = grandTotal + parseFloat(a);
         }
         document.getElementById("grandTotal").innerHTML = `&#8377; ${grandTotal}`;
-    </script>
+    </script> -->
 
 <%- include('_layouts/footer') %>

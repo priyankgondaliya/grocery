@@ -185,10 +185,8 @@ router.get('/clear', checkUser, async (req,res) => {
     } else {
         delete req.session.cart;
     }
-    console.log("CART CLEARED.");
     req.flash('success','Cart cleared!');
     res.redirect('/cart');
-
 });
 
 module.exports = router;

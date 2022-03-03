@@ -21,8 +21,13 @@ router.get("/", checkUser, async (req,res)=>{
     const searchString = req.query.search;
     if (searchString) {
         console.log(searchString);
-        const searchProds = await Product.find({ $text: {$search: searchString} });
-        // MyModel.find({$text: {$search: searchString}})
+        const regex = new RegExp(searchString.replace(/\s+/g,"\\s+"), "gi");
+
+        const searchProds = await Product.find({ 'productname': { $regex: regex }});
+        console.log(searchProds.length);
+
+        const searchCats = await Category.find({ 'name': { $regex: regex }});
+        console.log(searchCats.length);
     }
     const cats = await Category.find({ featured: true });
     const prods = await Product.find({ featured: true });
