@@ -11,6 +11,7 @@ const checkUser = function (req, res, next) {
                 req.user = null;
                 return res.status(201).render("account", {
                     title: 'My account',
+                    user: null,
                     alert: [{msg:'Invalid token! Please login again.'}]
                 });
             } else {
@@ -20,12 +21,14 @@ const checkUser = function (req, res, next) {
                         req.user = null;
                         return res.status(201).render("account", {
                             title: 'My account',
+                            user: null,
                             alert: [{msg:'Oops! An error occurred.'}]
                         });
                     }
                     if (!user) {
                         return res.status(201).render("account", {
                             title: 'My account',
+                            user: null,
                             alert: [{msg:'Please login first.'}]
                         });
                     }

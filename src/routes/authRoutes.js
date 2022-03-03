@@ -19,7 +19,7 @@ router.post("/register", checkUser, [
   ],async(req,res)=>{
     try {
         if (req.user) {
-            var cart = await Cart.findOne({ userId: req.user.id});
+            const cart = await Cart.findOne({ userId: req.user.id});
             var cartLength = cart.products.length;
         } else {
             var cartLength = req.session.cart.products.length;
@@ -69,6 +69,13 @@ router.post("/register", checkUser, [
             httpOnly:true
         });
         await user.save();
+        // create cart
+        const cart = new Cart({
+            userId: user.id,
+            products: []
+        })
+        await cart.save();
+
         res.status(201).render("account", {
             title: 'My account',
             user: req.user,
