@@ -20,7 +20,7 @@ router.get("/", checkUser, async (req,res)=>{
     req.session.redirectToUrl = req.originalUrl;
     const searchString = req.query.search;
     if (searchString) {
-        console.log(searchString);
+        // console.log(searchString);
         const regex = new RegExp(searchString.replace(/\s+/g,"\\s+"), "gi");
 
         const searchProds = await Product.find({ 'productname': { $regex: regex }});
