@@ -137,4 +137,3 @@ app.listen(port,()=>{
 // vendor register view
 // vendor register form validation
 // vendor register api
-// google api for auto complete address field

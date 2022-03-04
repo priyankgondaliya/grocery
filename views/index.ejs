@@ -10,11 +10,14 @@
 				<input class="plh1" type="text" name="search" placeholder="Search..." style="border: 2px solid #81b03f;">
 			</form>
 			<ul class="category_banner_list">
+				<% for( let i = 0; i < cats.length; i++ ) { %>
+					<li><a href="/products/<%= cats[i].id %>"><%= cats[i].name %></a>
+				<% } %>
+				<!-- <li><a href="#">Cat 1</a></li>
 				<li><a href="#">Cat 1</a></li>
 				<li><a href="#">Cat 1</a></li>
 				<li><a href="#">Cat 1</a></li>
-				<li><a href="#">Cat 1</a></li>
-				<li><a href="#">Cat 1</a></li>
+				<li><a href="#">Cat 1</a></li> -->
 			</ul>
 		</div>
 	</div>

@@ -101,106 +101,106 @@
 
 							<!-- - -->
 							<div class="tab-pane fade" id="addresses" role="tabpanel">
-										<form onsubmit="validateCa()" action="/address" method="POST" id="caform">
-											<div class="row">
-												<div class="col-sm-6 p-b-23">
-													<div>
-														<div class="txt-s-101 cl6 p-b-10">
-															House No <span class="cl12">*</span>
-														</div>
-		
-														<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" value="<%= user.address.house %>"  type="text" name="house" id="caHouse">
-														<div class="txt-s-101 cl6 p-b-10">
-															<span class="cl12" id="caErrHouse"></span>
-														</div>
-													</div>
-												</div>
-		
-												<div class="col-sm-6 p-b-23">
-													<div>
-														<div class="txt-s-101 cl6 p-b-10">
-															Apartment Name <span class="cl12">*</span>
-														</div>
-		
-														<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" value="<%= user.address.apartment %>" type="text" name="apartment" id="caApartment">
-														<div class="txt-s-101 cl6 p-b-10">
-															<span class="cl12" id="caErrApartment"></span>
-														</div>
-													</div>
-												</div>
-		
-												<div class="col-sm-6 p-b-23">
-													<div>
-														<div class="txt-s-101 cl6 p-b-10">
-															Landmark <span class="cl12">*</span>
-														</div>
-		
-														<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" value="<%= user.address.landmark %>" type="text" name="landmark" id="caLandmark">
-														<div class="txt-s-101 cl6 p-b-10">
-															<span class="cl12" id="caErrLandmark"></span>
-														</div>
-													</div>
-												</div>
-		
-												<div class="col-sm-6 p-b-23">
-													<div>
-														<div class="txt-s-101 cl6 p-b-10">
-															City <span class="cl12">*</span>
-														</div>
-		
-														<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.address.city %>" name="city" id="caCity">
-														<div class="txt-s-101 cl6 p-b-10">
-															<span class="cl12" id="caErrCity"></span>
-														</div>
-													</div>
+								<form onsubmit="validateCa()" action="/address" method="POST" id="caform">
+									<div class="row">
+										<div class="col-sm-6 p-b-23">
+											<div>
+												<div class="txt-s-101 cl6 p-b-10">
+													House No <span class="cl12">*</span>
 												</div>
 
-												<div class="col-sm-6 p-b-23">
-													<div>
-														<div class="txt-s-101 cl6 p-b-10">
-															State <span class="cl12">*</span>
-														</div>
-		
-														<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.address.state %>" name="state" id="caState">
-														<div class="txt-s-101 cl6 p-b-10">
-															<span class="cl12" id="caErrState"></span>
-														</div>
-													</div>
+												<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" value="<%= user.address.house %>"  type="text" name="house" id="caHouse">
+												<div class="txt-s-101 cl6 p-b-10">
+													<span class="cl12" id="caErrHouse"></span>
 												</div>
-
-												<div class="col-sm-6 p-b-23">
-													<div>
-														<div class="txt-s-101 cl6 p-b-10">
-															Country <span class="cl12">*</span>
-														</div>
-		
-														<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.address.country %>" name="country" id="caCountry">
-														<div class="txt-s-101 cl6 p-b-10">
-															<span class="cl12" id="caErrCountry"></span>
-														</div>
-													</div>
-												</div>
-
-												<div class="col-sm-6 p-b-23">
-													<div>
-														<div class="txt-s-101 cl6 p-b-10">
-															Postal Code <span class="cl12">*</span>
-														</div>
-		
-														<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.address.postal %>" name="postal" id="caPostal"onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
-														<div class="txt-s-101 cl6 p-b-10">
-															<span class="cl12" id="caErrPostal"></span>
-														</div>
-													</div>
-												</div>
-		
 											</div>
-											<div class="flex-w p-rl-15 p-t-17">
-												<button type="submit" class="flex-c-m txt-s-105 cl0 bg10 size-a-43 hov-btn2 trans-04 p-rl-10">
-													Save changes
-												</button>
+										</div>
+
+										<div class="col-sm-6 p-b-23">
+											<div>
+												<div class="txt-s-101 cl6 p-b-10">
+													Apartment Name <span class="cl12">*</span>
+												</div>
+
+												<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" value="<%= user.address.apartment %>" type="text" name="apartment" id="caApartment">
+												<div class="txt-s-101 cl6 p-b-10">
+													<span class="cl12" id="caErrApartment"></span>
+												</div>
 											</div>
-										</form>
+										</div>
+
+										<div class="col-sm-6 p-b-23">
+											<div>
+												<div class="txt-s-101 cl6 p-b-10">
+													Landmark <span class="cl12">*</span>
+												</div>
+
+												<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" value="<%= user.address.landmark %>" type="text" name="landmark" id="caLandmark">
+												<div class="txt-s-101 cl6 p-b-10">
+													<span class="cl12" id="caErrLandmark"></span>
+												</div>
+											</div>
+										</div>
+
+										<div class="col-sm-6 p-b-23">
+											<div>
+												<div class="txt-s-101 cl6 p-b-10">
+													City <span class="cl12">*</span>
+												</div>
+
+												<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.address.city %>" name="city" id="caCity">
+												<div class="txt-s-101 cl6 p-b-10">
+													<span class="cl12" id="caErrCity"></span>
+												</div>
+											</div>
+										</div>
+
+										<div class="col-sm-6 p-b-23">
+											<div>
+												<div class="txt-s-101 cl6 p-b-10">
+													State <span class="cl12">*</span>
+												</div>
+
+												<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.address.state %>" name="state" id="caState">
+												<div class="txt-s-101 cl6 p-b-10">
+													<span class="cl12" id="caErrState"></span>
+												</div>
+											</div>
+										</div>
+
+										<div class="col-sm-6 p-b-23">
+											<div>
+												<div class="txt-s-101 cl6 p-b-10">
+													Country <span class="cl12">*</span>
+												</div>
+
+												<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.address.country %>" name="country" id="caCountry">
+												<div class="txt-s-101 cl6 p-b-10">
+													<span class="cl12" id="caErrCountry"></span>
+												</div>
+											</div>
+										</div>
+
+										<div class="col-sm-6 p-b-23">
+											<div>
+												<div class="txt-s-101 cl6 p-b-10">
+													Postal Code <span class="cl12">*</span>
+												</div>
+
+												<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.address.postal %>" name="postal" id="caPostal"onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
+												<div class="txt-s-101 cl6 p-b-10">
+													<span class="cl12" id="caErrPostal"></span>
+												</div>
+											</div>
+										</div>
+
+									</div>
+									<div class="flex-w p-rl-15 p-t-17">
+										<button type="submit" class="flex-c-m txt-s-105 cl0 bg10 size-a-43 hov-btn2 trans-04 p-rl-10">
+											Save changes
+										</button>
+									</div>
+								</form>
 								<!-- </div> -->
 							</div>
 

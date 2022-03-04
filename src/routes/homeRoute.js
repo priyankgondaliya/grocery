@@ -24,20 +24,33 @@ router.get("/", checkUser, async (req,res)=>{
         const regex = new RegExp(searchString.replace(/\s+/g,"\\s+"), "gi");
 
         const searchProds = await Product.find({ 'productname': { $regex: regex }});
-        console.log(searchProds.length);
-
+        // console.log(searchProds.length);
         const searchCats = await Category.find({ 'name': { $regex: regex }});
-        console.log(searchCats.length);
+        // console.log(searchCats.length);
+
+        const allcats = await Category.find();
+        const cats = await Category.find({ featured: true });
+        res.render("search",{
+            title: `Search for ${searchString}`,
+            user: req.user,
+            cartLength,
+            cats,
+            allcats,
+            searchString,
+            searchCats,
+            searchProds
+        });
+    } else {
+        const cats = await Category.find({ featured: true });
+        const prods = await Product.find({ featured: true });
+        res.render("index",{
+            title: "Home",
+            user: req.user,
+            cats,
+            cartLength,
+            prods
+        });
     }
-    const cats = await Category.find({ featured: true });
-    const prods = await Product.find({ featured: true });
-    res.render("index",{
-        title: "Home",
-        user: req.user,
-        cats,
-        cartLength,
-        prods
-    });
 });
 
 module.exports = router;

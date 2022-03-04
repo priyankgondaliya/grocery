@@ -136,7 +136,6 @@ router.post('/edit/:id', upload.single('image'), [
         cat.name = name;
         cat.tax = tax;
         if (req.body.featured) {
-            console.log(req.body.featured);
             cat.featured = true;
         } else {
             cat.featured = false;

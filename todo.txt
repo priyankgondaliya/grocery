@@ -1,8 +1,6 @@
-vendor forgot pass
-vendor register
+wishlist frontend js
 
 https://youtu.be/VKuY8QscZwY orders
-https://youtu.be/zZ0Cru5dK0E address field
 vendor delivery range
 
 view details link in users table
