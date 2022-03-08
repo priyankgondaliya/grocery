@@ -210,25 +210,20 @@
 		<div class="wrap-header-mobile">
 			<!-- Logo moblie -->		
 			<div class="logo-mobile">
-				<a href="index.html"><img src="/images/icons/logo-01.png" alt="IMG-LOGO"></a>
+				<a href="/"><img src="/images/icons/logo-01.png" alt="IMG-LOGO"></a>
 			</div>
 
 			<!-- Icon header -->
 			<div class="wrap-icon-header flex-w flex-r-m h-full wrap-menu-click m-r-15">
-				<div class="h-full flex-m">
-					<div class="icon-header-item flex-c-m trans-04 js-show-modal-search">
-						<img src="/images/icons/icon-search.png" alt="SEARCH">
-					</div>
-				</div>
-
 				<div class="wrap-cart-header h-full flex-m m-l-5 menu-click">
-					<div class="icon-header-item flex-c-m trans-04 icon-header-noti" data-notify="2">
-						<img src="/images/icons/icon-cart-2.png" alt="CART">
+					<div class="icon-header-item flex-c-m trans-04 icon-header-noti" data-notify="<%= cartLength %>">
+						<a href="/cart">
+							<img src="/images/icons/icon-cart-2.png" alt="CART">
+						</a>
 					</div>
 
-					<div class="cart-header menu-click-child trans-04">
+					<!-- <div class="cart-header menu-click-child trans-04">
 						<div class="bo-b-1 bocl15">
-							<!-- cart header item -->
 							<div class="flex-w flex-str m-b-25">
 								<div class="size-w-15 flex-w flex-t">
 									<a href="product-single.html" class="wrap-pic-w bo-all-1 bocl12 size-w-16 hov3 trans-04 m-r-14">
@@ -257,7 +252,6 @@
 								</div>
 							</div>
 
-							<!-- cart header item -->
 							<div class="flex-w flex-str m-b-25">
 								<div class="size-w-15 flex-w flex-t">
 									<a href="product-single.html" class="wrap-pic-w bo-all-1 bocl12 size-w-16 hov3 trans-04 m-r-14">
@@ -310,7 +304,7 @@
 						<a href="checkout.html" class="flex-c-m size-a-8 bg10 txt-s-105 cl13 hov-btn2 trans-04">
 							check out
 						</a>	
-					</div>
+					</div> -->
 				</div>
 			</div>
 
@@ -327,22 +321,14 @@
 		<div class="menu-mobile">
 			<ul class="main-menu-m">
 				<li>
-					<a href="account.html">My Account</a>									
+					<% if (user) { %>
+						<a href="account.html">Account</a>
+					<% } else { %>
+						<a href="/signup">LogIn/SignUp</a>
+					<% } %>
 				</li>
 
-				<li><a href="wishlist.html">Wishlist</a></li>
-
-				<li>
-					<a href="shop-sidebar-grid.html">Shop</a>
-				</li>
-
-				<li>
-					<a href="blog-grid-01.html">Blog</a>
-				</li>								
-
-				<li>
-					<a href="contact.html">Contact</a>									
-				</li>
+				<li><a href="/wishlist">Wishlist</a></li>
 			</ul>
 		</div>
 
