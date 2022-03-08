@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
+
+const checkAdmin = require('../middleware/authAdminMiddleware');
+
 const sharp = require('sharp');
 const multer  = require('multer');
 const fs = require('fs-extra');
@@ -25,7 +28,7 @@ const upload = multer({
 });
 
 // GET vendors
-router.get("/", async (req,res)=>{
+router.get("/", checkAdmin, async (req,res)=>{
     try {
         const vendors = await Vendor.find();
         res.status(201).render("admin/vendor", {
@@ -39,7 +42,7 @@ router.get("/", async (req,res)=>{
 });
 
 // GET add vendors
-router.get("/add", async (req,res)=>{
+router.get("/add", checkAdmin, async (req,res)=>{
     try {
         res.status(201).render("admin/add_vendor", {
             title: 'Add Vendor',
@@ -51,7 +54,7 @@ router.get("/add", async (req,res)=>{
 });
 
 // POST add vendor
-router.post("/add", upload.fields([
+router.post("/add", checkAdmin, upload.fields([
     { name: 'image', maxCount: 1 },
     { name: 'idImage', maxCount: 1 },
     { name: 'addImage', maxCount: 1 },
@@ -115,7 +118,7 @@ router.post("/add", upload.fields([
 })
 
 // GET edit vendor
-router.get("/edit/:id", async (req,res)=>{
+router.get("/edit/:id", checkAdmin, async (req,res)=>{
     try {
         const id = req.params.id;
         const vendor = await Vendor.findById(id);
@@ -135,7 +138,7 @@ router.get("/edit/:id", async (req,res)=>{
 });
 
 // POST edit vendor
-router.post("/edit/:id", upload.fields([
+router.post("/edit/:id", checkAdmin, upload.fields([
     { name: 'image', maxCount: 1 },
     { name: 'idImage', maxCount: 1 },
     { name: 'addImage', maxCount: 1 },
@@ -212,7 +215,7 @@ router.post("/edit/:id", upload.fields([
 });
 
 // GET delete vendor
-router.get("/delete/:id", async (req,res)=>{
+router.get("/delete/:id", checkAdmin, async (req,res)=>{
     try {
         const id = req.params.id;
         const vendor = await Vendor.findByIdAndRemove(id);
@@ -233,7 +236,7 @@ router.get("/delete/:id", async (req,res)=>{
 });
 
 // GET vendors
-router.get("/contact", async (req,res)=>{
+router.get("/contact", checkAdmin, async (req,res)=>{
     try {
         const vendors = await Vendor.find();
         res.status(201).render("admin/vendorcontact", {

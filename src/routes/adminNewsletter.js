@@ -3,8 +3,10 @@ const router = express.Router();
 const Newsletter = require('../models/newsletterModel');
 const formatDate = require('../helpers/formateDate');
 
+const checkAdmin = require('../middleware/authAdminMiddleware');
+
 // Get newsletter
-router.get("/", async (req,res) => {
+router.get("/", checkAdmin, async (req,res) => {
     try {
         const newsletters = await Newsletter.find(); //.limit(limit*1).skip((page-1)*limit);
         

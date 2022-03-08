@@ -5,8 +5,10 @@ const { check, validationResult } = require('express-validator');
 const Page = require('../models/pageModel');
 const Contact = require('../models/contactDetailModel');
 
+const checkAdmin = require('../middleware/authAdminMiddleware');
+
 // about us
-router.get("/about_us", async (req,res)=>{
+router.get("/about_us", checkAdmin, async (req,res)=>{
     try {
         const page = await Page.findOne({ title:'About Us'})
         const content = page.content;
@@ -20,7 +22,7 @@ router.get("/about_us", async (req,res)=>{
     }
 });
 
-router.post('/about_us', [
+router.post('/about_us', checkAdmin, [
     check('content','Content must have a value').notEmpty(),
   ], async function(req,res){
     const validationErrors = validationResult(req)
@@ -41,7 +43,7 @@ router.post('/about_us', [
 });
 
 // faqs
-router.get("/faqs", async (req,res)=>{
+router.get("/faqs", checkAdmin, async (req,res)=>{
     try {
         const page = await Page.findOne({ title:'FAQs'})
         const content = page.content;
@@ -55,7 +57,7 @@ router.get("/faqs", async (req,res)=>{
     }
 });
 
-router.post('/faqs', [
+router.post('/faqs', checkAdmin, [
     check('content','Content must have a value').notEmpty(),
   ], async function(req,res){
     const validationErrors = validationResult(req)
@@ -76,7 +78,7 @@ router.post('/faqs', [
 });
 
 // terms
-router.get("/terms_con", async (req,res)=>{
+router.get("/terms_con", checkAdmin, async (req,res)=>{
     try {
         const page = await Page.findOne({ title:'Terms & Conditions'})
         const content = page.content;
@@ -90,7 +92,7 @@ router.get("/terms_con", async (req,res)=>{
     }
 });
 
-router.post('/terms_con', [
+router.post('/terms_con', checkAdmin, [
     check('content','Content must have a value').notEmpty(),
   ], async function(req,res){
     const validationErrors = validationResult(req)
@@ -111,7 +113,7 @@ router.post('/terms_con', [
 });
 
 // privacy
-router.get("/privacy_policy", async (req,res)=>{
+router.get("/privacy_policy", checkAdmin, async (req,res)=>{
     try {
         const page = await Page.findOne({ title: 'Privacy Policy'})
         const content = page.content;
@@ -125,7 +127,7 @@ router.get("/privacy_policy", async (req,res)=>{
     }
 });
 
-router.post('/privacy_policy', [
+router.post('/privacy_policy', checkAdmin, [
     check('content','Content must have a value').notEmpty(),
   ], async function(req,res){
     const validationErrors = validationResult(req)
@@ -146,7 +148,7 @@ router.post('/privacy_policy', [
 });
 
 // contact
-router.get("/contact", async (req,res)=>{
+router.get("/contact", checkAdmin, async (req,res)=>{
     try {
         const page = await Page.findOne({ title:'Contact'})
         const content = page.content;
@@ -162,7 +164,7 @@ router.get("/contact", async (req,res)=>{
     }
 });
 
-router.post('/contact', [
+router.post('/contact', checkAdmin, [
     // check('content','Content must have a value').notEmpty(),
     check('phone','Phone must have a value').notEmpty(),
     check('email','Email must have a valid value').isEmail(),

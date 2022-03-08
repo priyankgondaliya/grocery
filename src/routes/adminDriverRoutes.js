@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
+
+const checkAdmin = require('../middleware/authAdminMiddleware');
+
 const sharp = require('sharp');
 const multer  = require('multer');
 const fs = require('fs-extra');
@@ -25,7 +28,7 @@ const upload = multer({
 });
 
 // Get driver details
-router.get("/", async (req,res) => {
+router.get("/", checkAdmin, async (req,res) => {
     const drivers = await Driver.find();
     res.status(201).render("admin/driver", {
         title: 'Driver List',
@@ -34,14 +37,14 @@ router.get("/", async (req,res) => {
 });
 
 // Get add driver 
-router.get("/add", (req,res)=>{
+router.get("/add", checkAdmin, (req,res)=>{
     res.status(201).render("admin/add_driver", {
         title: 'Add Driver'
     });
 });
 
 // POST add driver
-router.post("/add", upload.fields([
+router.post("/add", checkAdmin, upload.fields([
     { name: 'driverImage', maxCount: 1 },
     { name: 'vehicleImage', maxCount: 1 },
     { name: 'frontImage', maxCount: 1 },
@@ -111,7 +114,7 @@ router.post("/add", upload.fields([
 })
 
 // GET edit driver
-router.get("/edit/:id", async (req,res)=>{
+router.get("/edit/:id", checkAdmin, async (req,res)=>{
     try {
         const id = req.params.id;
         const driver = await Driver.findById(id);
@@ -135,7 +138,7 @@ router.get("/edit/:id", async (req,res)=>{
 });
 
 // POST Edit driver
-router.post('/edit/:id', upload.fields([
+router.post('/edit/:id', checkAdmin, upload.fields([
     { name: 'driverImage', maxCount: 1 },
     { name: 'vehicleImage', maxCount: 1 },
     { name: 'frontImage', maxCount: 1 },
@@ -228,7 +231,7 @@ router.post('/edit/:id', upload.fields([
 });
 
 // GET delete driver
-router.get("/delete/:id", async (req,res)=>{
+router.get("/delete/:id", checkAdmin, async (req,res)=>{
     try {
         const id = req.params.id;
         const driver = await Driver.findByIdAndRemove(id);
@@ -249,7 +252,7 @@ router.get("/delete/:id", async (req,res)=>{
 });
 
 // Get driver transaction
-router.get("/transaction", (req,res)=>{
+router.get("/transaction", checkAdmin, (req,res)=>{
     res.status(201).render("admin/driver_transaction", {
         title: 'Driver Transaction'
     });

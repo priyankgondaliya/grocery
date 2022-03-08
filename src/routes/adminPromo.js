@@ -4,8 +4,10 @@ const formatDate = require('../helpers/formateDate');
 
 const Promo = require('../models/promoModel');
 
+const checkAdmin = require('../middleware/authAdminMiddleware');
+
 // GET promo
-router.get("/", async (req,res)=>{
+router.get("/", checkAdmin, async (req,res)=>{
     const promos = await Promo.find();
     let updated = []
     for (let i = 0; i < promos.length; i++) {
@@ -29,14 +31,14 @@ router.get("/", async (req,res)=>{
 });
 
 // GET add promo
-router.get("/add", (req,res)=>{
+router.get("/add", checkAdmin, (req,res)=>{
     res.status(201).render("admin/add_promo",{
         title: 'Add Promocode',
     });
 });
 
 // POST add promo
-router.post('/add', async (req, res) => {
+router.post('/add', checkAdmin, async (req, res) => {
     try {
         const promo = new Promo({ 
             promo: req.body.promo,
@@ -58,7 +60,7 @@ router.post('/add', async (req, res) => {
 })
 
 // GET edit promo
-router.get("/edit/:id", async (req,res)=>{
+router.get("/edit/:id", checkAdmin, async (req,res)=>{
     try {
         const id = req.params.id;
         const promo = await Promo.findById(id);
@@ -80,7 +82,7 @@ router.get("/edit/:id", async (req,res)=>{
 });
 
 // POST edit promo
-router.post("/edit/:id", async (req,res)=>{
+router.post("/edit/:id", checkAdmin, async (req,res)=>{
     try {
         const id = req.params.id;
         await Promo.findByIdAndUpdate(id, {
@@ -107,7 +109,7 @@ router.post("/edit/:id", async (req,res)=>{
 });
 
 // delete promo
-router.get("/delete/:id", async (req,res)=>{
+router.get("/delete/:id", checkAdmin, async (req,res)=>{
     try {
         await Promo.findByIdAndRemove(req.params.id);
         req.flash('success','Promo deleted successfully.')

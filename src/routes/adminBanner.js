@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
+
+const checkAdmin = require('../middleware/authAdminMiddleware');
+
 const sharp = require('sharp');
 const multer  = require('multer');
 const fs = require('fs-extra');
@@ -26,7 +29,7 @@ const Banner = require("../models/banner");
 const formatDate = require('../helpers/formateDate');
 
 // GET banner
-router.get("/", async (req,res)=>{
+router.get("/", checkAdmin, async (req,res)=>{
     const banners = await Banner.find();
     let updated = []
     for (let i = 0; i < banners.length; i++) {
@@ -43,13 +46,13 @@ router.get("/", async (req,res)=>{
     });
 });
 // GET add banner
-router.get("/add", (req,res)=>{
+router.get("/add", checkAdmin, (req,res)=>{
     res.status(201).render("admin/add_banners", {
         title: 'Add Banner'
     });
 });
 // add new banner
-router.post("/add", upload.single('image'),async (req,res)=>{
+router.post("/add", checkAdmin, upload.single('image'),async (req,res)=>{
     try {
         const validationErrors = validationResult(req)
         if (validationErrors.errors.length > 0) {
@@ -76,7 +79,7 @@ router.post("/add", upload.single('image'),async (req,res)=>{
     }
 })
 // GET edit Banner
-router.get("/edit/:id", async (req,res)=>{
+router.get("/edit/:id", checkAdmin, async (req,res)=>{
     try {
         const id = req.params.id;
         const banner = await Banner.findById(id);
@@ -97,7 +100,7 @@ router.get("/edit/:id", async (req,res)=>{
 
 
 // POST edit banner
-router.post("/edit/:id", upload.single('image'),async (req,res)=>{
+router.post("/edit/:id", checkAdmin, upload.single('image'),async (req,res)=>{
     try {
         const validationErrors = validationResult(req)
         if (validationErrors.errors.length > 0) {
@@ -136,7 +139,7 @@ router.post("/edit/:id", upload.single('image'),async (req,res)=>{
     }
 });
 // GET delete banner
-router.get("/delete/:id", async (req,res)=>{
+router.get("/delete/:id", checkAdmin, async (req,res)=>{
     try {
         const id = req.params.id;
         const banner = await Banner.findByIdAndRemove(id);

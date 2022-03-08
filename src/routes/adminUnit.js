@@ -3,8 +3,10 @@ const router = express.Router();
 const Unit = require('../models/unitModel')
 const formatDate = require('../helpers/formateDate');
 
+const checkAdmin = require('../middleware/authAdminMiddleware');
+
 // GET units
-router.get("/", async (req,res)=>{
+router.get("/", checkAdmin, async (req,res)=>{
     const units = await Unit.find();
     let updated = []
     for (let i = 0; i < units.length; i++) {
@@ -22,14 +24,14 @@ router.get("/", async (req,res)=>{
 });
     
 // GET add units
-router.get("/add", (req,res)=>{
+router.get("/add", checkAdmin, (req,res)=>{
     res.status(201).render("admin/add_unit", {
         title: 'Add Unit',
     });
 });
 
 // POST add units
-router.post("/add", async (req,res)=>{
+router.post("/add", checkAdmin, async (req,res)=>{
     try {
         const unit = new Unit({ name: req.body.name });
         await unit.save();
@@ -46,7 +48,7 @@ router.post("/add", async (req,res)=>{
 });
 
 // GET edit units
-router.get("/edit/:id", async (req,res)=>{
+router.get("/edit/:id", checkAdmin, async (req,res)=>{
     try {
         const id = req.params.id;
         const unit = await Unit.findById(id);
@@ -66,7 +68,7 @@ router.get("/edit/:id", async (req,res)=>{
 });
 
 // POST edit units
-router.post("/edit/:id", async (req,res)=>{
+router.post("/edit/:id", checkAdmin, async (req,res)=>{
     try {
         const id = req.params.id;
         await Unit.findByIdAndUpdate(id, { name: req.body.name});
@@ -87,7 +89,7 @@ router.post("/edit/:id", async (req,res)=>{
 });
 
 // delete unit
-router.get("/delete/:id", async (req,res)=>{
+router.get("/delete/:id", checkAdmin, async (req,res)=>{
     try {
         await Unit.findByIdAndRemove(req.params.id);
         req.flash('success','Unit deleted successfully')

@@ -19,7 +19,7 @@ const checkVendor = function (req, res, next) {
                         return res.redirect('/vendor/login');
                     }
                     if (!vendor) {
-                        req.flash('danger','Invalid Credentials!');
+                        req.flash('danger','Please Login as Vendor first!');
                         return res.redirect('/vendor/login');
                     }
                     req.vendor = vendor;

@@ -35,7 +35,7 @@
     <section id="wrapper" class="login-register">
         <div class="login-box">
             <div class="white-box">
-                <form class="form-horizontal form-material" id="loginform" action="/vendor/login" method="post" onsubmit="return validate()">
+                <form class="form-horizontal form-material" id="loginform" action="/vendor/login" method="post" onsubmit="validate()">
                     <h3 class="box-title m-b-20">Sign In</h3>
                     <!-- messages -->
                     <div class="w-75 p-3" style="margin: auto;">
@@ -43,7 +43,7 @@
                     </div>
                     <div class="form-group ">
                         <div class="col-xs-12">
-                            <input id="email" class="form-control" type="text" placeholder="Email">
+                            <input id="email" class="form-control" type="text" placeholder="Email" name="email">
                             <div class="txt-s-101 cl6 p-b-10">
                                 <span class="cl12" id="ErrEmail" style="color: red;"></span>
                             </div>
@@ -51,7 +51,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-xs-12">
-                            <input id="pass" class="form-control" type="password" placeholder="Password">
+                            <input id="pass" class="form-control" type="password" placeholder="Password" name="password">
                             <div class="txt-s-101 cl6 p-b-10">
                                 <span class="cl12" id="ErrPass" style="color: red;"></span>
                             </div>

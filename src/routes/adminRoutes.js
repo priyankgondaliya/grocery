@@ -65,7 +65,7 @@ router.post("/login", [
 })
 
 // GET products
-router.get("/product", async (req,res)=>{
+router.get("/product", checkAdmin, async (req,res)=>{
     const products = await Product.find();
     res.status(201).render("admin/products", {
         title: 'Product List',
@@ -74,7 +74,7 @@ router.get("/product", async (req,res)=>{
 });
 
 // GET product detail
-router.get("/product/detail/:id", async (req,res)=>{
+router.get("/product/detail/:id", checkAdmin, async (req,res)=>{
     try {
         const id = req.params.id;
         const product = await Product.findById(id);
@@ -100,7 +100,7 @@ router.get("/product/detail/:id", async (req,res)=>{
 });
 
 // featured product
-router.post("/product/edit/:id", async (req,res) => {
+router.post("/product/edit/:id", checkAdmin, async (req,res) => {
     try {
         const id = req.params.id;
         const product = await Product.findById(id);
@@ -125,7 +125,7 @@ router.post("/product/edit/:id", async (req,res) => {
 })
 
 // GET delete product
-router.get("/product/delete/:id", async (req,res)=>{
+router.get("/product/delete/:id", checkAdmin, async (req,res)=>{
     try {
         const id = req.params.id;
         const product = await Product.findByIdAndRemove(id);
@@ -147,7 +147,7 @@ router.get("/product/delete/:id", async (req,res)=>{
 });
 
 // GET offers
-router.get("/offer", async (req,res)=>{
+router.get("/offer", checkAdmin, async (req,res)=>{
     const offers = await Offer.find();
     res.status(201).render("admin/offers", {
         title: 'Offer List',
@@ -156,7 +156,7 @@ router.get("/offer", async (req,res)=>{
 });
 
 // GET product detail
-router.get("/offer/detail/:id", async (req,res)=>{
+router.get("/offer/detail/:id", checkAdmin, async (req,res)=>{
     try {
         const id = req.params.id;
         const offer = await Offer.findById(id);
@@ -182,7 +182,7 @@ router.get("/offer/detail/:id", async (req,res)=>{
 });
 
 // GET delete offer
-router.get("/offer/delete/:id", async (req,res)=>{
+router.get("/offer/delete/:id", checkAdmin, async (req,res)=>{
     try {
         const id = req.params.id;
         const offer = await Offer.findByIdAndRemove(id);
@@ -204,7 +204,7 @@ router.get("/offer/delete/:id", async (req,res)=>{
 });
 
 // GET order
-router.get("/orders", (req,res)=>{
+router.get("/orders", checkAdmin, (req,res)=>{
     res.status(201).render("admin/orders",{
         title: 'Order List',
     });

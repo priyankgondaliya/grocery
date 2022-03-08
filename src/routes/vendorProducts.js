@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
+
+const checkVendor = require('../middleware/authVendorMiddleware');
+
 const sharp = require('sharp');
 const multer  = require('multer');
 const fs = require('fs-extra');
@@ -29,7 +32,7 @@ const Unit = require('../models/unitModel');
 const Product = require('../models/productModel');
 
 // GET products
-router.get("/", async (req,res)=>{
+router.get("/", checkVendor, async (req,res)=>{
     const products = await Product.find();
     res.status(201).render("vendor/vendor_products", {
         title: 'Product List',
@@ -38,7 +41,7 @@ router.get("/", async (req,res)=>{
 });
 
 // GET add product
-router.get("/add", async (req,res)=>{
+router.get("/add", checkVendor, async (req,res)=>{
     const cats = await Category.find();
     let array = {}
     for (let i = 0; i < cats.length; i++) {
@@ -57,7 +60,7 @@ router.get("/add", async (req,res)=>{
 });
 
 // add new product
-router.post("/add", upload.single('image'), [
+router.post("/add", checkVendor, upload.single('image'), [
     check('category','Please enter category.').notEmpty(),
     check('productName','Please enter productName.').notEmpty(),
     check('type','Please enter valid type.').notEmpty(),
@@ -102,7 +105,7 @@ router.post("/add", upload.single('image'), [
 })
 
 // GET edit product
-router.get("/edit/:id", async (req,res)=>{
+router.get("/edit/:id", checkVendor, async (req,res)=>{
     try {
         const id = req.params.id;
         const product = await Product.findById(id);
@@ -132,7 +135,7 @@ router.get("/edit/:id", async (req,res)=>{
 });
 
 // POST edit product
-router.post('/edit/:id', upload.single('image'), [
+router.post('/edit/:id', checkVendor, upload.single('image'), [
     check('category','Please enter category.').notEmpty(),
     check('productName','Please enter productName.').notEmpty(),
     check('type','Please enter valid type.').notEmpty(),
@@ -188,7 +191,7 @@ router.post('/edit/:id', upload.single('image'), [
 });
 
 // GET delete product
-router.get("/delete/:id", async (req,res)=>{
+router.get("/delete/:id", checkVendor, async (req,res)=>{
     try {
         const id = req.params.id;
         const product = await Product.findByIdAndRemove(id);

@@ -23,7 +23,7 @@ const checkAdmin = function (req, res, next) {
                         req.flash('danger','Invalid Credentials!');
                         return res.redirect('/admin/login');
                     } else if (!user.isAdmin) {
-                        req.flash('danger','Invalid Credentials!');
+                        req.flash('danger','Please login as admin first!');
                         return res.redirect('/admin/login');
                     }
                     req.user = user;

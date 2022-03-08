@@ -2,8 +2,10 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/userModel');
 
+const checkAdmin = require('../middleware/authAdminMiddleware');
+
 // get all users
-router.get("/", async (req,res)=>{
+router.get("/", checkAdmin, async (req,res)=>{
     try {
         const users = await User.find();
         res.render("admin/users", {

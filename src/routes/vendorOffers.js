@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
+
+const checkVendor = require('../middleware/authVendorMiddleware');
+
 const sharp = require('sharp');
 const multer  = require('multer');
 const fs = require('fs-extra');
@@ -30,7 +33,7 @@ const Unit = require('../models/unitModel');
 const Offer = require('../models/offerModel');
 
 // GET offers
-router.get("/", async (req,res)=>{
+router.get("/", checkVendor, async (req,res)=>{
     const offers = await Offer.find();
     res.status(201).render("vendor/vendor_offers", {
         title: 'Offer List',
@@ -39,7 +42,7 @@ router.get("/", async (req,res)=>{
 });
 
 // GET add offer
-router.get("/add", async (req,res)=>{
+router.get("/add", checkVendor, async (req,res)=>{
     const cats = await Category.find();
     let array = {}
     for (let i = 0; i < cats.length; i++) {
@@ -56,7 +59,7 @@ router.get("/add", async (req,res)=>{
 });
 
 // Post new offer
-router.post("/add", upload.single('image'), [
+router.post("/add", checkVendor, upload.single('image'), [
     check('category','Please enter category.').notEmpty(),
     check('productName','Please enter productName.').notEmpty(),
     check('type','Please enter type.').notEmpty(),
@@ -105,7 +108,7 @@ router.post("/add", upload.single('image'), [
 })
 
 // GET edit offer
-router.get("/edit/:id", async (req,res)=>{
+router.get("/edit/:id", checkVendor, async (req,res)=>{
     try {
         const id = req.params.id;
         const offer = await Offer.findById(id);
@@ -135,7 +138,7 @@ router.get("/edit/:id", async (req,res)=>{
 });
 
 // POST edit offer
-router.post('/edit/:id', upload.single('image'), [
+router.post('/edit/:id', checkVendor, upload.single('image'), [
     check('category','Please enter category.').notEmpty(),
     check('productName','Please enter productName.').notEmpty(),
     check('type','Please enter valid type.').notEmpty(),
@@ -195,7 +198,7 @@ router.post('/edit/:id', upload.single('image'), [
 });
 
 // GET delete offer
-router.get("/delete/:id", async (req,res)=>{
+router.get("/delete/:id", checkVendor, async (req,res)=>{
     try {
         const id = req.params.id;
         const offer = await Offer.findByIdAndRemove(id);

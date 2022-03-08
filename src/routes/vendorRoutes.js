@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const { sendForgotPassMail } = require('../helpers/sendmail')
 const { check, validationResult } = require('express-validator');
+
 const sharp = require('sharp');
 const multer  = require('multer');
 const fs = require('fs-extra');
@@ -29,8 +30,7 @@ const upload = multer({
 });
 
 // GET dashboard
-// router.get("/",checkVendor, (req,res)=>{
-router.get("/", (req,res)=>{
+router.get("/", checkVendor, (req,res)=>{
     res.status(201).render("vendor/vendor_dashboard", {
         title: 'Vendor Dashboard',
     });
@@ -181,7 +181,7 @@ router.post("/forgot", async (req, res, next) => {
 })
 
 // GET orders
-router.get("/orders", (req,res)=>{
+router.get("/orders", checkVendor, (req,res)=>{
     res.status(201).render("vendor/orders",{
         title: 'Order List',
     });

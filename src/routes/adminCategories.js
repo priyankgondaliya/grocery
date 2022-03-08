@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
+
+const checkAdmin = require('../middleware/authAdminMiddleware');
+
 const sharp = require('sharp');
 const multer  = require('multer');
 const fs = require('fs-extra');
@@ -27,7 +30,7 @@ const upload = multer({
 const Category = require('../models/category');
 
 // GET category
-router.get("/", async (req,res)=>{
+router.get("/", checkAdmin, async (req,res)=>{
     const cats = await Category.find();
     let updated = []
     for (let i = 0; i < cats.length; i++) {
@@ -47,14 +50,14 @@ router.get("/", async (req,res)=>{
 });
 
 // GET add category
-router.get("/add", (req,res)=>{
+router.get("/add", checkAdmin, (req,res)=>{
     res.status(201).render("admin/add_category", {
         title: 'Add Category'
     });
 });
 
 // POST add category
-router.post('/add', upload.single('image'), [
+router.post('/add', checkAdmin, upload.single('image'), [
     check('name','Category name must have a value').notEmpty(),
     check('tax','Category tax must have a value').notEmpty(),
 ],async (req,res) => {
@@ -97,7 +100,7 @@ router.post('/add', upload.single('image'), [
 });
 
 // GET edit category
-router.get("/edit/:id", async (req,res)=>{
+router.get("/edit/:id", checkAdmin, async (req,res)=>{
     try {
         const id = req.params.id;
         const cat = await Category.findById(id);
@@ -117,7 +120,7 @@ router.get("/edit/:id", async (req,res)=>{
 });
 
 // POST Edit category
-router.post('/edit/:id', upload.single('image'), [
+router.post('/edit/:id', checkAdmin, upload.single('image'), [
     check('name','Category name must have a value').notEmpty(),
     check('tax','Category tax must have a value').notEmpty(),
 ],async (req,res) => {
@@ -171,7 +174,7 @@ router.post('/edit/:id', upload.single('image'), [
 });
 
 // GET delete category
-router.get("/delete/:id", async (req,res)=>{
+router.get("/delete/:id", checkAdmin, async (req,res)=>{
     try {
         const id = req.params.id;
         const cat = await Category.findByIdAndRemove(id);

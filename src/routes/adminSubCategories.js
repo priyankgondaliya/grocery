@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const formatDate = require('../helpers/formateDate');
+
+const checkAdmin = require('../middleware/authAdminMiddleware');
+
 const fs = require('fs-extra');
 const sharp = require('sharp');
 const multer  = require('multer');
@@ -28,7 +31,7 @@ const Subcategory = require('../models/subcategory');
 const Category = require('../models/category');
 
 // GET subcategory
-router.get("/", async (req,res)=>{
+router.get("/", checkAdmin, async (req,res)=>{
     const cats = await Category.find();
     const subcats = await Subcategory.find();
 
@@ -52,7 +55,7 @@ router.get("/", async (req,res)=>{
 });
 
 // GET add subcategory
-router.get("/add", async (req,res)=>{
+router.get("/add", checkAdmin, async (req,res)=>{
     const cats = await Category.find();
     res.status(201).render("admin/add_subcategory", {
         title: 'Add Sub Category',
@@ -61,7 +64,7 @@ router.get("/add", async (req,res)=>{
 });
 
 // POST add subcategory
-router.post('/add', upload.single('image'), [
+router.post('/add', checkAdmin, upload.single('image'), [
     check('name','Sub category name must have a value').notEmpty(),
     check('category','Please select Category name').notEmpty(),
 ],async (req,res) => {
@@ -103,7 +106,7 @@ router.post('/add', upload.single('image'), [
 });
 
 // GET edit subcategory
-router.get("/edit/:id", async (req,res)=>{
+router.get("/edit/:id", checkAdmin, async (req,res)=>{
     try {
         const id = req.params.id;
         const cats = await Category.find();
@@ -125,7 +128,7 @@ router.get("/edit/:id", async (req,res)=>{
 });
 
 // POST edit subcategory
-router.post('/edit/:id', upload.single('image'), [
+router.post('/edit/:id', checkAdmin, upload.single('image'), [
     check('name','Sub category name must have a value').notEmpty(),
     check('category','Please select Category name').notEmpty(),
 ],async (req,res) => {
@@ -177,7 +180,7 @@ router.post('/edit/:id', upload.single('image'), [
 });
 
 // GET delete subcategory
-router.get("/delete/:id", async (req,res)=>{
+router.get("/delete/:id", checkAdmin, async (req,res)=>{
     try {
         const id = req.params.id;
         const cat = await Subcategory.findByIdAndRemove(id);
