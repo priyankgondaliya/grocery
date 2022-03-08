@@ -18,15 +18,13 @@ router.get("/", checkUser, async (req,res)=>{
         var cartLength = req.session.cart.products.length;
     }
     req.session.redirectToUrl = req.originalUrl;
-    const searchString = req.query.search;
-    if (searchString) {
-        // console.log(searchString);
+    const search = req.query.search;
+    if (search) {   // search page
+        const searchString = search.trim();
         const regex = new RegExp(searchString.replace(/\s+/g,"\\s+"), "gi");
 
         const searchProds = await Product.find({ 'productname': { $regex: regex }});
-        // console.log(searchProds.length);
         const searchCats = await Category.find({ 'name': { $regex: regex }});
-        // console.log(searchCats.length);
 
         const allcats = await Category.find();
         const cats = await Category.find({ featured: true });
@@ -40,7 +38,7 @@ router.get("/", checkUser, async (req,res)=>{
             searchCats,
             searchProds
         });
-    } else {
+    } else {    // homepage
         const cats = await Category.find({ featured: true });
         const prods = await Product.find({ featured: true });
         res.render("index",{

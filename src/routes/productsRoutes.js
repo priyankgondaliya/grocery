@@ -76,13 +76,25 @@ router.get('/:cat/:sub?', checkUser, async function(req,res){
         if (cat == 'all') {
             var subcats = await Subcategory.find();
             var prods = await Product.find();
+            var SubcatOf = `total`;
+            var ProdOf = `total`;
         } else {
             var subcats = await Subcategory.find({category: cat});
             var prods = await Product.find({category: cat});
+            const category = await Category.findById(cat);
+            const catName = category.name;
+            var SubcatOf = `of ${catName}`;
+            var ProdOf = `of ${catName}`;
         }
     } else {
         var subcats = await Subcategory.find({category: cat});
         var prods = await Product.find({subcategory: sub});
+        const category = await Category.findById(cat);
+        const subcategory = await Subcategory.findById(sub);
+        const catName = category.name;
+        const subName = subcategory.name;
+        var SubcatOf = `of ${catName}`;
+        var ProdOf = `of ${subName}`;
     }
     const cats = await Category.find();
     res.render('all_products',{
@@ -90,6 +102,8 @@ router.get('/:cat/:sub?', checkUser, async function(req,res){
         subcats,
         cats,
         prods,
+        SubcatOf,
+        ProdOf,
         cartLength,
         user: req.user
     });

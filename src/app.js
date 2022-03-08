@@ -132,8 +132,3 @@ app.listen(port,()=>{
 // NOTE
 
 // REPORT
-
-// vendor forgot pass api
-// vendor register view
-// vendor register form validation
-// vendor register api
