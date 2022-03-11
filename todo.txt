@@ -1,9 +1,16 @@
-wishlist frontend js
+outof stock
+learn about dicount & cashback
+set vendor field in product
 
-https://youtu.be/VKuY8QscZwY orders
 vendor delivery range
-
 view details link in users table
 user info page
 promocode per category
 vendor
+
+BUG: when logged in vendor tries to go to user side
+
+REPORT:
+admin order detail api
+
+DOing:

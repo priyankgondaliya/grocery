@@ -47,6 +47,10 @@ const productSchema = new mongoose.Schema ({
     featured: {
         type: Boolean,
         default: false
+    },
+    vendor: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Vendor',
     }
 })
 

@@ -3,6 +3,7 @@ const router = express.Router();
 const fs = require('fs-extra');
 const { check, validationResult } = require('express-validator');
 const bcrypt = require("bcryptjs");
+const formatDate = require('../helpers/formateDate');
 
 const checkAdmin = require('../middleware/authAdminMiddleware');
 
@@ -12,6 +13,7 @@ const Offer = require('../models/offerModel');
 const Category = require('../models/category');
 const Subcategory = require('../models/subcategory');
 const Unit = require('../models/unitModel');
+const Order = require('../models/orderModel');
 
 // const formatDate = require('../helpers/formateDate');
 
@@ -155,7 +157,7 @@ router.get("/offer", checkAdmin, async (req,res)=>{
     });
 });
 
-// GET product detail
+// GET offer detail
 router.get("/offer/detail/:id", checkAdmin, async (req,res)=>{
     try {
         const id = req.params.id;
@@ -204,10 +206,67 @@ router.get("/offer/delete/:id", checkAdmin, async (req,res)=>{
 });
 
 // GET order
-router.get("/orders", checkAdmin, (req,res)=>{
+router.get("/order", checkAdmin, async (req,res)=>{
+    var orders = await Order.find();
+    let updated = []
+    for (let i = 0; i < orders.length; i++) {
+        let user = await User.findById(orders[i].user);
+        let username = `${user.firstname} ${user.lastname}`
+        let e = {
+            username,
+            id: orders[i].id,
+            useraddress: orders[i].useraddress,
+            totalamount: orders[i].totalamount,
+            deliverycharge: orders[i].deliverycharge,
+            payableamount: orders[i].payableamount,
+            discountamount: orders[i].discountamount,
+            cashback: orders[i].cashback,
+            paymentmode: orders[i].paymentmode,
+            // status: orders[i].status,
+            date: formatDate(new Date(orders[i].orderdate))
+        }
+        updated.push(e)
+    }
+    // console.log(updated);
     res.status(201).render("admin/orders",{
         title: 'Order List',
+        orders: updated
     });
+});
+
+// GET order detail
+router.get("/order/detail/:id", checkAdmin, async (req,res)=>{
+    try {
+        const id = req.params.id;
+        const order = await Order.findById(id);
+        let updated = [];
+        for (let i = 0; i < order.products.length; i++) {
+            let product = await Product.findById(order.products[i].productId);
+            let unit = await Unit.findById(product.unit);
+            let e = {
+                image: product.image,
+                name: order.products[i].name,
+                quantity: order.products[i].quantity,
+                weight: order.products[i].weight,
+                price: order.products[i].price,
+                unit: unit.name,
+            }
+            updated.push(e)
+        }
+        res.status(201).render("admin/order_detail", {
+            title: 'Order Details',
+            // offer,
+            updated,
+        });
+    } catch (error) {
+        if (error.name === 'CastError') {
+            req.flash('danger',`Order not found!`);
+            res.redirect('/admin/order');
+        } else {
+            console.log(error);
+            res.send(error)
+        }
+    }
 });
 
 module.exports = router;

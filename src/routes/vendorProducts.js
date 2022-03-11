@@ -89,7 +89,8 @@ router.post("/add", checkVendor, upload.single('image'), [
             totalprice : req.body.totalPrice,
             image : '/uploads/product/' + filename,
             title : req.body.title,
-            description : req.body.description
+            description : req.body.description,
+            vendor : req.vendor.id
         })
         fs.access('./public/uploads/product', (err) => { if (err) fs.mkdirSync('./public/uploads/product'); });
         await sharp(req.file.buffer)
@@ -164,6 +165,7 @@ router.post('/edit/:id', checkVendor, upload.single('image'), [
         product.totalprice = req.body.totalPrice;
         product.title = req.body.title;
         product.description = req.body.description;
+        product.vendor = req.vendor.id;
         if (typeof req.file !== 'undefined') {
             oldImage = "public" + product.image;
             fs.remove(oldImage, function (err) {

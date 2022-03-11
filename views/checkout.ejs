@@ -334,47 +334,32 @@
 						</div>
 
                         <div>
-                        <h4 class="txt-m-124 cl3 p-b-11">
-							Payment Method
-						</h4>
+							<h4 class="txt-m-124 cl3 p-b-11">
+								Payment Method
+							</h4>
                         </div>
 
-						<div class="bo-all-1 bocl15 p-b-25 m-b-30">
-							<div class="flex-w flex-m bo-b-1 bocl15 p-rl-20 p-tb-16">
-								<input class="m-r-15" id="radio1" type="radio" name="pay" value="payment" checked="checked">
-								<label class="txt-m-103 cl6" for="radio1">
-									Cash on delivery
-								</label>
+						<form action="/order" method="post">
+							<div class="bo-all-1 bocl15 p-b-25 m-b-30">
+								<div class="flex-w flex-m bo-b-1 bocl15 p-rl-20 p-tb-16">
+									<input class="m-r-15" id="radio1" type="radio" name="pay" value="cod" checked="checked">
+									<label class="txt-m-103 cl6" for="radio1">
+										Cash on delivery
+									</label>
+								</div>
+	
+								<div class="flex-w flex-m p-rl-20 p-t-17 p-b-10">
+									<input class="m-r-15" id="radio2" type="radio" name="pay" value="razorpay">
+									<label class="txt-m-103 cl6" for="radio2">
+										Pay With Razorpay
+									</label>
+								</div>
 							</div>
-
-							<!-- <div class="content-payment bo-b-1 bocl15 p-rl-20 p-tb-15">
-								<p class="txt-s-120 cl9">
-									Please send a check to Store Name, Store Street, Store Town, Store State / County, Store Postcode.
-								</p>
-							</div> -->
-
-							<div class="flex-w flex-m p-rl-20 p-t-17 p-b-10">
-								<input class="m-r-15" id="radio2" type="radio" name="pay" value="razorpay">
-								<label class="txt-m-103 cl6" for="radio2">
-									Pay With Razorpay
-								</label>
-
-								<!-- <div class="w-full p-l-29 p-t-16">
-									<a href="#"><img src="images/icons/paypal.png" alt="IMG"></a>
-								</div> -->
-							</div> 
-
-							<!-- <div class="content-paypal bo-tb-1 bocl15 p-rl-20 p-tb-15 m-tb-10 dis-none">
-								<p class="txt-s-120 cl9">
-									Pay via PayPal; you can pay with your credit card if you don’t have a PayPal account.
-								</p>
-							</div> -->
-							 
-						</div>
-
-						<button class="flex-c-m txt-s-105 cl0 bg10 size-a-21 hov-btn2 trans-04 p-rl-10">
-							Place Order
-						</button>
+	
+							<button class="flex-c-m txt-s-105 cl0 bg10 size-a-21 hov-btn2 trans-04 p-rl-10">
+								Place Order
+							</button>
+						</form>
 					</div>
 				</div>
 			</div>

@@ -13,6 +13,7 @@ router.get("/", checkUser, async (req,res)=>{
         req.session.redirectToUrl = req.originalUrl;
         return res.redirect('/signup');
     }
+    req.session.redirectToUrl = req.originalUrl;
     var cart = await Cart.findOne({ userId: req.user.id});
     var cartLength = cart.products.length;
     const wishlist = req.user.wishlist;
@@ -46,7 +47,9 @@ router.get("/add/:id", checkUser, async (req,res)=>{
             user.wishlist.push(req.params.id);
             await user.save();
         }
-        res.redirect('/wishlist');
+        const redirect = req.session.redirectToUrl;
+        req.session.redirectToUrl = undefined;
+        res.redirect(redirect || '/wishlist');
     } catch (error) {
         console.log(error);        
     }
@@ -65,18 +68,13 @@ router.get("/remove/:id", checkUser, async (req,res)=>{
             user.wishlist = user.wishlist.filter((value) => value != req.params.id);
         }
         await user.save();
-    
-        res.redirect('/wishlist');
+
+        const redirect = req.session.redirectToUrl;
+        req.session.redirectToUrl = undefined;
+        res.redirect(redirect || '/wishlist');
     } catch (error) {
         console.log(error);        
     }
 });
-
-// TODO
-// do not redirect
-// create api and fetch via frontend js
-
-// 61c441a15ca0451bb0896aeb
-// 61c45740dea27764addb5c91
 
 module.exports = router;

@@ -456,11 +456,15 @@
 								<a href="/cart/add/<%= prods[i].id %>" class="block1-icon flex-c-m wrap-pic-max-w">
 									<img src="/images/icons/icon-cart.png" alt="ICON">
 								</a>
-								<a href="#" class="block1-icon flex-c-m wrap-pic-max-w js-addwish-b1">
-								<!-- <a id="myLink" href="#" onclick="MyFunction();">link text</a> -->
-									<img class="icon-addwish-b1" src="/images/icons/icon-heart.png" alt="ICON">
-									<img class="icon-addedwish-b1" src="/images/icons/icon-heart2.png" alt="ICON">
-								</a>
+								<% if (user && user.wishlist.includes(prods[i].id)) { %>
+									<a href="/wishlist/remove/<%= prods[i].id %>" class="block1-icon flex-c-m wrap-pic-max-w">
+										<img class="icon-addedwish-b1" src="/images/icons/icon-heart2.png" alt="ICON">
+									</a>
+								<% } else { %>
+									<a href="/wishlist/add/<%= prods[i].id %>" class="block1-icon flex-c-m wrap-pic-max-w">
+										<img class="icon-addwish-b1" src="/images/icons/icon-heart.png" alt="ICON">
+									</a>
+								<% } %>
 							</div>
 						</div>
 					</div>

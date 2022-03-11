@@ -96,6 +96,7 @@ app.use('/', require('./routes/accountRoutes'));
 app.use('/', require('./routes/homeRoute'));
 app.use('/cart', require('./routes/cartRoutes'));
 app.use('/checkout', require('./routes/checkout'));
+app.use('/order', require('./routes/orderRoutes'));
 app.use('/products', require('./routes/productsRoutes'));
 app.use('/wishlist', require('./routes/wishlistRoutes'));
 app.use('/newsletter', require('./routes/newsletterRoutes'));
@@ -128,7 +129,3 @@ const port = process.env.PORT || 3000;
 app.listen(port,()=>{
     console.log(`server is running on port ${port}`);
 })
-
-// NOTE
-
-// REPORT

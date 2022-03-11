@@ -83,8 +83,7 @@
 								</p>
 							</div>
 
-							<!-- - -->
-							<div class="tab-pane fade" id="orders" role="tabpanel">
+							<!-- <div class="tab-pane fade" id="orders" role="tabpanel">
 								<div class="bo-all-1 bocl15 flex-w flex-sb-m p-rl-30 p-tb-10 p-rl-15-ssm">
 									<div class="flex-t p-tb-8 m-r-30">
 										<img class="m-t-6 m-r-10" src="images/icons/icon-list.png" alt="IMG">
@@ -92,13 +91,54 @@
 											No order has been made yet.
 										</span>
 									</div>
-
 									<a href="/products/all" class="flex-c-m txt-s-105 cl0 bg10 size-a-42 hov-btn2 trans-04 p-rl-10 m-tb-8">
 										go shop
 									</a>
 								</div>
-							</div>
+							</div> -->
 
+							<div class="tab-pane fade" id="orders" role="tabpanel">
+								<div class="bo-all-1 bocl15 flex-w flex-sb-m p-rl-30 p-tb-10 p-rl-15-ssm">
+									<div class="flex-t p-tb-8 m-r-30">
+										<!-- <img class="m-t-6 m-r-10" src="images/icons/icon-list.png" alt="IMG"> -->
+										<span class="size-w-53 txt-s-101 cl6">
+											<h3 class="page-title">Orders</h3>
+											
+										</span>
+									</div>
+
+									<a href="/products/all" class="flex-c-m txt-s-105 cl0 bg10 size-a-42 hov-btn2 trans-04 p-rl-10 m-tb-8">
+										Continue shopping
+									</a>
+								</div>
+								<div class="table-responsive">
+									<table id="myTable" class="table table-striped color-table primary-table">
+										<thead>
+											<tr>
+												<th>Sr No.</th>
+												<th>Order Date</th>
+												<th>Status</th>
+												<th>Total</th>
+												<th>Pay With</th>
+												<th>Detail</th>
+											</tr>
+										</thead>
+										<tbody>
+											<% for( let i = 0; i < orders.length; i++ ) { %>
+												<tr>
+													<td><%= i+1 %></td>
+													<td><%= orders[i].date %></td>
+													<td>#</td>
+													<td><%= orders[i].totalamount %> &#8377;</td>
+													<td><%= orders[i].paymentmode %></td>
+													<td><a href="/order/detail/<%= orders[i].id %>"><i class="fa fa-info" style="color: black;"></i></a></td>
+												</tr>
+											<% } %>
+										</tbody>
+									</table>
+								</div>
+	
+							</div>
 							<!-- - -->
 							<div class="tab-pane fade" id="addresses" role="tabpanel">
 								<form onsubmit="validateCa()" action="/address" method="POST" id="caform">
