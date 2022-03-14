@@ -18,6 +18,7 @@ Bug solved (Forgot password not working)
 Bug solved (google search limit india)
 Bug solved (clear cart confirmation)
 Bug solved (continue shopping button)
+Bug solved (sub categories ma products, same page ma na show karo)
 Bug solved ()
 
 DOing:

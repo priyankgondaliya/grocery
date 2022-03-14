@@ -72,8 +72,8 @@ router.get('/:cat/:sub?', checkUser, async function(req,res){
     }
     req.session.redirectToUrl = req.originalUrl;
     const {cat, sub} = req.params;
-    const cats = await Category.find();
     if (sub == undefined) {
+        const cats = await Category.find();
         if (cat == 'all') {
             var subcats = await Subcategory.find();
             var prods = await Product.find();
@@ -88,7 +88,7 @@ router.get('/:cat/:sub?', checkUser, async function(req,res){
             var ProdOf = `of ${catName}`;
         }
         res.render('all_products',{
-            title:'All products',
+            title:'Products page',
             subcats,
             cats,
             prods,
@@ -98,21 +98,13 @@ router.get('/:cat/:sub?', checkUser, async function(req,res){
             user: req.user
         });
     } else {
-        var subcats = await Subcategory.find({category: cat});
         var prods = await Product.find({subcategory: sub});
-        const category = await Category.findById(cat);
         const subcategory = await Subcategory.findById(sub);
-        const catName = category.name;
         const subName = subcategory.name;
-        var SubcatOf = `of ${catName}`;
         var ProdOf = `of ${subName}`;
-        // bug: sub categories ma products, same page ma na show karo
-        res.render('all_products',{
-            title:'All products',
-            subcats,
-            cats,
+        res.render('products_per_subcat',{
+            title:'Products page',
             prods,
-            SubcatOf,
             ProdOf,
             cartLength,
             user: req.user
