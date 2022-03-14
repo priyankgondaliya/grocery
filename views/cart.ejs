@@ -97,10 +97,13 @@
 				</div>
 
 				<div class="flex-w flex-sb-m p-t-20">
-					<a href="/cart/clear">
-						<div class="flex-c-m txt-s-105 cl0 bg10 size-a-33 hov-btn2 trans-04 pointer p-rl-10 m-tb-10">
+					<a href="/cart/clear" onclick="return confirm('Are you sure?')">
+						<button class="flex-c-m txt-s-105 cl0 bg10 size-a-33 hov-btn2 trans-04 pointer p-rl-10 m-tb-10">
 							Clear CART
-						</div>
+						</button>
+					</a>
+					<a href="/products/all" class="flex-c-m txt-s-103 cl0 bg10 size-h-9 hov-btn2 trans-04 pointer p-rl-29 m-tb-10">
+						Continue shopping
 					</a>
 				</div>
 
@@ -153,14 +156,5 @@
 		</div>
 	</div>
 	<script src="/js/setGrandTotal.js"></script>
-    <!-- <script>
-        const array = document.getElementsByClassName("total");
-        let grandTotal = 0;
-        for (let i = 0; i < array.length; i++) {
-            let a = array[i].innerText.split(" ")[1];
-            grandTotal = grandTotal + parseFloat(a);
-        }
-        document.getElementById("grandTotal").innerHTML = `&#8377; ${grandTotal}`;
-    </script> -->
 
 <%- include('_layouts/footer') %>

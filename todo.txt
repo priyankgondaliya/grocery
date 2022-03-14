@@ -1,4 +1,4 @@
-outof stock
+out of stock
 learn about dicount & cashback
 set vendor field in product
 
@@ -11,9 +11,13 @@ vendor
 BUG: when logged in vendor tries to go to user side
 
 REPORT:
+admin order detail api
 Bug solved (Cart was empty still check out process working)
 Bug solved (Contact us not working)
+Bug solved (Forgot password not working)
+Bug solved (google search limit india)
+Bug solved (clear cart confirmation)
+Bug solved (continue shopping button)
 Bug solved ()
-admin order detail api
 
 DOing:
