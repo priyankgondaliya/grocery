@@ -21,6 +21,7 @@ const messageSchema = new mongoose.Schema ({
     },
     phone : {
         type:Number,
+        // type:String,
         require:true
     },
     message : {

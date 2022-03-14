@@ -293,39 +293,45 @@ router.get("/forgot_pass", checkUser, async (req, res) => {
     });
 })
 
-router.post("/forgot_pass", async (req, res, next) => {
-    if (req.user) {
-        var cart = await Cart.findOne({ userId: req.user.id});
-        var cartLength = cart.products.length;
-    } else {
-        var cartLength = req.session.cart.products.length;
-    }
-    // generate pass
-    let pass = (Math.random() + 1).toString(36).substring(5);
-
-    // set pass
-    const email = req.body.email
-    const user = await User.findOne({email})
-    if (!user) {
-        return res.render("forgot_pass",{
-            title:  "Forgot password",
-            usre: req.user,
+router.post("/forgot_pass", checkUser, async (req, res, next) => {
+    try {
+        if (req.user) {
+            var cart = await Cart.findOne({ userId: req.user.id});
+            var cartLength = cart.products.length;
+        } else {
+            var cartLength = req.session.cart.products.length;
+        }
+        // generate pass
+        let pass = (Math.random() + 1).toString(36).substring(5);
+    
+        // set pass
+        const email = req.body.email
+        const user = await User.findOne({email})
+        if (!user) {
+            return res.render("forgot_pass",{
+                title:  "Forgot password",
+                usre: req.user,
+                cartLength,
+                alert: [{msg:'Please enter registered email id.'}]
+            });
+        }
+        user.password = pass;
+        await user.save();
+    
+        // send mail
+        sendForgotPassMail(email, pass)
+        // console.log('email : '+ email);
+        // console.log('pass : '+ pass);
+        res.status(201).render("account", {
+            title: 'My account',
+            user: req.user,
             cartLength,
-            alert: [{msg:'Please enter registered email id.'}]
+            alert: [{msg:'A new password sent to your mail. Check your mail and Try logging in.'}],
         });
+    } catch (error) {
+        console.log(error);
+        res.send(error.message)
     }
-    user.password = pass;
-    await user.save();
-
-    // send mail
-    sendForgotPassMail(email, pass)
-    console.log('pass : '+ pass);
-    res.status(201).render("account", {
-        title: 'My account',
-        user: req.user,
-        cartLength,
-        alert: [{msg:'A new password sent to your mail. Check your mail and Try logging in.'}],
-    });
 })
 
 // post address

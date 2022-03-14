@@ -11,6 +11,9 @@ vendor
 BUG: when logged in vendor tries to go to user side
 
 REPORT:
+Bug solved (Cart was empty still check out process working)
+Bug solved (Contact us not working)
+Bug solved ()
 admin order detail api
 
 DOing:

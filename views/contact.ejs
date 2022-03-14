@@ -83,7 +83,7 @@
 
 					<div class="col-sm-6 p-b-30">
 						<div class="validate-input" data-validate = "Phone is required">
-							<input class="txt-s-101 cl3 plh1 size-a-46 bo-all-1 bocl15 focus1 p-rl-20" type="text" name="phone" placeholder="Your Phone *" id="contactPhone">
+							<input class="txt-s-101 cl3 plh1 size-a-46 bo-all-1 bocl15 focus1 p-rl-20" type="text" name="phone" placeholder="Your Phone *" id="contactPhone" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
 						</div>
 						<div class="txt-s-101 cl6 p-b-10">
 							<span class="cl12" id="contactErrPhone"></span>
