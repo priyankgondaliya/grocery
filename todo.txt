@@ -1,6 +1,5 @@
 out of stock
 learn about dicount & cashback
-set vendor field in product
 
 vendor delivery range
 view details link in users table
@@ -10,7 +9,6 @@ vendor
 
 BUG: when logged in vendor tries to go to user side
 
-REPORT:
 admin order detail api
 Bug solved (Cart was empty still check out process working)
 Bug solved (Contact us not working)
@@ -19,6 +17,18 @@ Bug solved (google search limit india)
 Bug solved (clear cart confirmation)
 Bug solved (continue shopping button)
 Bug solved (sub categories ma products, same page ma na show karo)
+Bug solved (When vendor add product its not showing into user side)
+Bug solved (autocomplete address field in vendor register)
+Bug solved (Add to wishlist not working)
+Bug solved (clear wishlist confirmation)
+Bug solved (autocomplete address field in add vendor)
+Bug solved (autocomplete address field in edit vendor)
+Bug solved (Add to cart not working)
+Bug solved (In cart page show only product details)
+
+REPORT:
+set vendor field in product model
+
 Bug solved ()
 
 DOing:

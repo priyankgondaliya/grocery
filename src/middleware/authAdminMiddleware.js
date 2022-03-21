@@ -3,7 +3,7 @@ const User = require('../models/userModel');
 
 const checkAdmin = function (req, res, next) {
     // console.log("MIDDLEWARE");
-    const token = req.cookies['jwt'];
+    const token = req.cookies['jwtAdmin'];
     if (token) {
         jwt.verify(token, process.env.SECRET_KEY, function(err, decodedToken){
             if (err) {
