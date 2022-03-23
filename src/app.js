@@ -73,6 +73,12 @@ app.get('/store', (req, res, next) => {
     });
 });
 
+app.get('/ajax', (req, res) => {
+    console.log("AJAX");
+    // res.status(201).send('Hi from node.');
+    res.status(200).json('Hi from node.');
+});
+
 // Routes
 app.use('/admin/category', require('./routes/adminCategories'));
 app.use('/admin/subcategory', require('./routes/adminSubCategories'));
@@ -100,6 +106,8 @@ app.use('/order', require('./routes/orderRoutes'));
 app.use('/products', require('./routes/productsRoutes'));
 app.use('/wishlist', require('./routes/wishlistRoutes'));
 app.use('/newsletter', require('./routes/newsletterRoutes'));
+
+// app.use('/api/cart', require('./routes/cartRoutes'));
 
 app.use('/google', require('./routes/googleAuthRoutes'));
 

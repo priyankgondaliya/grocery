@@ -25,10 +25,14 @@ Bug solved (autocomplete address field in add vendor)
 Bug solved (autocomplete address field in edit vendor)
 Bug solved (Add to cart not working)
 Bug solved (In cart page show only product details)
+set vendor field in product model
+Bug solved (user and admin login)
+Bug solved (empty cart checkout)
+learning jQuery
+learning RazorPay
 
 REPORT:
-set vendor field in product model
+learning AJAX
 
-Bug solved ()
 
 DOing:

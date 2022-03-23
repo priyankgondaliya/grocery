@@ -16,6 +16,10 @@ router.get("/", checkUser, async (req,res) => {
         var cartLength = req.session.cart.products.length;
     }
     var myCart = [];
+    if (cartLength <= 0) {
+        req.flash('success',"Cart is empty can not checkout.")
+        return res.redirect('/cart');
+    }
     for (let i = 0; i < cart.products.length; i++) {
         var prod = await Product.findById(cart.products[i].productId);
         prod.quantity = cart.products[i].quantity;
