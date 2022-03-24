@@ -117,6 +117,7 @@ router.get("/add/:product", checkUser, async (req, res)=>{
 
 //GET update product
 router.get('/update/:product', checkUser, async (req,res) => {
+    // console.log(req.url);
     if (req.user) {
         var cart = await Cart.findOne({ userId: req.user.id});
         var id = req.params.product;

@@ -30,9 +30,9 @@ Bug solved (user and admin login)
 Bug solved (empty cart checkout)
 learning jQuery
 learning RazorPay
+learning AJAX
 
 REPORT:
-learning AJAX
 
 
 DOing:

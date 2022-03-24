@@ -516,12 +516,50 @@
     try {
         $('.btn-num-product-down').on('click', function(){
             var numProduct = Number($(this).next().val());
-            if(numProduct > 0) $(this).next().val(numProduct - 1);
+            var id = $(this).parent().find('#id').val();
+            $.get(`/cart/update/${id}?action=remove`, function(data, status){
+                // console.log("request sent");
+            });
+            if(numProduct > 1){
+                $(this).next().val(numProduct - 1);
+                var price = parseFloat($(this).parent().parent().parent().find('#price').text())
+                var qty = parseInt($(this).parent().find('#qty').val())
+                var total = price * qty
+                $(this).parent().parent().parent().find('.total').html(`&#8377; ${total}`);
+            } else {
+                // remove
+                $(this).parent().parent().parent().remove();
+                if ($(".table-shopping-cart").find("tbody").find("tr").length == 2) {
+                    $(".table-shopping-cart").find('#empty').removeAttr('hidden');
+                }
+            }
+            const array = document.getElementsByClassName("total");
+            let grandTotal = 0;
+            for (let i = 0; i < array.length; i++) {
+                let a = array[i].innerText.split(" ")[1];
+                grandTotal = grandTotal + parseFloat(a);
+            }
+            document.getElementById("grandTotal").innerHTML = `&#8377; ${grandTotal}`;
         });
 
         $('.btn-num-product-up').on('click', function(){
             var numProduct = Number($(this).prev().val());
+            var id = $(this).parent().find('#id').val();
             $(this).prev().val(numProduct + 1);
+            var price = parseFloat($(this).parent().parent().parent().find('#price').text())
+            var qty = parseInt($(this).parent().find('#qty').val())
+            var total = price * qty
+            $(this).parent().parent().parent().find('.total').html(`&#8377; ${total}`);
+            $.get(`/cart/update/${id}?action=add`, function(data, status){
+                // console.log("request sent");
+            });
+            const array = document.getElementsByClassName("total");
+            let grandTotal = 0;
+            for (let i = 0; i < array.length; i++) {
+                let a = array[i].innerText.split(" ")[1];
+                grandTotal = grandTotal + parseFloat(a);
+            }
+            document.getElementById("grandTotal").innerHTML = `&#8377; ${grandTotal}`;
         });
     } catch(er) {console.log(er);}
         
