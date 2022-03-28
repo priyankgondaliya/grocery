@@ -55,7 +55,7 @@ router.get("/add/:id", checkUser, async (req,res)=>{
     }
 });
 
-// GET remove wishlist
+// GET remove wishlist api
 router.get("/remove/:id", checkUser, async (req,res)=>{
     if (!req.user) {
         return res.redirect('/signup');
@@ -72,6 +72,49 @@ router.get("/remove/:id", checkUser, async (req,res)=>{
         const redirect = req.session.redirectToUrl;
         req.session.redirectToUrl = undefined;
         res.redirect(redirect || '/wishlist');
+    } catch (error) {
+        console.log(error);        
+    }
+});
+
+// GET add wishlist api
+router.get("/api/add/:id", checkUser, async (req,res)=>{
+    if(!req.user){
+        return res.json({ status: "fail" })
+    }
+    try {
+        const p = await Product.findById(req.params.id);
+        if (p == null) {
+            // given id is not a product
+            console.log("Invalid product id");
+            return res.json({ status: "fail" })
+        }
+        const user = await User.findById(req.user.id);
+        if (!user.wishlist.includes(req.params.id)) {
+            user.wishlist.push(req.params.id);
+            await user.save();
+        }
+        res.json({ status: "success" })
+    } catch (error) {
+        console.log(error);        
+    }
+});
+
+// GET remove wishlist api
+router.get("/api/remove/:id", checkUser, async (req,res)=>{
+    if (!req.user) {
+        return res.json({ status: "fail" })
+    }
+    try {
+        const user = await User.findById(req.user.id);
+        if (req.params.id == 'all') {
+            user.wishlist = [];
+        } else {
+            user.wishlist = user.wishlist.filter((value) => value != req.params.id);
+        }
+        await user.save();
+
+        res.json({ status: "success" })
     } catch (error) {
         console.log(error);        
     }

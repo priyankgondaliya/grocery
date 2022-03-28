@@ -2,7 +2,7 @@ const jwt=require('jsonwebtoken');
 const Vendor = require('../models/vendorModel');
 
 const checkVendor = function (req, res, next) {
-    const token = req.cookies['jwt'];
+    const token = req.cookies['jwtVendor'];
     if (token) {
         jwt.verify(token, process.env.SECRET_KEY, function(err, decodedToken){
             if (err) {

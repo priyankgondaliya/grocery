@@ -246,18 +246,40 @@
     /*==================================================================
     [ Sweetalert ]*/
     try {
-        $('.js-addwish-b1, .js-addwish1').on('click', function(e){
+        $('.js-addwish-b1, .js-addwish1, .js-addedwish-b1').on('click', function(e){
             e.preventDefault();
         });
 
         $('.js-addwish-b1').each(function(){
             var nameProduct = $(this).parent().parent().find('.js-name-b1').html();
             $(this).on('click', function(){
-                swal(nameProduct, "is added to wishlist !", "success");
+                var id = $(this).parent().parent().find('#id').val();
+                $.get(`/wishlist/api/add/${id}`, function(data, status){
+                    if (data.status == 'success') {
+                        $('.'+id).parent().find('.js-addwish-b1').attr('hidden','True');
+                        $('.'+id).parent().find('.js-addedwish-b1').removeAttr('hidden');
+                        swal(nameProduct, "is added to wishlist !", "success");
+                    } else {
+                        window.location.replace('/signup');
+                    }
+                });
+            });
+        });
 
-                $(this).addClass('js-addedwish-b1');
-                $(this).removeClass('js-addwish-b1');
-                $(this).off('click');
+        $('.js-addedwish-b1').each(function(){
+            var nameProduct = $(this).parent().parent().find('.js-name-b1').html();
+            $(this).on('click', function(){
+                var id = $(this).parent().parent().find('#id').val();
+                console.log(id);
+                $.get(`/wishlist/api/remove/${id}`, function(data, status){
+                    if (data.status == 'success') {
+                        swal(nameProduct, "is removed from wishlist !", "warning");
+                        $('.'+id).parent().find('.js-addedwish-b1').attr('hidden','True')
+                        $('.'+id).parent().find('.js-addwish-b1').removeAttr('hidden')
+                    } else {
+                        window.location.replace('/signup');
+                    }
+                });
             });
         });
 

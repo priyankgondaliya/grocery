@@ -130,7 +130,7 @@
 							Billing details
 						</h4>
 
-						<form action="/checkout" method="post" id="form" onsubmit="validate()">
+						<form action="/checkout" method="post" id="form" onsubmit="return validate()">
 							<div class="row p-b-50">
 								<div class="col-sm-6 p-b-23">
 									<div>
@@ -339,7 +339,7 @@
 							</h4>
                         </div>
 
-						<form action="/order" method="post">
+						<form action="/order" method="post" onsubmit="return validate()">
 							<div class="bo-all-1 bocl15 p-b-25 m-b-30">
 								<div class="flex-w flex-m bo-b-1 bocl15 p-rl-20 p-tb-16">
 									<input class="m-r-15" id="radio1" type="radio" name="pay" value="cod" checked="checked">
@@ -455,9 +455,10 @@
 			} else {
 				removeError('postalErr')
 			}
-			if (returnVal) {
-				form.submit();
-			}
+			// if (returnVal) {
+			// 	form.submit();
+			// }
+			return returnVal
 		}
 
 		function setError(id, error) {

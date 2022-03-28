@@ -7,32 +7,17 @@ user info page
 promocode per category
 vendor
 
-BUG: when logged in vendor tries to go to user side
-
-admin order detail api
-Bug solved (Cart was empty still check out process working)
-Bug solved (Contact us not working)
-Bug solved (Forgot password not working)
-Bug solved (google search limit india)
-Bug solved (clear cart confirmation)
-Bug solved (continue shopping button)
-Bug solved (sub categories ma products, same page ma na show karo)
-Bug solved (When vendor add product its not showing into user side)
-Bug solved (autocomplete address field in vendor register)
-Bug solved (Add to wishlist not working)
-Bug solved (clear wishlist confirmation)
-Bug solved (autocomplete address field in add vendor)
-Bug solved (autocomplete address field in edit vendor)
-Bug solved (Add to cart not working)
-Bug solved (In cart page show only product details)
-set vendor field in product model
-Bug solved (user and admin login)
-Bug solved (empty cart checkout)
-learning jQuery
-learning RazorPay
-learning AJAX
+add to wishlist without refresh
+remove from wishlist without refresh
+redirect if not logged
+add to wishlist api for AJAX
 
 REPORT:
-
+remove from wishlist api for AJAX
+update cart without refresh
+count total and grand total when update cart
+show message if cart is empty
+BUG: when logged in vendor tries to go to user side
+BUG: user can place order without address
 
 DOing:

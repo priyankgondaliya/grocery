@@ -14,10 +14,16 @@ router.post('/', checkUser, async (req, res) => {
         var cart = await Cart.findOne({ userId: req.user.id});
         var cartLength = cart.products.length;
     } else {
-        // please login
+        req.flash('danger','Please login first!');
+        return res.redirect('/signup');
     }
     // create order
     const user = req.user;
+    if (user.address == undefined) {
+        console.log(user.address);
+        req.flash('danger','Address is required!');
+        return res.redirect('/checkout');
+    }
     const address = `${user.address.house},${user.address.apartment},${user.address.landmark},${user.address.city},${user.address.state},${user.address.country}-${user.address.postal}`;
     var totalamount = 0;
     for (let i = 0; i < cart.products.length; i++) {
@@ -26,7 +32,6 @@ router.post('/', checkUser, async (req, res) => {
     var products = [];
     for (let i = 0; i < cart.products.length; i++) {
         const product = await Product.findById(cart.products[i].productId);
-        console.log(product);
         var pro = {
             productId: product.id,
             quantity: cart.products[i].quantity,

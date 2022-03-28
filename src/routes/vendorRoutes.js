@@ -66,7 +66,7 @@ router.post("/login", [
             return res.redirect('/vendor/login');
         }
         const token = await vendorExist.generateAuthToken();
-        res.cookie("jwt", token, {
+        res.cookie("jwtVendor", token, {
             expires:new Date( Date.now() + 90*24*60*60*1000 ),
             httpOnly:true,
             // secure:true

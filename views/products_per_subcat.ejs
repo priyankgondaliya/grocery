@@ -39,6 +39,7 @@
 								<div class="block1-bg wrap-pic-w bo-all-1 bocl12 hov3 trans-04">
 									<img src="<%= prods[i].image %>" class="product_img_set" alt="IMG" width="200px">
 
+									
 									<div class="block1-content flex-col-c-m p-b-46">
 										<a href="product-single.html" class="txt-m-103 cl3 txt-center hov-cl10 trans-04 js-name-b1">
 											<%= prods[i].productname %>
@@ -47,6 +48,7 @@
 										<span class="block1-content-more txt-m-104 cl9 p-t-21 trans-04">
 											<%= prods[i].totalprice %>&#8377;
 										</span>
+										<input type="text" id="id" value="<%= prods[i].id %>" class="<%= prods[i].id %>" hidden>
 										<div class="block1-wrap-icon flex-c-m flex-w trans-05">
 											<a href="/products/detail/<%= prods[i].id %>" class="block1-icon flex-c-m wrap-pic-max-w">
 												<img src="/images/icons/icon-view.png" alt="ICON">
@@ -55,11 +57,17 @@
 												<img src="/images/icons/icon-cart.png" alt="ICON">
 											</a>
 											<% if (user && user.wishlist.includes(prods[i].id)) { %>
-												<a href="/wishlist/remove/<%= prods[i].id %>" class="block1-icon flex-c-m wrap-pic-max-w">
+												<a href="javascript:void(0)" class="block1-icon flex-c-m wrap-pic-max-w js-addedwish-b1">
 													<img class="icon-addedwish-b1" src="/images/icons/icon-heart2.png" alt="ICON">
 												</a>
+												<a href="javascript:void(0)" class="block1-icon flex-c-m wrap-pic-max-w js-addwish-b1" hidden>
+													<img class="icon-addwish-b1" src="/images/icons/icon-heart.png" alt="ICON">
+												</a>
 											<% } else { %>
-												<a href="/wishlist/add/<%= prods[i].id %>" class="block1-icon flex-c-m wrap-pic-max-w">
+												<a href="javascript:void(0)" class="block1-icon flex-c-m wrap-pic-max-w js-addedwish-b1" hidden>
+													<img class="icon-addedwish-b1" src="/images/icons/icon-heart2.png" alt="ICON">
+												</a>
+												<a href="javascript:void(0)" class="block1-icon flex-c-m wrap-pic-max-w js-addwish-b1">
 													<img class="icon-addwish-b1" src="/images/icons/icon-heart.png" alt="ICON">
 												</a>
 											<% } %>

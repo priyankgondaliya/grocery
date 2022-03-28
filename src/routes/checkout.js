@@ -13,7 +13,8 @@ router.get("/", checkUser, async (req,res) => {
         var cart = await Cart.findOne({ userId: req.user.id });
         var cartLength = cart.products.length;
     } else {
-        var cartLength = req.session.cart.products.length;
+        req.flash('danger','Please login first!');
+        return res.redirect('/signup');
     }
     var myCart = [];
     if (cartLength <= 0) {
