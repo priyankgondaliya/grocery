@@ -9,12 +9,12 @@ update cart without refresh
 count total and grand total when update cart
 show message if cart is empty
 BUG: when logged in vendor tries to go to user side
-
-REPORT:
 BUG: user can place order without address
 vendor delivery range
 elastic search api
 find store api
+
+REPORT:
 select store view
 Handle error: wrong id by user
 select store api
