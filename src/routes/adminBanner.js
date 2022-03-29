@@ -83,6 +83,10 @@ router.get("/edit/:id", checkAdmin, async (req,res)=>{
     try {
         const id = req.params.id;
         const banner = await Banner.findById(id);
+        if (banner == null) {
+            req.flash('danger',`Banner not found!`);
+            return res.redirect('/admin/banner');
+        }
         res.status(201).render("admin/edit_banners", {
             title: 'Edit Banner',
             banner
@@ -113,6 +117,10 @@ router.post("/edit/:id", checkAdmin, upload.single('image'),async (req,res)=>{
         }
         const id = req.params.id;
         const banner = await Banner.findById(id);
+        if (banner == null) {
+            req.flash('danger',`Banner not found!`);
+            return res.redirect('/admin/banner');
+        }
         if (typeof req.file !== 'undefined') {
             oldImage = "public" + banner.image;
             fs.remove(oldImage, function (err) {
@@ -150,7 +158,7 @@ router.get("/delete/:id", checkAdmin, async (req,res)=>{
         req.flash('success',`Banner Deleted successfully`);
         res.redirect('/admin/banner')
     } catch (error) {
-        if (error.name === 'CastError') {
+        if (error.name === 'CastError'  || error.name === 'TypeError') {
             req.flash('danger',`Banner not found!`);
             res.redirect('/admin/banner');
         } else {

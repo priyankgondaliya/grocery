@@ -110,6 +110,10 @@ router.get("/edit/:id", checkVendor, async (req,res)=>{
     try {
         const id = req.params.id;
         const product = await Product.findById(id);
+        if (product == null) {
+            req.flash('danger',`Product not found!`);
+            return res.redirect('/vendor/product');
+        }
         const cats = await Category.find();
         let array = {}
         for (let i = 0; i < cats.length; i++) {
@@ -153,6 +157,10 @@ router.post('/edit/:id', checkVendor, upload.single('image'), [
         }
         const id = req.params.id;
         const product = await Product.findById(id);
+        if (product == null) {
+            req.flash('danger',`Product not found!`);
+            return res.redirect('/vendor/product');
+        }
         product.category = req.body.category;
         product.subcategory = req.body.subCategory;
         product.company = req.body.company;
@@ -204,7 +212,7 @@ router.get("/delete/:id", checkVendor, async (req,res)=>{
         req.flash('success',`Product Deleted successfully`);
         res.redirect('/vendor/product')
     } catch (error) {
-        if (error.name === 'CastError') {
+        if (error.name === 'CastError' || error.name === 'TypeError') {
             req.flash('danger',`Product not found!`);
             res.redirect('/vendor/product');
         } else {

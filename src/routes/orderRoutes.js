@@ -10,47 +10,52 @@ const Unit = require('../models/unitModel');
 
 // place order
 router.post('/', checkUser, async (req, res) => {
-    if (req.user) {
-        var cart = await Cart.findOne({ userId: req.user.id});
-        var cartLength = cart.products.length;
-    } else {
+    try {
+        if (req.user) {
+            var cart = await Cart.findOne({ userId: req.user.id});
+            var cartLength = cart.products.length;
+        } else {
         req.flash('danger','Please login first!');
         return res.redirect('/signup');
-    }
-    // create order
-    const user = req.user;
-    if (user.address == undefined) {
-        console.log(user.address);
-        req.flash('danger','Address is required!');
-        return res.redirect('/checkout');
-    }
-    const address = `${user.address.house},${user.address.apartment},${user.address.landmark},${user.address.city},${user.address.state},${user.address.country}-${user.address.postal}`;
-    var totalamount = 0;
-    for (let i = 0; i < cart.products.length; i++) {
-        var totalamount = totalamount + (cart.products[i].price * cart.products[i].quantity);
-    }
-    var products = [];
-    for (let i = 0; i < cart.products.length; i++) {
-        const product = await Product.findById(cart.products[i].productId);
-        var pro = {
-            productId: product.id,
-            quantity: cart.products[i].quantity,
-            name: product.productname,
-            weight: product.productweight,
-            price: cart.products[i].price
         }
-        products.push(pro);
+        // create order
+        const user = req.user;
+        if (user.address == undefined) {
+            console.log(user.address);
+            req.flash('danger','Address is required!');
+            return res.redirect('/checkout');
+        }
+        const address = `${user.address.house},${user.address.apartment},${user.address.landmark},${user.address.city},${user.address.state},${user.address.country}-${user.address.postal}`;
+        var totalamount = 0;
+        for (let i = 0; i < cart.products.length; i++) {
+            var totalamount = totalamount + (cart.products[i].price * cart.products[i].quantity);
+        }
+        var products = [];
+        for (let i = 0; i < cart.products.length; i++) {
+            const product = await Product.findById(cart.products[i].productId);
+            var pro = {
+                productId: product.id,
+                quantity: cart.products[i].quantity,
+                name: product.productname,
+                weight: product.productweight,
+                price: cart.products[i].price
+            }
+            products.push(pro);
+        }
+        const order = new Order({
+            // vendor
+            user: user.id,
+            useraddress: address,
+            totalamount,
+            products,
+            paymentmode: req.body.pay
+        })
+        await order.save();
+        res.redirect('/');
+    } catch (error) {
+        console.log(error);
+        res.redirect('/404');
     }
-    const order = new Order({
-        // vendor
-        user: user.id,
-        useraddress: address,
-        totalamount,
-        products,
-        paymentmode: req.body.pay
-    })
-    await order.save();
-    res.redirect('/');
 })
 
 // GET order detail
@@ -87,6 +92,7 @@ router.get('/detail/:id', checkUser, async function(req,res){
         });
     } catch (error) {
         console.log(error);
+        res.redirect('/404');
     }
 });
 

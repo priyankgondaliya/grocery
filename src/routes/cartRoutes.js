@@ -43,138 +43,152 @@ router.get("/", checkUser, async (req,res)=>{
 
 // add to cart
 router.get("/add/:product", checkUser, async (req, res)=>{
-    const product = await Product.findById(req.params.product);
-    // check if user is logged
-    if (req.user) {
-        // change in mongo
-        var cart = await Cart.findOne({ userId: req.user.id});
-        if (cart) {
-            //cart exists for user
-            let itemIndex = cart.products.findIndex(p => p.productId == product.id);
-
-            if (itemIndex > -1) {
-                //product exists in the cart, update the quantity
-                let productItem = cart.products[itemIndex];
-                productItem.quantity = productItem.quantity + 1;
-                cart.products[itemIndex] = productItem;
-            } else {
-                //product does not exists in cart, add new item
-                cart.products.push({
-                    productId: product._id,
-                    quantity: 1,
-                    price: product.totalprice
-                });
-            }
-            await cart.save();
-        } else {
-            const cart = new Cart({
-                userId: req.user.id,
-                products: [{
-                    productId: product._id,
-                    quantity: 1,
-                    price: product.totalprice
-                }]
-            })
-            await cart.save();
-        }
-        const redirect = req.session.redirectToUrl;
-        req.session.redirectToUrl = undefined;
-        res.redirect(redirect || '/cart');
-    } else {
-        // store in session
-        if (typeof req.session.cart == "undefined") {
-            req.session.cart = { products: [] };
-            req.session.cart.products.push({
-                productId: product.id,
-                quantity: 1,
-                price: product.totalprice
-            });
-        } else {
-            var cart = req.session.cart;
-            var newItem = true;
-            for (var i=0; i<cart.products.length; i++) {
-                if ( cart.products[i].productId == product.id) {
-                    cart.products[i].quantity++;
-                    newItem = false;
-                    break;
+    try {
+        const product = await Product.findById(req.params.product);
+        // check if user is logged
+        if (req.user) {
+            // change in mongo
+            var cart = await Cart.findOne({ userId: req.user.id});
+            if (cart) {
+                //cart exists for user
+                let itemIndex = cart.products.findIndex(p => p.productId == product.id);
+    
+                if (itemIndex > -1) {
+                    //product exists in the cart, update the quantity
+                    let productItem = cart.products[itemIndex];
+                    productItem.quantity = productItem.quantity + 1;
+                    cart.products[itemIndex] = productItem;
+                } else {
+                    //product does not exists in cart, add new item
+                    cart.products.push({
+                        productId: product._id,
+                        quantity: 1,
+                        price: product.totalprice
+                    });
                 }
+                await cart.save();
+            } else {
+                const cart = new Cart({
+                    userId: req.user.id,
+                    products: [{
+                        productId: product._id,
+                        quantity: 1,
+                        price: product.totalprice
+                    }]
+                })
+                await cart.save();
             }
-            if (newItem) {
-                cart.products.push({
+            const redirect = req.session.redirectToUrl;
+            req.session.redirectToUrl = undefined;
+            res.redirect(redirect || '/cart');
+        } else {
+            // store in session
+            if (typeof req.session.cart == "undefined") {
+                req.session.cart = { products: [] };
+                req.session.cart.products.push({
                     productId: product.id,
                     quantity: 1,
                     price: product.totalprice
                 });
+            } else {
+                var cart = req.session.cart;
+                var newItem = true;
+                for (var i=0; i<cart.products.length; i++) {
+                    if ( cart.products[i].productId == product.id) {
+                        cart.products[i].quantity++;
+                        newItem = false;
+                        break;
+                    }
+                }
+                if (newItem) {
+                    cart.products.push({
+                        productId: product.id,
+                        quantity: 1,
+                        price: product.totalprice
+                    });
+                }
             }
+            // console.log(req.session.cart);
+            // console.log("");
+            const redirect = req.session.redirectToUrl;
+            req.session.redirectToUrl = undefined;
+            res.redirect(redirect || '/cart');
         }
-        // console.log(req.session.cart);
-        // console.log("");
-        const redirect = req.session.redirectToUrl;
-        req.session.redirectToUrl = undefined;
-        res.redirect(redirect || '/cart');
+    } catch (error) {
+        if (error.name === 'CastError' || error.name === 'TypeError') {
+            res.redirect('/404');
+        } else {
+            console.log(error);
+            res.send(error)
+        }        
     }
 })
 
 //GET update product
 router.get('/update/:product', checkUser, async (req,res) => {
     // console.log(req.url);
-    if (req.user) {
-        var cart = await Cart.findOne({ userId: req.user.id});
-        var id = req.params.product;
-        var action = req.query.action;
-    
-        for (var i=0; i<cart.products.length; i++) {
-            if (cart.products[i].productId == id) {
-                switch (action) {
-                    case "add":
-                        cart.products[i].quantity++;
-                        break;
-                    case "remove":
-                        cart.products[i].quantity--;
-                        if (cart.products[i].quantity<1) {
+    try {
+        if (req.user) {
+            var cart = await Cart.findOne({ userId: req.user.id});
+            var id = req.params.product;
+            var action = req.query.action;
+        
+            for (var i=0; i<cart.products.length; i++) {
+                if (cart.products[i].productId == id) {
+                    switch (action) {
+                        case "add":
+                            cart.products[i].quantity++;
+                            break;
+                        case "remove":
+                            cart.products[i].quantity--;
+                            if (cart.products[i].quantity<1) {
+                                cart.products.splice(i,1);
+                            }
+                            break;
+                        case "clear":
                             cart.products.splice(i,1);
-                        }
-                        break;
-                    case "clear":
-                        cart.products.splice(i,1);
-                        break;
-                    default:
-                        console.log('Update problem');
-                        break;
+                            break;
+                        default:
+                            console.log('Update problem');
+                            break;
+                    }
+                    break;
                 }
-                break;
+            }
+            await cart.save();
+        } else {
+            var cart = req.session.cart;
+            var id = req.params.product;
+            var action = req.query.action;
+        
+            for (var i=0; i<cart.products.length; i++) {
+                if (cart.products[i].productId == id) {
+                    switch (action) {
+                        case "add":
+                            cart.products[i].quantity++;
+                            break;
+                        case "remove":
+                            cart.products[i].quantity--;
+                            if (cart.products[i].quantity<1) {
+                                cart.products.splice(i,1);
+                            }
+                            break;
+                        case "clear":
+                            cart.products.splice(i,1);
+                            break;
+                        default:
+                            console.log('Update problem');
+                            break;
+                    }
+                    break;
+                }
             }
         }
-        await cart.save();
-    } else {
-        var cart = req.session.cart;
-        var id = req.params.product;
-        var action = req.query.action;
-    
-        for (var i=0; i<cart.products.length; i++) {
-            if (cart.products[i].productId == id) {
-                switch (action) {
-                    case "add":
-                        cart.products[i].quantity++;
-                        break;
-                    case "remove":
-                        cart.products[i].quantity--;
-                        if (cart.products[i].quantity<1) {
-                            cart.products.splice(i,1);
-                        }
-                        break;
-                    case "clear":
-                        cart.products.splice(i,1);
-                        break;
-                    default:
-                        console.log('Update problem');
-                        break;
-                }
-                break;
-            }
-        }
+        res.redirect('/cart');
+    } catch (error) {
+        console.log(error);
+        res.send(error)
     }
-    res.redirect('/cart');
 });
 
 // GET clear cart

@@ -104,6 +104,10 @@ router.get("/edit/:id", checkAdmin, async (req,res)=>{
     try {
         const id = req.params.id;
         const cat = await Category.findById(id);
+        if (cat == null) {
+            req.flash('danger',`Category not found!`);
+            return res.redirect('/admin/category');
+        }
         res.status(201).render("admin/edit_category", {
             title: 'Edit Category',
             cat
@@ -136,6 +140,10 @@ router.post('/edit/:id', checkAdmin, upload.single('image'), [
         }
         const id = req.params.id;
         const cat = await Category.findById(id);
+        if (cat == null) {
+            req.flash('danger',`Category not found!`);
+            return res.redirect('/admin/category');
+        }
         cat.name = name;
         cat.tax = tax;
         if (req.body.featured) {
@@ -185,7 +193,7 @@ router.get("/delete/:id", checkAdmin, async (req,res)=>{
         req.flash('success',`Category Deleted successfully`);
         res.redirect('/admin/category')
     } catch (error) {
-        if (error.name === 'CastError') {
+        if (error.name === 'CastError' || error.name === 'TypeError') {
             req.flash('danger',`Category not found!`);
             res.redirect('/admin/category');
         } else {

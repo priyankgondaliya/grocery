@@ -80,6 +80,10 @@ router.get("/product/detail/:id", checkAdmin, async (req,res)=>{
     try {
         const id = req.params.id;
         const product = await Product.findById(id);
+        if (product == null) {
+            req.flash('danger',`Product not found!`);
+            return res.redirect('/admin/product');
+        }
         const category = await Category.findById(product.category);
         const subcategory = await Subcategory.findById(product.subcategory);
         const unit = await Unit.findById(product.unit);
@@ -106,6 +110,10 @@ router.post("/product/edit/:id", checkAdmin, async (req,res) => {
     try {
         const id = req.params.id;
         const product = await Product.findById(id);
+        if (product == null) {
+            req.flash('danger',`Product not found!`);
+            return res.redirect('/admin/product');
+        }
         if (req.body.featured) {
             product.featured = true;
         } else {
@@ -138,7 +146,7 @@ router.get("/product/delete/:id", checkAdmin, async (req,res)=>{
         req.flash('success',`Product Deleted successfully`);
         res.redirect('/admin/product')
     } catch (error) {
-        if (error.name === 'CastError') {
+        if (error.name === 'CastError' || error.name === 'TypeError') {
             req.flash('danger',`Product not found!`);
             res.redirect('/admin/product');
         } else {
@@ -162,6 +170,10 @@ router.get("/offer/detail/:id", checkAdmin, async (req,res)=>{
     try {
         const id = req.params.id;
         const offer = await Offer.findById(id);
+        if (offer == null) {
+            req.flash('danger',`Offer not found!`);
+            return res.redirect('/admin/offer');
+        }
         const category = await Category.findById(offer.category);
         const subcategory = await Subcategory.findById(offer.subcategory);
         const unit = await Unit.findById(offer.unit);
@@ -188,6 +200,10 @@ router.get("/offer/delete/:id", checkAdmin, async (req,res)=>{
     try {
         const id = req.params.id;
         const offer = await Offer.findByIdAndRemove(id);
+        if (offer == null) {
+            req.flash('danger',`Offer not found!`);
+            return res.redirect('/admin/offer');
+        }
         image = "public" + offer.image;
         fs.remove(image, function (err) {
             if (err) { console.log(err); }

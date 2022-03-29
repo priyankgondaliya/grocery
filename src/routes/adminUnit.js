@@ -52,6 +52,10 @@ router.get("/edit/:id", checkAdmin, async (req,res)=>{
     try {
         const id = req.params.id;
         const unit = await Unit.findById(id);
+        if (unit == null) {
+            req.flash('danger',`Unit not found!`);
+            return res.redirect('/admin/unit');
+        }
         res.status(201).render("admin/edit_unit", {
             title: 'Add Unit',
             unit
@@ -78,7 +82,7 @@ router.post("/edit/:id", checkAdmin, async (req,res)=>{
         if (error.code == 11000) {
             req.flash('danger',`Unit name '${req.body.name}' already exist!`);
             res.redirect('/admin/unit');
-        } else if (error.name === 'CastError') {
+        } else if (error.name === 'CastError' || error.name === 'TypeError') {
             req.flash('danger',`Unit not found!`);
             res.redirect('/admin/unit');
         } else {
@@ -95,7 +99,7 @@ router.get("/delete/:id", checkAdmin, async (req,res)=>{
         req.flash('success','Unit deleted successfully')
         res.redirect('/admin/unit');
     } catch (error) {
-        if (error.name === 'CastError') {
+        if (error.name === 'CastError' || error.name === 'TypeError') {
             req.flash('danger',`Unit not found!`);
             res.redirect('/admin/unit');
         } else {

@@ -64,6 +64,10 @@ router.get("/edit/:id", checkAdmin, async (req,res)=>{
     try {
         const id = req.params.id;
         const promo = await Promo.findById(id);
+        if (promo == null) {
+            req.flash('danger',`Promo not found!`);
+            return res.redirect('/admin/promo');
+        }
         d = new Date(promo.date);
         promo.date = d.toISOString().split('T')[0];
         res.status(201).render("admin/edit_promo", {
@@ -98,7 +102,7 @@ router.post("/edit/:id", checkAdmin, async (req,res)=>{
         req.flash('success','Promo edited successfully.')
         res.redirect('/admin/promo');
     } catch (error) {
-        if (error.name === 'CastError') {
+        if (error.name === 'CastError' || error.name === 'TypeError') {
             req.flash('danger',`Promo not found!`);
             res.redirect('/admin/promo');
         } else {
@@ -115,7 +119,7 @@ router.get("/delete/:id", checkAdmin, async (req,res)=>{
         req.flash('success','Promo deleted successfully.')
         res.redirect('/admin/promo');
     } catch (error) {
-        if (error.name === 'CastError') {
+        if (error.name === 'CastError' || error.name === 'TypeError') {
             req.flash('danger',`Promo not found!`);
             res.redirect('/admin/promo');
         } else {

@@ -65,7 +65,13 @@ app.get('*', function (req, res, next) {
     }
     next();
 })
-
+app.get('/selectstore', (req, res) => {
+    res.render("selectstore",{
+        title:  "Store Page",
+        user: req.user,
+        cartLength: 0
+    });
+});
 // Routes
 app.use('/admin/category', require('./routes/adminCategories'));
 app.use('/admin/subcategory', require('./routes/adminSubCategories'));

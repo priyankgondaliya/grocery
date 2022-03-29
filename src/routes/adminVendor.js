@@ -127,6 +127,10 @@ router.get("/edit/:id", checkAdmin, async (req,res)=>{
     try {
         const id = req.params.id;
         const vendor = await Vendor.findById(id);
+        if (vendor == null) {
+            req.flash('danger',`Vendor not found!`);
+            return res.redirect('/admin/vendor');
+        }
         res.status(201).render("admin/edit_vendor", {
             title: 'Edit Vendor',
             vendor
@@ -165,6 +169,10 @@ router.post("/edit/:id", checkAdmin, upload.fields([
         }
         const id = req.params.id;
         const vendor = await Vendor.findById(id);
+        if (vendor == null) {
+            req.flash('danger',`Vendor not found!`);
+            return res.redirect('/admin/vendor');
+        }
         vendor.storename = req.body.storename;
         vendor.ownername = req.body.ownername;
         vendor.contact = req.body.contact;
@@ -235,7 +243,7 @@ router.get("/delete/:id", checkAdmin, async (req,res)=>{
         req.flash('success',`Vendor Deleted successfully`);
         res.redirect('/admin/vendor');
     } catch (error) {
-        if (error.name === 'CastError') {
+        if (error.name === 'CastError' || error.name === 'TypeError') {
             req.flash('danger',`Vendor not found!`);
             res.redirect('/admin/vendor');
         } else {

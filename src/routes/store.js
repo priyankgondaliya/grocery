@@ -24,8 +24,6 @@ router.get('/nearStore', async (req, res) => {
         let point1 = new GeoPoint(lat, lng);
         let point2 = new GeoPoint(vendors[i].coords.lat, vendors[i].coords.lng);
         let distance = point1.distanceTo(point2, true)
-        // console.log(distance +" "+ vendors[i].storename);
-        // let distance = calcDistance(lat, lng, vendors[i].coords.lat, vendors[i].coords.lng)
         if (distance < vendors[i].deliveryrange) {
             nearStores.push(vendors[i])
         }

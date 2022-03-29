@@ -161,6 +161,10 @@ router.post('/edit/:id', checkAdmin, upload.fields([
         }
         const id = req.params.id;
         const driver = await Driver.findById(id);
+        if (driver == null) {
+            req.flash('danger',`Driver not found!`);
+            return res.redirect('/admin/driver');
+        }
         driver.name = req.body.name;
         driver.number = req.body.number;
         driver.Bankname = req.body.Bankname;
@@ -241,7 +245,7 @@ router.get("/delete/:id", checkAdmin, async (req,res)=>{
         req.flash('success',`Driver Deleted successfully`);
         res.redirect('/admin/driver');
     } catch (error) {
-        if (error.name === 'CastError') {
+        if (error.name === 'CastError' || error.name === 'TypeError') {
             req.flash('danger',`Driver not found!`);
             res.redirect('/admin/driver');
         } else {

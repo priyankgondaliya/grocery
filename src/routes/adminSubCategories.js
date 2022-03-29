@@ -111,6 +111,10 @@ router.get("/edit/:id", checkAdmin, async (req,res)=>{
         const id = req.params.id;
         const cats = await Category.find();
         const subcats = await Subcategory.findById(id);
+        if (subcats == null) {
+            req.flash('danger',`Sub Category not found!`);
+            return res.redirect('/admin/subcategory');
+        }
         res.status(201).render("admin/edit_subcategory", {
             title: 'Edit Category',
             cats,
@@ -118,8 +122,6 @@ router.get("/edit/:id", checkAdmin, async (req,res)=>{
         });
     } catch (error) {
         if (error.name === 'CastError') {
-            req.flash('danger',`Sub Category not found!`);
-            res.redirect('/admin/subcategory');
         } else {
             console.log(error);
             res.send(error)
@@ -169,7 +171,7 @@ router.post('/edit/:id', checkAdmin, upload.single('image'), [
             req.flash('danger',`Sub Category name '${req.body.name}' already exist!`);
             // res.redirect('/admin/subcategory');
             res.redirect(`/admin/subcategory/edit/${req.params.id}`);
-        } else if (error.name === 'CastError') {
+        } else if (error.name === 'CastError'  || error.name === 'TypeError') {
             req.flash('danger',`Sub Category not found!`);
             res.redirect('/admin/subcategory');
         } else {
@@ -191,7 +193,7 @@ router.get("/delete/:id", checkAdmin, async (req,res)=>{
         req.flash('success',`Subcategory Deleted successfully`);
         res.redirect('/admin/subcategory')
     } catch (error) {
-        if (error.name === 'CastError') {
+        if (error.name === 'CastError' || error.name === 'TypeError') {
             req.flash('danger',`Sub Category not found!`);
             res.redirect('/admin/subcategory');
         } else {

@@ -51,7 +51,12 @@ router.get("/add/:id", checkUser, async (req,res)=>{
         req.session.redirectToUrl = undefined;
         res.redirect(redirect || '/wishlist');
     } catch (error) {
-        console.log(error);        
+        if (error.name === 'CastError' || error.name === 'TypeError') {
+            res.redirect('/404');
+        } else {
+            console.log(error);
+            res.send(error)
+        }
     }
 });
 
@@ -73,7 +78,12 @@ router.get("/remove/:id", checkUser, async (req,res)=>{
         req.session.redirectToUrl = undefined;
         res.redirect(redirect || '/wishlist');
     } catch (error) {
-        console.log(error);        
+        if (error.name === 'CastError' || error.name === 'TypeError') {
+            res.redirect('/404');
+        } else {
+            console.log(error);
+            res.send(error)
+        }
     }
 });
 
@@ -96,7 +106,12 @@ router.get("/api/add/:id", checkUser, async (req,res)=>{
         }
         res.json({ status: "success" })
     } catch (error) {
-        console.log(error);        
+        if (error.name === 'CastError' || error.name === 'TypeError') {
+            res.redirect('/404');
+        } else {
+            console.log(error);
+            res.send(error)
+        }
     }
 });
 
@@ -116,7 +131,12 @@ router.get("/api/remove/:id", checkUser, async (req,res)=>{
 
         res.json({ status: "success" })
     } catch (error) {
-        console.log(error);        
+        if (error.name === 'CastError' || error.name === 'TypeError') {
+            res.redirect('/404');
+        } else {
+            console.log(error);
+            res.send(error)
+        }
     }
 });
 
