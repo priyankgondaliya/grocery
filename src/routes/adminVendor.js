@@ -94,6 +94,11 @@ router.post("/add", checkAdmin, upload.fields([
             contact : req.body.contact,
             address : req.body.address,
             deliverycharge : req.body.deliverycharge,
+            deliveryrange : req.body.deliveryrange,
+            coords: {
+                lat: req.body.lat,
+                lng: req.body.lng
+            }
         })
         vendor.image = `/uploads/vendor/${vendor.id}/` + file1name;
         vendor.idimage = `/uploads/vendor/${vendor.id}/` + file2name;
@@ -165,6 +170,11 @@ router.post("/edit/:id", checkAdmin, upload.fields([
         vendor.contact = req.body.contact;
         vendor.address = req.body.address;
         vendor.deliverycharge = req.body.deliverycharge;
+        vendor.deliveryrange = req.body.deliveryrange;
+        vendor.coords =  {
+            lat: req.body.lat,
+            lng: req.body.lng
+        }
 
         if (typeof req.files.image !== 'undefined') {
             oldImage = "public" + vendor.image;

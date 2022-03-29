@@ -1,23 +1,19 @@
 out of stock
-learn about dicount & cashback
-
-vendor delivery range
+learn about dicount
 view details link in users table
 user info page
 promocode per category
-vendor
 
-add to wishlist without refresh
-remove from wishlist without refresh
-redirect if not logged
-add to wishlist api for AJAX
-
-REPORT:
 remove from wishlist api for AJAX
 update cart without refresh
 count total and grand total when update cart
 show message if cart is empty
 BUG: when logged in vendor tries to go to user side
+
+REPORT:
 BUG: user can place order without address
+vendor delivery range
+elastic search api
+find store api
 
 DOing:

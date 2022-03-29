@@ -49,6 +49,8 @@
 
             google.maps.event.addListener(autocomplete, 'place_changed', function () {
                 var near_place = autocomplete.getPlace();
+                document.getElementById('loc_lat').value = near_place.geometry.location.lat();
+                document.getElementById('loc_long').value = near_place.geometry.location.lng();
             });
         });
     </script>
@@ -216,7 +218,7 @@
                     <div class="col-md-12">
                         <div class="panel panel-info">
                             <div class="panel-wrapper collapse in" aria-expanded="true">
-                                <form onsubmit="validate()" method="POST" action="/admin/vendor/edit/<%= vendor.id %>"
+                                <form onsubmit="validate()" onkeydown="return event.key != 'Enter';" method="POST" action="/admin/vendor/edit/<%= vendor.id %>"
                                     id="VendorForm" enctype="multipart/form-data">
                                     <div class="panel-body">
                                         <div class="form-body">
@@ -245,7 +247,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6">
+                                                <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label class="control-label">Contact No</label>
                                                         <input type="text" id="contact" class="form-control"
@@ -256,15 +258,27 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6">
+                                                <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label class="control-label">Delivery Charge</label>
-                                                        <input type="text" id="delivery" class="form-control"
+                                                        <input type="text" id="deliverycharge" class="form-control"
                                                             name="deliverycharge" value="<%= vendor.deliverycharge %>"
                                                             placeholder="Delivery Charge"
                                                             oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
                                                         <div class="txt-s-101 cl6 p-b-10" style="color: red;">
-                                                            <span class="cl12" id="Errdelivery"></span>
+                                                            <span class="cl12" id="Errdeliverycharge"></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Delivery Range</label>
+                                                        <input type="text" id="delivery" class="form-control"
+                                                            name="deliveryrange" value="<%= vendor.deliveryrange %>"
+                                                            placeholder="Delivery Range"
+                                                            oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                                                        <div class="txt-s-101 cl6 p-b-10" style="color: red;">
+                                                            <span class="cl12" id="Errdeliveryrange"></span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -277,6 +291,8 @@
                                                         <div class="txt-s-101 cl6 p-b-10" style="color: red;">
                                                             <span class="cl12" id="Erraddress"></span>
                                                         </div>
+                                                        <input type="hidden" name="lat" id="loc_lat" />
+                                                        <input type="hidden" name="lng" id="loc_long" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -338,7 +354,8 @@
                 const storeValue = document.getElementById('storeName').value.trim();
                 const ownerValue = document.getElementById('ownerName').value.trim();
                 const contactValue = document.getElementById('contact').value.trim();
-                const deliveryValue = document.getElementById('delivery').value.trim();
+                const deliveryCValue = document.getElementById('deliverycharge').value.trim();
+                const deliveryRValue = document.getElementById('deliveryrange').value.trim();
                 const addressValue = document.getElementById('address').value.trim();
                 const filevalue1 = document.getElementById('input-file-now1').value;
                 const filevalue2 = document.getElementById('input-file-now2').value;
@@ -368,11 +385,18 @@
                     removeError('Errcontact')
                 }
 
-                if (deliveryValue == '') {
-                    setError('Errdelivery', 'Please enter Delivery charge.')
+                if (deliveryCValue == '') {
+                    setError('Errdeliverycharge','Please enter Delivery charge.')
                     returnVal = false;
                 } else {
-                    removeError('Errdelivery')
+                    removeError('Errdeliverycharge')
+                }
+
+                if (deliveryRValue == '') {
+                    setError('Errdeliveryrange','Please enter Delivery range.')
+                    returnVal = false;
+                } else {
+                    removeError('Errdeliveryrange')
                 }
 
                 if (addressValue == '') {

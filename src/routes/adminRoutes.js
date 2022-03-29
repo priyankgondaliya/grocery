@@ -218,6 +218,8 @@ router.get("/order", checkAdmin, async (req,res)=>{
             useraddress: orders[i].useraddress,
             totalamount: orders[i].totalamount,
             deliverycharge: orders[i].deliverycharge,
+            deliveryrange: orders[i].deliveryrange,
+            deliveryrange: orders[i].deliveryrange,
             payableamount: orders[i].payableamount,
             discountamount: orders[i].discountamount,
             cashback: orders[i].cashback,

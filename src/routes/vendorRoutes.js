@@ -126,6 +126,11 @@ router.post("/register", upload.fields([
             contact : req.body.contact,
             address : req.body.address,
             deliverycharge : req.body.deliverycharge,
+            deliveryrange : req.body.deliveryrange,
+            coords: {
+                lat: req.body.lat,
+                lng: req.body.lng
+            }
         })
         vendor.image = `/uploads/vendor/${vendor.id}/` + file1name;
         vendor.idimage = `/uploads/vendor/${vendor.id}/` + file2name;

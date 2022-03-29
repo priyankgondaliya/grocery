@@ -24,6 +24,7 @@ app.locals.errors=null;
 //get all pages to pass to header.ejs
 const Contact = require('./models/contactDetailModel');
 const checkUser = require("./middleware/authMiddleware");
+const { json } = require("body-parser");
 Contact.findOne({}, function(err,contact){
     if(err){
         console.log(err);
@@ -65,20 +66,6 @@ app.get('*', function (req, res, next) {
     next();
 })
 
-app.get('/store', (req, res, next) => {
-    res.render("store",{
-        title:  "Store Page",
-        user: req.user,
-        cartLength: 0
-    });
-});
-
-app.get('/ajax', (req, res) => {
-    console.log("AJAX");
-    // res.status(201).send('Hi from node.');
-    res.status(200).json('Hi from node.');
-});
-
 // Routes
 app.use('/admin/category', require('./routes/adminCategories'));
 app.use('/admin/subcategory', require('./routes/adminSubCategories'));
@@ -100,6 +87,7 @@ app.use('/', require('./routes/authRoutes'));
 app.use('/', require('./routes/cmsPages'));
 app.use('/', require('./routes/accountRoutes'));
 app.use('/', require('./routes/homeRoute'));
+app.use('/store', require('./routes/store'));
 app.use('/cart', require('./routes/cartRoutes'));
 app.use('/checkout', require('./routes/checkout'));
 app.use('/order', require('./routes/orderRoutes'));
@@ -121,7 +109,7 @@ app.all('/404', checkUser, (req, res, next) => {
 });
 app.all('*', (req, res, next) => {
     // console.log(req.url);
-    res.redirect('/404');
+    res.status(404).redirect('/404');
 });
 
 // error handler

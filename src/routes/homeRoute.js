@@ -51,4 +51,13 @@ router.get("/", checkUser, async (req,res)=>{
     }
 });
 
+router.get('/autocomplete', async (req, res) => {
+    const search = req.query.term;
+    const searchString = search.trim();
+    const regex = new RegExp(searchString.replace(/\s+/g,"\\s+"), "gi");
+    const searchProds = await Product.find({ 'productname': { $regex: regex }});
+    // res.json([{id: 1, name:'Product'},{id: 2, name:'Product2'}]);
+    res.json(searchProds);
+});
+
 module.exports = router;

@@ -49,6 +49,16 @@ const vendorSchema = new mongoose.Schema ({
     address: {
        type:String,
        required:true
+    },
+    coords: {
+        lat: {
+            type: Number,
+            require: true
+        },
+        lng: {
+            type: Number,
+            require: true
+        }
     }
 })
 

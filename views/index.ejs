@@ -3,21 +3,17 @@
 
 	<div class="new_banner_wrapper">
 		<div class="container">
-			<form class="wrap-search-header flex-w">
+			<form class="wrap-search-header flex-w" autocomplete="off">
 				<button class="flex-c-m trans-04">
 					<span class="lnr lnr-magnifier"></span>
 				</button>
-				<input class="plh1" type="text" name="search" placeholder="Search..." style="border: 2px solid #81b03f;">
+				<input class="plh1" id="search" type="text" name="search" placeholder="Search..." style="border: 2px solid #81b03f;">
+				<ul id="searchResult"></ul>
 			</form>
 			<ul class="category_banner_list">
 				<% for( let i = 0; i < cats.length; i++ ) { %>
 					<li><a href="/products/<%= cats[i].id %>"><%= cats[i].name %></a>
 				<% } %>
-				<!-- <li><a href="#">Cat 1</a></li>
-				<li><a href="#">Cat 1</a></li>
-				<li><a href="#">Cat 1</a></li>
-				<li><a href="#">Cat 1</a></li>
-				<li><a href="#">Cat 1</a></li> -->
 			</ul>
 		</div>
 	</div>

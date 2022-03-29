@@ -210,13 +210,42 @@
     
     <!--===============================================================================================-->	
         <script src="/vendor/jquery/jquery-3.2.1.min.js"></script>
-        <!-- <script>
-            $(window).on('load', function(){
-                $.get("/ajax", function(data, status){
-                    alert("Data: " + data + "\nStatus: " + status);
-                });
+        
+        <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
+        <script type="text/javascript">
+            $('body').click(function() {
+                $('#searchResult').hide();
             });
-        </script> -->
+            $('#search').keyup(function() {
+                if ($(this).val().length == 0) {
+                    $("#searchResult").empty();
+                }
+            });
+            $('#search').autocomplete({
+                source: function (req, res) {
+                    if (req.term.trim().length == 0) {
+                        $("#searchResult").empty();
+                    } else {
+                        $.ajax({
+                            url: "http://localhost:3000/autocomplete?term="+req.term.trim(),
+                            // dataType: "jsonp",
+                            type: "GET",
+                            success: function (data) {
+                                // console.log(data);
+                                $("#searchResult").empty();
+                                $('#searchResult').show();
+                                for (let i = 0; i < data.length; i++) {
+                                    $("#searchResult").append("<li value='"+data[i]._id+"'>"+data[i].productname+"</li>");                                
+                                }
+                            },
+                            error: function (xhr) {
+                                alert(xhr.status + ' : ' + xhr.statusText);
+                            }
+                        });
+                    }
+                }    
+            });
+        </script>
     <!--===============================================================================================-->
         <script src="/vendor/animsition/js/animsition.min.js"></script>
     <!--===============================================================================================-->
