@@ -73,8 +73,7 @@
                 <div class="left_store">
 			        <div class="row">
                         <div class="col-md-6">
-                           <!-- <img src="https://oolakart.com/assets/front/greenfarm/images/Logo.png"> -->
-					        <!-- <img src="https://oolakart.com/assets/front/greenfarm/images/text.png"> -->
+					        <img src="/images/icons/logo-01.png">
                         </div>
                         <!-- <div class="col-md-6 btn_left_store"> -->
                            <!-- <a href="#" class="login_left_store">Login</a> -->
@@ -85,14 +84,16 @@
                         <!-- <h2>Late night at office?</h2> -->
                         <!-- <p>Order food from favourite restaurants near you.</p> -->
                     </div>
-                    <form id="form" onkeydown="return event.key != 'Enter';" onsubmit="return findStoreBtn()">
+                    <form id="form" method="post" action="/store/nearstore" onsubmit="findStore()">
                         <input type="text" placeholder="Enter your delivery location" id="search_input">
                         <button>Find Store</button>
-                        <input type="hidden" id="loc_lat" />
-                        <input type="hidden" id="loc_long" />
+                        <input type="hidden" id="loc_lat" name="lat" />
+                        <input type="hidden" id="loc_long" name="lng" />
                         <br>
                         <!-- <span id="no_location" style="background-color:red;color:white"></span> -->
-                        <span id="err_msg" style="background-color: red; color: white;"></span>
+                        <% if (error) { %>
+                            <span id="err_msg" style="background-color: red; color: white; padding: 10px; display: hi;">Sorry! We don’t have a store at your location currently.</span>
+                        <% } %>
                     </form>
                     <div class="locate_store">
                         <a href="javascript:void(0)" onclick="myLocation()"><i class="fa fa-map-marker"></i> Locate me</a>
@@ -318,9 +319,13 @@
     <script src="/vendor/jquery/jquery-3.2.1.min.js"></script>
     <script>
         var form = document.getElementById('form');
+        var latInput = document.getElementById('loc_lat');
+        var lngInput = document.getElementById('loc_long');
+
         form.addEventListener('submit', (e) => {
 			e.preventDefault();
 		})
+
         function myLocation()
         {
             navigator.geolocation.getCurrentPosition(success, error);
@@ -330,7 +335,9 @@
         {
             var lat = position.coords.latitude;
             var lng = position.coords.longitude;
-            nearStore(lat,lng);
+            latInput.value = lat;
+            lngInput.value = lng;
+            findStore();
         }
         
         function error() 
@@ -338,53 +345,16 @@
             alert("You have blocked us to know your location.");
         }
 
-        function findStoreBtn() {
-            var lat = document.getElementById("loc_lat").value;
-            var lng = document.getElementById("loc_long").value;
-            nearStore(lat,lng);
-        }
-        
-        function nearStore(lat,lng)
-        {
-            $.ajax({
-                url: "/store/nearStore",
-                method: 'GET',
-                dataType: 'json',
-                data: {lat: lat,lng:lng},
+        function findStore() {
+            var lat = latInput.value;
+            var lng = lngInput.value;
 
-                success: function(response)
-                {
-                    // console.log(response);
-                    if (response != "") {
-                        $("#store_list").find('.modal-body').html(response);
-                        $("#store_list").modal('show');
-                    } else {
-                        $("#err_msg").css("padding","10px");
-                        $("#err_msg").text('Sorry! We don’t have a store at your location currently.');
-                    }
-                },
-                error: function (xhr) {
-                    alert("Error\n" + xhr.status + ' : ' + xhr.statusText);
-                }
-            });
+            console.log(lat+','+lng);
+            if (lat == "" || lng == "") {
+                return false
+            }
+            form.submit();
         }
-        
-        // function selectStore(store_id)
-        // {
-        //     $.ajax({
-        //         url: sitepath + "home/selectStore",
-        //         method: 'POST',
-        //         data:{store_id: store_id},
-
-        //         success:function(response)
-        //         {
-        //             if(response != false)
-        //             {
-        //                 window.location.href = sitepath;
-        //             }
-        //         }
-        //     });
-        // }
     </script>
 <!--===============================================================================================-->
     <script src="/vendor/animsition/js/animsition.min.js"></script>

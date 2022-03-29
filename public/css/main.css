@@ -5121,7 +5121,8 @@ margin-top: 30px;
 
 .store_main_wrap .left_store .btn_left_store a {
   padding: 10px 30px;
-  background: #107bd4;
+  /* background: #107bd4; */
+  background: #81b03f;
   color: #fff;
   text-transform: uppercase;
 }
@@ -5160,11 +5161,13 @@ margin-top: 30px;
   height: 50px;
   outline: none;
   box-shadow: none;
-  background: #107bd4;
+  /* background: #107bd4; */
+  background: #81b03f;
   padding: 0 20px;
   color: #fff;
   margin-left: -5px;
-  border: 1px solid #107bd4;
+  /* border: 1px solid #107bd4; */
+  border: 1px solid #81b03f;
   vertical-align: middle;
 }
 .store_main_wrap .right_store {
@@ -5211,7 +5214,8 @@ margin-top: 30px;
 }
 .store_main_wrap .locate_store a {
   font-size: 18px;
-  color: #107bd4;
+  /* color: #107bd4; */
+  color: #81b03f;
   line-height: 25px;
 }
 .store_main_wrap .locate_store {padding-top:15px;}

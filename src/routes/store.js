@@ -9,14 +9,15 @@ router.get('/', (req, res) => {
     res.render("store",{
         title:  "Store Page",
         user: req.user,
-        cartLength: 0
+        cartLength: 0,
+        error: false
     });
 });
 
 // GET stores api
-router.get('/nearStore', async (req, res) => {
-    const lat = parseFloat(req.query.lat);
-    const lng = parseFloat(req.query.lng);
+router.post('/nearstore', async (req, res) => {
+    const lat = parseFloat(req.body.lat);
+    const lng = parseFloat(req.body.lng);
 
     const vendors = await Vendor.find();
     let nearStores = [];
@@ -28,8 +29,41 @@ router.get('/nearStore', async (req, res) => {
             nearStores.push(vendors[i])
         }
     }
-    // console.log(nearStores);
-    res.json(nearStores);
+    // console.log(nearStores.length);
+    if (nearStores.length == 0) {
+        res.render("store",{
+            title:  "Store Page",
+            user: req.user,
+            cartLength: 0,
+            error: true
+        });
+    } else {
+        res.render("selectstore",{
+            title:  "Select Store",
+            user: req.user,
+            cartLength: 0,
+            nearStores
+        });
+    }
 });
+
+router.get('/select/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        const store = await Vendor.findById(id);
+        if (store == null) {
+            return res.redirect('/404');
+        }
+        res.cookie("selectStore", id, {
+            expires: new Date( Date.now() + 90*24*60*60*1000 ),
+            httpOnly: true,
+            // secure:true
+        });
+        res.redirect('/');
+    } catch (error) {
+        console.log(error);
+        res.send(error);
+    }
+})
 
 module.exports = router;

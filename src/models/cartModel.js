@@ -13,7 +13,7 @@ const CartSchema = new mongoose.Schema({
           },
         quantity: Number,
         // name: String,
-        price: Number
+        // price: Number // what if price is changed
       }
     ]
 });

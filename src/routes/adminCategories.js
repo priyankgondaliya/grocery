@@ -21,7 +21,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
     storage: storage,
     limits: {
-      fileSize: 1024 * 1024 * 5
+      fileSize: 1024 * 1024 * 10
     },
     fileFilter: fileFilter
 });
@@ -78,7 +78,6 @@ router.post('/add', checkAdmin, upload.single('image'), [
             image: '/uploads/category/' + filename
         })
         if (req.body.featured) {
-            console.log(req.body.featured);
             cat.featured = true
         }
         fs.access('./public/uploads/category', (err) => { if (err) fs.mkdirSync('./public/uploads/category'); });

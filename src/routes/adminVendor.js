@@ -179,9 +179,11 @@ router.post("/edit/:id", checkAdmin, upload.fields([
         vendor.address = req.body.address;
         vendor.deliverycharge = req.body.deliverycharge;
         vendor.deliveryrange = req.body.deliveryrange;
-        vendor.coords =  {
-            lat: req.body.lat,
-            lng: req.body.lng
+        if (req.body.lat && req.body.lng) {
+            vendor.coords =  {
+                lat: req.body.lat,
+                lng: req.body.lng
+            }
         }
 
         if (typeof req.files.image !== 'undefined') {

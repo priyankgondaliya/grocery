@@ -21,7 +21,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
     storage: storage,
     limits: {
-      fileSize: 1024 * 1024 * 5
+      fileSize: 1024 * 1024 * 10
     },
     fileFilter: fileFilter
 });
@@ -38,15 +38,19 @@ router.get("/", checkAdmin, async (req,res)=>{
     let updated = []
     for (let i = 0; i < subcats.length; i++) {
         let cat = cats.find(o => o.id == subcats[i].category);
-        let e = {
-            id: subcats[i]._id,
-            name: subcats[i].name,
-            category: cat.name,
-            // categoryName: subcats[i].categoryName,
-            image: subcats[i].image,
-            date: formatDate(new Date(subcats[i].date))
+        if (cat == undefined) {
+            await Subcategory.findByIdAndRemove(subcats[i]._id);
+        } else {
+            let e = {
+                id: subcats[i]._id,
+                name: subcats[i].name,
+                category: cat.name,
+                // categoryName: subcats[i].categoryName,
+                image: subcats[i].image,
+                date: formatDate(new Date(subcats[i].date))
+            }
+            updated.push(e)
         }
-        updated.push(e)
     }
     res.status(201).render("admin/subcategory", {
         title: 'Subcategory List',

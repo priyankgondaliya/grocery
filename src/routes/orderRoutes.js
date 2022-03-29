@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const checkUser = require('../middleware/authMiddleware');
+const checkStore = require('../middleware/selectedStore');
 
 const Cart = require('../models/cartModel');
 const Order = require('../models/orderModel');
@@ -9,7 +10,7 @@ const Product = require('../models/productModel');
 const Unit = require('../models/unitModel');
 
 // place order
-router.post('/', checkUser, async (req, res) => {
+router.post('/', checkUser, checkStore, async (req, res) => {
     try {
         if (req.user) {
             var cart = await Cart.findOne({ userId: req.user.id});
@@ -38,7 +39,8 @@ router.post('/', checkUser, async (req, res) => {
                 quantity: cart.products[i].quantity,
                 name: product.productname,
                 weight: product.productweight,
-                price: cart.products[i].price
+                price: cart.products[i].price,
+                vendor: req.store
             }
             products.push(pro);
         }

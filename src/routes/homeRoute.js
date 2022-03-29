@@ -1,8 +1,8 @@
 const express = require('express');
-const { serializeUser } = require('passport');
 const router = express.Router();
 
 const checkUser = require('../middleware/authMiddleware');
+const checkStore = require('../middleware/selectedStore');
 
 // models
 const Category = require('../models/category');
@@ -10,7 +10,7 @@ const Product = require('../models/productModel');
 const Cart = require('../models/cartModel');
 
 // home
-router.get("/", checkUser, async (req,res)=>{
+router.get("/", checkUser, checkStore, async (req,res)=>{
     if (req.user) {
         var cart = await Cart.findOne({ userId: req.user.id});
         var cartLength = cart.products.length;
@@ -23,7 +23,7 @@ router.get("/", checkUser, async (req,res)=>{
         const searchString = search.trim();
         const regex = new RegExp(searchString.replace(/\s+/g,"\\s+"), "gi");
 
-        const searchProds = await Product.find({ 'productname': { $regex: regex }});
+        const searchProds = await Product.find({ 'productname': { $regex: regex }, vendor: req.store });
         const searchCats = await Category.find({ 'name': { $regex: regex }});
 
         const allcats = await Category.find();
@@ -40,7 +40,7 @@ router.get("/", checkUser, async (req,res)=>{
         });
     } else {    // homepage
         const cats = await Category.find({ featured: true });
-        const prods = await Product.find({ featured: true });
+        const prods = await Product.find({ featured: true, vendor: req.store });
         res.render("index",{
             title: "Home",
             user: req.user,
@@ -51,11 +51,11 @@ router.get("/", checkUser, async (req,res)=>{
     }
 });
 
-router.get('/autocomplete', async (req, res) => {
+router.get('/autocomplete', checkStore, async (req, res) => {
     const search = req.query.term;
     const searchString = search.trim();
     const regex = new RegExp(searchString.replace(/\s+/g,"\\s+"), "gi");
-    const searchProds = await Product.find({ 'productname': { $regex: regex }});
+    const searchProds = await Product.find({ 'productname': { $regex: regex }, vendor: req.store });
     // res.json([{id: 1, name:'Product'},{id: 2, name:'Product2'}]);
     res.json(searchProds);
 });

@@ -33,7 +33,7 @@ const Product = require('../models/productModel');
 
 // GET products
 router.get("/", checkVendor, async (req,res)=>{
-    const products = await Product.find();
+    const products = await Product.find({vendor: req.vendor.id});
     res.status(201).render("vendor/vendor_products", {
         title: 'Product List',
         products
@@ -204,7 +204,8 @@ router.post('/edit/:id', checkVendor, upload.single('image'), [
 router.get("/delete/:id", checkVendor, async (req,res)=>{
     try {
         const id = req.params.id;
-        const product = await Product.findByIdAndRemove(id);
+        // const product = await Product.findByIdAndRemove(id);
+        const product = await Product.findOneAndRemove({_id: id, vendor: req.vendor.id});
         image = "public" + product.image;
         fs.remove(image, function (err) {
             if (err) { console.log(err); }

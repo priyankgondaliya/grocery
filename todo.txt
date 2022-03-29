@@ -16,5 +16,14 @@ vendor delivery range
 elastic search api
 find store api
 select store view
+Handle error: wrong id by user
+select store api
+middleware for store
+only show selected store's products
+Cart: user can only add selected store's products to cart
+Vendor: only show logged vendor's products and offers
+remove a product from cart if its deleted
 
 DOing:
+cart per vendor
+do not store price in cart

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const checkUser = require('../middleware/authMiddleware');
+const checkStore = require('../middleware/selectedStore');
 
 const Cart = require('../models/cartModel');
 const Product = require('../models/productModel');
@@ -13,9 +14,14 @@ router.get("/", checkUser, async (req,res)=>{
         var myCart = [];
         for (let i = 0; i < cart.products.length; i++) {
             var prod = await Product.findById(cart.products[i].productId);
-            prod.quantity = cart.products[i].quantity;
-            myCart.push(prod);
+            if (prod == null) {
+                cart.products.splice(i,1);
+            } else {
+                prod.quantity = cart.products[i].quantity;
+                myCart.push(prod);
+            }
         }
+        cart.save();
         var cartLength = cart.products.length;
     } else {
         if (typeof req.session.cart == "undefined") {
@@ -27,8 +33,12 @@ router.get("/", checkUser, async (req,res)=>{
             var myCart = [];
             for (let i = 0; i < cart.products.length; i++) {
                 var prod = await Product.findById(cart.products[i].productId);
-                prod.quantity = cart.products[i].quantity;
-                myCart.push(prod);
+                if (prod == null) {
+                    cart.products.splice(i,1);
+                } else {
+                    prod.quantity = cart.products[i].quantity;
+                    myCart.push(prod);
+                }
             }
             var cartLength = cart.products.length;
         }
@@ -42,9 +52,14 @@ router.get("/", checkUser, async (req,res)=>{
 });
 
 // add to cart
-router.get("/add/:product", checkUser, async (req, res)=>{
+router.get("/add/:product", checkUser, checkStore, async (req, res)=>{
     try {
         const product = await Product.findById(req.params.product);
+        if (product.vendor != req.store) {
+            const redirect = req.session.redirectToUrl;
+            req.session.redirectToUrl = undefined;
+            return res.redirect(redirect || '/cart');
+        }
         // check if user is logged
         if (req.user) {
             // change in mongo
@@ -63,7 +78,7 @@ router.get("/add/:product", checkUser, async (req, res)=>{
                     cart.products.push({
                         productId: product._id,
                         quantity: 1,
-                        price: product.totalprice
+                        // price: product.totalprice
                     });
                 }
                 await cart.save();
@@ -73,7 +88,7 @@ router.get("/add/:product", checkUser, async (req, res)=>{
                     products: [{
                         productId: product._id,
                         quantity: 1,
-                        price: product.totalprice
+                        // price: product.totalprice
                     }]
                 })
                 await cart.save();
@@ -88,7 +103,7 @@ router.get("/add/:product", checkUser, async (req, res)=>{
                 req.session.cart.products.push({
                     productId: product.id,
                     quantity: 1,
-                    price: product.totalprice
+                    // price: product.totalprice
                 });
             } else {
                 var cart = req.session.cart;
@@ -104,7 +119,7 @@ router.get("/add/:product", checkUser, async (req, res)=>{
                     cart.products.push({
                         productId: product.id,
                         quantity: 1,
-                        price: product.totalprice
+                        // price: product.totalprice
                     });
                 }
             }
