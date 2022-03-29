@@ -15,5 +15,6 @@ BUG: user can place order without address
 vendor delivery range
 elastic search api
 find store api
+select store view
 
 DOing:
