@@ -69,12 +69,12 @@
         </nav>
         <!-- ===== Top-Navigation-End ===== -->
         <!-- ===== Left-Sidebar ===== -->
-        <aside class="sidebar">
+        <aside class="sidebar" role="navigation">
             <div class="scroll-sidebar">
                 <div class="user-profile">
                     <div class="dropdown user-pro-body">
                         <div class="profile-image">
-                            <img src="/plugins/images/users/hanna.jpg" alt="user-img" class="img-circle">
+                            <img src="<%= vendor.image %>" alt="user-img" class="img-circle">
                             <a href="javascript:void(0);" class="dropdown-toggle u-dropdown text-blue" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                 <span class="badge badge-danger">
                                     <i class="fa fa-angle-down"></i>
@@ -86,10 +86,10 @@
                                 <li role="separator" class="divider"></li>
                                 <li><a href="javascript:void(0);"><i class="fa fa-cog"></i> Account Settings</a></li>
                                 <li role="separator" class="divider"></li> -->
-                                <li><a href="#"><i class="fa fa-power-off"></i> Logout</a></li>
+                                <li><a href="javascript:void(0);"><i class="fa fa-power-off"></i> Logout</a></li>
                             </ul>
                         </div>
-                        <p class="profile-text m-t-15 font-16"><a href="javascript:void(0);"> Hanna Gover</a></p>
+                        <p class="profile-text m-t-15 font-16"><a href="javascript:void(0);"><%= vendor.storename %></a></p>
                     </div>
                 </div>
                 <nav class="sidebar-nav">

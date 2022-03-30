@@ -20,7 +20,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
     storage: storage,
     limits: {
-      fileSize: 1024 * 1024 * 5
+      fileSize: 1024 * 1024 * 10
     },
     fileFilter: fileFilter
 });
@@ -36,6 +36,7 @@ router.get("/", checkVendor, async (req,res)=>{
     const products = await Product.find({vendor: req.vendor.id});
     res.status(201).render("vendor/vendor_products", {
         title: 'Product List',
+        vendor: req.vendor,
         products
     });
 });
@@ -52,6 +53,7 @@ router.get("/add", checkVendor, async (req,res)=>{
     const units = await Unit.find();
     res.status(201).render("vendor/add_product", {
         title: 'Add Product',
+        vendor: req.vendor,
         cats,
         // subcats,
         units,
@@ -72,6 +74,7 @@ router.post("/add", checkVendor, upload.single('image'), [
             const alert = validationErrors.array()
             return res.render('vendor/add_product', {
                 title: 'Add Product',
+                vendor: req.vendor,
                 alert
             })
         }
@@ -123,6 +126,7 @@ router.get("/edit/:id", checkVendor, async (req,res)=>{
         const units = await Unit.find();
         res.status(201).render("vendor/edit_product", {
             title: 'Edit Product',
+            vendor: req.vendor,
             product,
             cats,
             units,
@@ -152,6 +156,7 @@ router.post('/edit/:id', checkVendor, upload.single('image'), [
             const alert = validationErrors.array()
             return res.render('vendor/add_product', {
                 title: 'Add Product',
+                vendor: req.vendor,
                 alert
             })
         }

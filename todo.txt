@@ -16,14 +16,18 @@ find store api
 
 REPORT:
 select store view
-Handle error: wrong id by user
 select store api
 middleware for store
 only show selected store's products
-Cart: user can only add selected store's products to cart
-Vendor: only show logged vendor's products and offers
+
+Handle error: wrong id by user
 remove a product from cart if its deleted
+Vendor: only show logged vendor's products and offers
+Cart: user can only add selected store's products to cart
+Handle error: if unit id deleted
+show deleted product in recent order details
 
 DOing:
 cart per vendor
 do not store price in cart
+show selected store in header

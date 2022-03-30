@@ -20,7 +20,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
     storage: storage,
     limits: {
-      fileSize: 1024 * 1024 * 5
+      fileSize: 1024 * 1024 * 10
     },
     fileFilter: fileFilter
 });
@@ -37,6 +37,7 @@ router.get("/", checkVendor, async (req,res)=>{
     const offers = await Offer.find();
     res.status(201).render("vendor/vendor_offers", {
         title: 'Offer List',
+        vendor: req.vendor,
         offers
     });
 });
@@ -52,6 +53,7 @@ router.get("/add", checkVendor, async (req,res)=>{
     const units = await Unit.find();
     res.status(201).render("vendor/add_offer", {
         title: 'Add Offer',
+        vendor: req.vendor,
         cats,
         units,
         array : array
@@ -73,6 +75,7 @@ router.post("/add", checkVendor, upload.single('image'), [
             const alert = validationErrors.array()
             return res.render('vendor/add_offers', {
                 title: 'Add Offer',
+                vendor: req.vendor,
                 alert
             })
         }
@@ -125,6 +128,7 @@ router.get("/edit/:id", checkVendor, async (req,res)=>{
         const units = await Unit.find();
         res.status(201).render("vendor/edit_offer", {
             title: 'Edit Offer',
+            vendor: req.vendor,
             offer,
             cats,
             units,
@@ -156,6 +160,7 @@ router.post('/edit/:id', checkVendor, upload.single('image'), [
             const alert = validationErrors.array()
             return res.render('vendor/add_offers', {
                 title: 'Add Offer',
+                vendor: req.vendor,
                 alert
             })
         }

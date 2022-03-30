@@ -33,6 +33,7 @@ const upload = multer({
 router.get("/", checkVendor, (req,res)=>{
     res.status(201).render("vendor/vendor_dashboard", {
         title: 'Vendor Dashboard',
+        vendor: req.vendor
     });
 });
 
@@ -189,6 +190,7 @@ router.post("/forgot", async (req, res, next) => {
 router.get("/orders", checkVendor, (req,res)=>{
     res.status(201).render("vendor/orders",{
         title: 'Order List',
+        vendor: req.vendor
     });
 });
 
