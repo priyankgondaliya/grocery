@@ -16,6 +16,7 @@ const checkStore = function (req, res, next) {
                 return res.redirect('/store');
             }
             req.store = cookie;
+            req.storename = vendor.storename;
             next();
         });
     } else {

@@ -86,10 +86,10 @@
 								Subcategories
 							</h4>
 							<p class="p-b-15"><%= subcats.length %> Subcategories <%= SubcatOf %></p>
-							<div class="row">
+							<div class="row subcats">
 								<!-- - -->
 								<% for( let i = 0; i < subcats.length; i++ ) { %>
-									<div class="col-sm-6 col-lg-4 p-b-30">
+									<div class="col-sm-6 col-lg-4 p-b-30 single-sub">
 										<a href="/products/<%= subcats[i].category %>/<%= subcats[i].id %>" class="txt-m-103 cl3 txt-center hov-cl10 trans-04 js-name-b1">
 											<div class="block1">
 												<div class="block1-bg wrap-pic-w bo-all-1 bocl12 hov3 trans-04">
@@ -106,6 +106,7 @@
 									</div>
 								<% } %>
 							</div>
+							<div id="pagination-container"></div>
 						</div>
 						<!-- Shop grid -->
 						<!-- <div class="shop-grid">
@@ -204,11 +205,11 @@
 					Products
 				</h4>
 				<p class="p-b-15"><%= prods.length %> Products <%= ProdOf %></p>
-				<div class="row">
+				<div class="row products">
 					<!-- - -->
 					<% for( let i = 0; i < prods.length; i++ ) { %>
 						<!-- <div class="col-sm-6 col-lg-4 p-b-30"> -->
-						<div class="col-sm-6 col-md-4 col-lg-3 p-b-30">
+						<div class="col-sm-6 col-md-4 col-lg-3 p-b-30 single-prod">
 							<div class="block1">
 								<div class="block1-bg wrap-pic-w bo-all-1 bocl12 hov3 trans-04">
 									<img src="<%= prods[i].image %>" class="product_img_set" alt="IMG" width="200px">

@@ -7,9 +7,10 @@ const { check, validationResult } = require('express-validator');
 const Message = require('../models/messageModel');
 const checkUser = require('../middleware/authMiddleware');
 const Cart = require('../models/cartModel');
+const checkStore = require('../middleware/selectedStore');
 
 // about us
-router.get("/about_us", checkUser, async (req,res)=>{
+router.get("/about_us", checkUser, checkStore, async (req,res)=>{
     try {
         if (req.user) {
             var cart = await Cart.findOne({ userId: req.user.id});
@@ -23,6 +24,7 @@ router.get("/about_us", checkUser, async (req,res)=>{
             title: 'About Us',
             user: req.user,
             cartLength,
+            storename: req.storename,
             content
         });
     } catch (error) {
@@ -32,7 +34,7 @@ router.get("/about_us", checkUser, async (req,res)=>{
 });
 
 // faqs
-router.get("/faqs", checkUser, async (req,res)=>{
+router.get("/faqs", checkUser, checkStore, async (req,res)=>{
     try {
         if (req.user) {
             var cart = await Cart.findOne({ userId: req.user.id});
@@ -46,6 +48,7 @@ router.get("/faqs", checkUser, async (req,res)=>{
             title: 'FAQs',
             user: req.user,
             cartLength,
+            storename: req.storename,
             content
         });
     } catch (error) {
@@ -55,7 +58,7 @@ router.get("/faqs", checkUser, async (req,res)=>{
 });
 
 // terms
-router.get("/terms_con", checkUser, async (req,res)=>{
+router.get("/terms_con", checkUser, checkStore, async (req,res)=>{
     try {
         if (req.user) {
             var cart = await Cart.findOne({ userId: req.user.id });
@@ -69,6 +72,7 @@ router.get("/terms_con", checkUser, async (req,res)=>{
             title: 'Terms & Conditions',
             user: req.user,
             cartLength,
+            storename: req.storename,
             content
         });
     } catch (error) {
@@ -78,7 +82,7 @@ router.get("/terms_con", checkUser, async (req,res)=>{
 });
 
 // privacy
-router.get("/privacy_policy", checkUser, async (req,res)=>{
+router.get("/privacy_policy", checkUser, checkStore, async (req,res)=>{
     try {
         if (req.user) {
             var cart = await Cart.findOne({ userId: req.user.id});
@@ -92,6 +96,7 @@ router.get("/privacy_policy", checkUser, async (req,res)=>{
             title:'Privacy Policy',
             user: req.user,
             cartLength,
+            storename: req.storename,
             content
         });
     } catch (error) {
@@ -101,7 +106,7 @@ router.get("/privacy_policy", checkUser, async (req,res)=>{
 });
 
 // contact
-router.get("/contact", checkUser, async (req,res)=>{
+router.get("/contact", checkUser, checkStore, async (req,res)=>{
     try {
         if (req.user) {
             var cart = await Cart.findOne({ userId: req.user.id});
@@ -116,6 +121,7 @@ router.get("/contact", checkUser, async (req,res)=>{
             title: 'Contact Us',
             user: req.user,
             cartLength,
+            storename: req.storename,
             content,
             // contact
         });
@@ -132,7 +138,7 @@ router.post("/contact",[
     check('address','Please enter address.').notEmpty(),
     check('phone','Please enter phone number.').notEmpty(),
     check('message','Please enter a message.').notEmpty(),
-  ], checkUser, async(req,res)=>{
+  ], checkUser, checkStore, async(req,res)=>{
     try {
         if (req.user) {
             var cart = await Cart.findOne({ userId: req.user.id});
@@ -150,6 +156,7 @@ router.post("/contact",[
                 alert,
                 user: req.user,
                 cartLength,
+                storename: req.storename,
                 content
             })
         }
@@ -165,6 +172,7 @@ router.post("/contact",[
             title: 'Contact Us',
             user: req.user,
             cartLength,
+            storename: req.storename,
             alert: [{msg:'Message sent successfully.'}],
             content
         });

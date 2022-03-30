@@ -44,6 +44,7 @@ router.get("/", checkUser, checkStore, async (req,res)=>{
         res.render("index",{
             title: "Home",
             user: req.user,
+            storename: req.storename,
             cats,
             cartLength,
             prods

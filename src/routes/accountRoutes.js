@@ -3,6 +3,7 @@ const router = express.Router();
 const formatDate = require('../helpers/formateDate');
 
 const checkUser = require('../middleware/authMiddleware');
+const checkStore = require('../middleware/selectedStore');
 
 const Cart = require('../models/cartModel');
 const Order = require('../models/orderModel');
@@ -22,7 +23,7 @@ router.get("/signup", checkUser, async (req,res)=>{
     });
 });
 
-router.get("/account", checkUser, async (req,res)=>{
+router.get("/account", checkUser, checkStore, async (req,res)=>{
     if (!req.user) {
         return res.redirect('/signup');
     }
@@ -45,7 +46,8 @@ router.get("/account", checkUser, async (req,res)=>{
         title: 'My account',
         user: req.user,
         orders: updated,
-        cartLength
+        cartLength,
+        storename: req.storename,
     });
 });
 

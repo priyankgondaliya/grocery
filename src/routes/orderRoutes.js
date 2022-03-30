@@ -53,7 +53,7 @@ router.post('/', checkUser, checkStore, async (req, res) => {
             paymentmode: req.body.pay
         })
         await order.save();
-        res.redirect('/');
+        res.redirect('/'); // redirect to this order's detail page
     } catch (error) {
         console.log(error);
         res.redirect('/404');
@@ -61,7 +61,7 @@ router.post('/', checkUser, checkStore, async (req, res) => {
 })
 
 // GET order detail
-router.get('/detail/:id', checkUser, async function(req,res){
+router.get('/detail/:id', checkUser, checkStore, async function(req,res){
     try {
         if (req.user) {
             var cart = await Cart.findOne({ userId: req.user.id});
@@ -93,6 +93,7 @@ router.get('/detail/:id', checkUser, async function(req,res){
             // order,
             updated,
             cartLength,
+            storename: req.storename,
             user: req.user
         });
     } catch (error) {

@@ -4065,7 +4065,7 @@ input.num-product::-webkit-inner-spin-button {
 .active-pagi1 {
   background-color: #81b03f;
   border-color: #81b03f;
-  color: #fff;
+  color: #fff !important;
 }
 
 /*---------------------------------------------*/
@@ -4581,7 +4581,7 @@ input.num-product::-webkit-inner-spin-button {
 .hov-btn1:hover {
   background-color: #81b03f;
   border-color: #81b03f;
-  color: #fff;
+  color: #fff !important;
 }
 
 /*---------------------------------------------*/
@@ -5215,7 +5215,8 @@ margin-top: 30px;
 .store_main_wrap .locate_store a {
   font-size: 18px;
   /* color: #107bd4; */
-  color: #81b03f;
+  /* color: #81b03f; */
+  color: #555;
   line-height: 25px;
 }
 .store_main_wrap .locate_store {padding-top:15px;}
@@ -5257,6 +5258,45 @@ margin-top: 30px;
   color: #81b03f;
 }
 
+/* pagination jquery */
+.simple-pagination ul {
+	margin: 0 0 20px;
+	padding: 0;
+	list-style: none;
+	text-align: center;
+}
+
+.simple-pagination li {
+	display: inline-block;
+	margin-right: 5px;
+}
+
+.simple-pagination li a,
+.simple-pagination li span {
+	color: #666;
+	padding: 5px 10px;
+	text-decoration: none;
+	border: 1px solid #EEE;
+	background-color: #FFF;
+	/* box-shadow: 0px 0px 10px 0px #EEE; */
+}
+
+.simple-pagination li a :hover{
+	color: #81b03f;
+}
+.simple-pagination .current {
+  background-color: #81b03f;
+  border-color: #81b03f;
+  color: #fff;
+}
+
+.simple-pagination .prev.current,
+.simple-pagination .next.current {
+	background: #fff;
+  /* border-color: #666; */
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #666;
+}
 
 @media screen and (min-width:768px) and (max-width:1199px) {
   .store_main_wrap form input[type="text"] {width:100%;margin-bottom:10px;}

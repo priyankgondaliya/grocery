@@ -34,6 +34,7 @@ router.get('/detail/:id', checkUser, checkStore, async function(req,res){
             subcat: subcategory.name,
             unit: unit ? unit.name : "" ,
             cartLength,
+            storename: req.storename,
             user: req.user
         });
     } catch (error) {
@@ -80,6 +81,7 @@ router.get('/:cat/:sub?', checkUser, checkStore, async function(req,res){
                 SubcatOf,
                 ProdOf,
                 cartLength,
+                storename: req.storename,
                 user: req.user
             });
         } else {
@@ -92,6 +94,7 @@ router.get('/:cat/:sub?', checkUser, checkStore, async function(req,res){
                 prods,
                 ProdOf,
                 cartLength,
+                storename: req.storename,
                 user: req.user
             });
         }   

@@ -6,9 +6,10 @@ const { check, validationResult } = require('express-validator');
 const Cart = require('../models/cartModel');
 const Product = require('../models/productModel');
 const User = require('../models/userModel');
+const checkStore = require('../middleware/selectedStore');
 
 // GET checkout
-router.get("/", checkUser, async (req,res) => {
+router.get("/", checkUser, checkStore, async (req,res) => {
     if (req.user) {
         var cart = await Cart.findOne({ userId: req.user.id });
         var cartLength = cart.products.length;
@@ -30,6 +31,7 @@ router.get("/", checkUser, async (req,res) => {
         title: 'Checkout',
         user: req.user,
         cartLength,
+        storename: req.storename,
         myCart
     });
 });
@@ -43,7 +45,7 @@ router.post("/", [
     check('state','Please enter State!').notEmpty(),
     check('country','Please enter Country!').notEmpty(),
     check('postal','Please enter Postal code!').isNumeric()
-  ], checkUser, async (req, res, next) => {
+  ], checkUser, checkStore, async (req, res, next) => {
     try {
         if (req.user) {
             var cart = await Cart.findOne({ userId: req.user.id});
@@ -65,6 +67,7 @@ router.post("/", [
                 title: 'Checkout',
                 alert,
                 cartLength,
+                storename: req.storename,
                 user,
                 myCart
             })

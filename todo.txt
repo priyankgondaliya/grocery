@@ -26,6 +26,9 @@ Vendor: only show logged vendor's products and offers
 Cart: user can only add selected store's products to cart
 Handle error: if unit id deleted
 show deleted product in recent order details
+pagination in products
+pagination in subcategory
+wishlist only show selected store's products
 
 DOing:
 cart per vendor

@@ -60,18 +60,13 @@
 						
 					<div class="center-header">
 						<!-- Menu desktop -->
-						<!-- <div class="menu-desktop">
-							<ul class="main-menu">								
-								<li>
-									<a href="/">Home</a>									
-								</li>
-								<li>
-									<a href="/account">My Account</a>									
-								</li>
-
-								<li><a href="/wishlist">Wishlist</a></li>
+						<div class="menu-desktop">
+							<ul class="main-menu">
+								<% if (typeof(storename)!='undefined') { %>
+									<li><a href="/store"><i class="fa fa-map-marker" style="margin-right:7px; font-size: 110%;"></i><%= storename %></a></li>
+								<% } %>								
 							</ul>
-						</div> -->
+						</div>
 					</div>
 						
 					<div class="right-header">
@@ -322,6 +317,9 @@
 		<!-- Menu Mobile -->
 		<div class="menu-mobile">
 			<ul class="main-menu-m">
+				<% if (typeof(storename)!='undefined') { %>
+					<li><a href="/store"><i class="fa fa-map-marker" style="margin-right:7px; font-size: 110%;"></i><%= storename %></a></li>
+				<% } %>
 				<li>
 					<% if (user) { %>
 						<a href="account.html">Account</a>

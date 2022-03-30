@@ -6,9 +6,10 @@ const checkUser = require('../middleware/authMiddleware');
 const User = require('../models/userModel');
 const Product = require('../models/productModel');
 const Cart = require('../models/cartModel');
+const checkStore = require('../middleware/selectedStore');
 
 // GET wishlist
-router.get("/", checkUser, async (req,res)=>{
+router.get("/", checkUser, checkStore, async (req,res)=>{
     if (!req.user) {
         req.session.redirectToUrl = req.originalUrl;
         return res.redirect('/signup');
@@ -19,13 +20,18 @@ router.get("/", checkUser, async (req,res)=>{
     const wishlist = req.user.wishlist;
     let items = [];
     for (let i = 0; i < wishlist.length; i++) {
-        let p = await Product.findById(wishlist[i]);
-        items.push(p);
+        let p = await Product.findOne({_id: wishlist[i], vendor: req.store});
+        if (p == null) {
+            wishlist.splice(i,1);
+        } else {
+            items.push(p);
+        }
     }
     res.status(201).render("wishlist", {
         title: 'Wishlist',
         items,
         cartLength,
+        storename: req.storename,
         user: req.user
     });
 });

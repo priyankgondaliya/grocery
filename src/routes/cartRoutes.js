@@ -8,7 +8,7 @@ const Cart = require('../models/cartModel');
 const Product = require('../models/productModel');
 
 // Get cart
-router.get("/", checkUser, async (req,res)=>{
+router.get("/", checkUser, checkStore, async (req,res)=>{
     if (req.user) {
         var cart = await Cart.findOne({ userId: req.user.id});
         var myCart = [];
@@ -47,7 +47,8 @@ router.get("/", checkUser, async (req,res)=>{
         title: 'Cart',
         user: req.user,
         myCart,
-        cartLength
+        cartLength,
+        storename: req.storename,
     });
 });
 
