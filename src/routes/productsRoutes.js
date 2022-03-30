@@ -32,7 +32,7 @@ router.get('/detail/:id', checkUser, checkStore, async function(req,res){
             product,
             cat: category.name,
             subcat: subcategory.name,
-            unit: unit.name,
+            unit: unit ? unit.name : "" ,
             cartLength,
             user: req.user
         });

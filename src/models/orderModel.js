@@ -42,9 +42,6 @@ const orderSchema = new mongoose.Schema ({
     discountamount: {
         type: String,
     },
-    cashback: {
-        type: String,
-    },
     orderdate: {
         type: Date,
         default: Date.now()

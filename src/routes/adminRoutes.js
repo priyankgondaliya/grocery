@@ -92,7 +92,7 @@ router.get("/product/detail/:id", checkAdmin, async (req,res)=>{
             product,
             cat: category.name,
             subcat: subcategory.name,
-            unit: unit.name
+            unit: unit ? unit.name : ""
         });
     } catch (error) {
         if (error.name === 'CastError') {
@@ -182,7 +182,7 @@ router.get("/offer/detail/:id", checkAdmin, async (req,res)=>{
             offer,
             cat: category.name,
             subcat: subcategory.name,
-            unit: unit.name
+            unit: unit ? unit.name : ""
         });
     } catch (error) {
         if (error.name === 'CastError') {
@@ -260,14 +260,17 @@ router.get("/order/detail/:id", checkAdmin, async (req,res)=>{
         let updated = [];
         for (let i = 0; i < order.products.length; i++) {
             let product = await Product.findById(order.products[i].productId);
-            let unit = await Unit.findById(product.unit);
+            let unit = null;
+            if (product) {
+                let unit = await Unit.findById(product.unit);
+            }
             let e = {
-                image: product.image,
+                image: product ? product.image : "",
                 name: order.products[i].name,
                 quantity: order.products[i].quantity,
                 weight: order.products[i].weight,
                 price: order.products[i].price,
-                unit: unit.name,
+                unit: unit ? unit.name : ""
             }
             updated.push(e)
         }
