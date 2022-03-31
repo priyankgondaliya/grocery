@@ -15,7 +15,7 @@ router.get("/", checkUser, checkStore, async (req,res)=>{
         return res.redirect('/signup');
     }
     req.session.redirectToUrl = req.originalUrl;
-    var cart = await Cart.findOne({ userId: req.user.id});
+    var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
     var cartLength = cart.products.length;
     const wishlist = req.user.wishlist;
     let items = [];

@@ -10,7 +10,7 @@ const Product = require('../models/productModel');
 // Get cart
 router.get("/", checkUser, checkStore, async (req,res)=>{
     if (req.user) {
-        var cart = await Cart.findOne({ userId: req.user.id});
+        var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
         var myCart = [];
         for (let i = 0; i < cart.products.length; i++) {
             var prod = await Product.findById(cart.products[i].productId);
@@ -24,23 +24,30 @@ router.get("/", checkUser, checkStore, async (req,res)=>{
         cart.save();
         var cartLength = cart.products.length;
     } else {
-        if (typeof req.session.cart == "undefined") {
-            req.session.cart = { products: [] };
-            var myCart = [];
-            var cartLength = 0;
+        var myCart = [];
+        var cartLength = 0;
+        const storeId = req.store;
+        if (typeof req.session.cart == undefined) {
+            req.session.cart = {};
+            req.session.cart[storeId] = [];
         } else {
-            var cart = req.session.cart;
-            var myCart = [];
-            for (let i = 0; i < cart.products.length; i++) {
-                var prod = await Product.findById(cart.products[i].productId);
-                if (prod == null) {
-                    cart.products.splice(i,1);
-                } else {
-                    prod.quantity = cart.products[i].quantity;
-                    myCart.push(prod);
+            if (req.session.cart[storeId] == undefined) {
+                req.session.cart[storeId] = [];
+            } else {
+                var cart = req.session.cart[storeId]; // add prods
+                // console.log(cart);
+                var myCart = [];
+                for (let i = 0; i < cart.length; i++) {
+                    var prod = await Product.findById(cart[i].productId);
+                    if (prod == null) {
+                        cart.splice(i,1);
+                    } else {
+                        prod.quantity = cart[i].quantity;
+                        myCart.push(prod);
+                    }
                 }
+                var cartLength = cart.length;
             }
-            var cartLength = cart.products.length;
         }
     }
     res.render("cart", {
@@ -64,7 +71,7 @@ router.get("/add/:product", checkUser, checkStore, async (req, res)=>{
         // check if user is logged
         if (req.user) {
             // change in mongo
-            var cart = await Cart.findOne({ userId: req.user.id});
+            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
             if (cart) {
                 //cart exists for user
                 let itemIndex = cart.products.findIndex(p => p.productId == product.id);
@@ -86,6 +93,7 @@ router.get("/add/:product", checkUser, checkStore, async (req, res)=>{
             } else {
                 const cart = new Cart({
                     userId: req.user.id,
+                    vendorId: req.store,
                     products: [{
                         productId: product._id,
                         quantity: 1,
@@ -99,39 +107,51 @@ router.get("/add/:product", checkUser, checkStore, async (req, res)=>{
             res.redirect(redirect || '/cart');
         } else {
             // store in session
+            var storeId = req.store;
             if (typeof req.session.cart == "undefined") {
-                req.session.cart = { products: [] };
-                req.session.cart.products.push({
+                req.session.cart = {};
+                req.session.cart[storeId] = [];
+                req.session.cart.storeId.push({
                     productId: product.id,
                     quantity: 1,
-                    // price: product.totalprice
                 });
             } else {
                 var cart = req.session.cart;
-                var newItem = true;
-                for (var i=0; i<cart.products.length; i++) {
-                    if ( cart.products[i].productId == product.id) {
-                        cart.products[i].quantity++;
-                        newItem = false;
-                        break;
-                    }
-                }
-                if (newItem) {
-                    cart.products.push({
+                if (req.session.cart[storeId] == undefined) {
+                    cart[storeId] = [];
+                    var old = cart[storeId];
+                    old.push({
                         productId: product.id,
                         quantity: 1,
-                        // price: product.totalprice
                     });
+                    cart[storeId] = old;
+                    req.session.cart = cart;
+                } else {
+                    const cart = req.session.cart[storeId];
+                    var newItem = true;
+                    for (var i=0; i < cart.length; i++) {
+                        if ( cart[i].productId == product.id) {
+                            cart[i].quantity++;
+                            newItem = false;
+                            break;
+                        }
+                    }
+                    if (newItem) {
+                        var old = cart;
+                        old.push({
+                            productId: product.id,
+                            quantity: 1,
+                        });
+                    }
                 }
             }
-            // console.log(req.session.cart);
-            // console.log("");
             const redirect = req.session.redirectToUrl;
             req.session.redirectToUrl = undefined;
             res.redirect(redirect || '/cart');
         }
     } catch (error) {
         if (error.name === 'CastError' || error.name === 'TypeError') {
+            console.log(error);
             res.redirect('/404');
         } else {
             console.log(error);
@@ -141,11 +161,11 @@ router.get("/add/:product", checkUser, checkStore, async (req, res)=>{
 })
 
 //GET update product
-router.get('/update/:product', checkUser, async (req,res) => {
+router.get('/update/:product', checkUser, checkStore, async (req,res) => {
     // console.log(req.url);
     try {
         if (req.user) {
-            var cart = await Cart.findOne({ userId: req.user.id});
+            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
             var id = req.params.product;
             var action = req.query.action;
         
@@ -173,24 +193,25 @@ router.get('/update/:product', checkUser, async (req,res) => {
             }
             await cart.save();
         } else {
-            var cart = req.session.cart;
+            var storeId = req.store;
+            var cart = req.session.cart[storeId];
             var id = req.params.product;
             var action = req.query.action;
         
-            for (var i=0; i<cart.products.length; i++) {
-                if (cart.products[i].productId == id) {
+            for (var i=0; i<cart.length; i++) {
+                if (cart[i].productId == id) {
                     switch (action) {
                         case "add":
-                            cart.products[i].quantity++;
+                            cart[i].quantity++;
                             break;
                         case "remove":
-                            cart.products[i].quantity--;
-                            if (cart.products[i].quantity<1) {
-                                cart.products.splice(i,1);
+                            cart[i].quantity--;
+                            if (cart[i].quantity<1) {
+                                cart.splice(i,1);
                             }
                             break;
                         case "clear":
-                            cart.products.splice(i,1);
+                            cart.splice(i,1);
                             break;
                         default:
                             console.log('Update problem');
@@ -208,16 +229,26 @@ router.get('/update/:product', checkUser, async (req,res) => {
 });
 
 // GET clear cart
-router.get('/clear', checkUser, async (req,res) => {
+router.get('/clear', checkUser, checkStore, async (req,res) => {
     if (req.user) {
-        var cart = await Cart.findOne({ userId: req.user.id});
+        var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
         cart.products = [];
         await cart.save();
     } else {
-        delete req.session.cart;
+        var storeId = req.store;
+        delete req.session.cart[storeId];
     }
     req.flash('success','Cart cleared!');
     res.redirect('/cart');
 });
 
 module.exports = router;
+
+// req.session.cart = {
+//     "id1": ["products"],
+//     "id2": ["products"],
+// }
+
+// req.session.cart = {
+//     "id": {id: id, products:[]},
+// }

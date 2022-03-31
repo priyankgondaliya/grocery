@@ -13,10 +13,11 @@ const checkStore = require('../middleware/selectedStore');
 router.get("/about_us", checkUser, checkStore, async (req,res)=>{
     try {
         if (req.user) {
-            var cart = await Cart.findOne({ userId: req.user.id});
+            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
             var cartLength = cart.products.length;
         } else {
-            var cartLength = req.session.cart.products.length;
+            const storeId = req.store;
+            var cartLength = req.session.cart[storeId] ? req.session.cart[storeId].length : 0;
         }
         const page = await Page.findOne({ title:'About Us'})
         const content = page.content;
@@ -37,10 +38,11 @@ router.get("/about_us", checkUser, checkStore, async (req,res)=>{
 router.get("/faqs", checkUser, checkStore, async (req,res)=>{
     try {
         if (req.user) {
-            var cart = await Cart.findOne({ userId: req.user.id});
+            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
             var cartLength = cart.products.length;
         } else {
-            var cartLength = req.session.cart.products.length;
+            const storeId = req.store;
+            var cartLength = req.session.cart[storeId] ? req.session.cart[storeId].length : 0;
         }
         const page = await Page.findOne({ title:'FAQs'})
         const content = page.content;
@@ -61,10 +63,11 @@ router.get("/faqs", checkUser, checkStore, async (req,res)=>{
 router.get("/terms_con", checkUser, checkStore, async (req,res)=>{
     try {
         if (req.user) {
-            var cart = await Cart.findOne({ userId: req.user.id });
+            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
             var cartLength = cart.products.length;
         } else {
-            var cartLength = req.session.cart.products.length;
+            const storeId = req.store;
+            var cartLength = req.session.cart[storeId] ? req.session.cart[storeId].length : 0;
         }
         const page = await Page.findOne({ title: 'Terms & Conditions' })
         const content = page.content;
@@ -85,10 +88,11 @@ router.get("/terms_con", checkUser, checkStore, async (req,res)=>{
 router.get("/privacy_policy", checkUser, checkStore, async (req,res)=>{
     try {
         if (req.user) {
-            var cart = await Cart.findOne({ userId: req.user.id});
+            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
             var cartLength = cart.products.length;
         } else {
-            var cartLength = req.session.cart.products.length;
+            const storeId = req.store;
+            var cartLength = req.session.cart[storeId] ? req.session.cart[storeId].length : 0;
         }
         const page = await Page.findOne({ title:'Privacy Policy'})
         const content = page.content;
@@ -109,10 +113,11 @@ router.get("/privacy_policy", checkUser, checkStore, async (req,res)=>{
 router.get("/contact", checkUser, checkStore, async (req,res)=>{
     try {
         if (req.user) {
-            var cart = await Cart.findOne({ userId: req.user.id});
+            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
             var cartLength = cart.products.length;
         } else {
-            var cartLength = req.session.cart.products.length;
+            const storeId = req.store;
+            var cartLength = req.session.cart[storeId] ? req.session.cart[storeId].length : 0;
         }
         const page = await Page.findOne({ title:'Contact'})
         const content = page.content;
@@ -141,10 +146,11 @@ router.post("/contact",[
   ], checkUser, checkStore, async(req,res)=>{
     try {
         if (req.user) {
-            var cart = await Cart.findOne({ userId: req.user.id});
+            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
             var cartLength = cart.products.length;
         } else {
-            var cartLength = req.session.cart.products.length;
+            const storeId = req.store;
+            var cartLength = req.session.cart[storeId] ? req.session.cart[storeId].length : 0;
         }
         const page = await Page.findOne({ title:'Contact'})
         const content = page.content;

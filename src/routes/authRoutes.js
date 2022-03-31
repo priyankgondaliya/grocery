@@ -8,9 +8,10 @@ const { check, validationResult } = require('express-validator');
 
 const User = require('../models/userModel');
 const Cart = require('../models/cartModel');
+const Vendor = require('../models/vendorModel');
 
 // POST register
-router.post("/register", checkUser, [
+router.post("/register", [
     check('firstname','Please enter firstname.').notEmpty(),
     check('lastname','Please enter lastname.').notEmpty(),
     check('email','Please enter valid email.').isEmail(),
@@ -18,12 +19,6 @@ router.post("/register", checkUser, [
     // check('number','Plaese enter mobile number').notEmpty(),
   ],async(req,res)=>{
     try {
-        if (req.user) {
-            const cart = await Cart.findOne({ userId: req.user.id});
-            var cartLength = cart.products.length;
-        } else {
-            var cartLength = req.session.cart.products.length;
-        }
         const validationErrors = validationResult(req)
         // console.log(validationErrors.errors);
         if (validationErrors.errors.length > 0) {
@@ -32,7 +27,7 @@ router.post("/register", checkUser, [
             return res.render('account', {
                 title: 'Account',
                 user: req.user,
-                cartLength,
+                cartLength:0,
                 alert
             })
         }
@@ -44,7 +39,7 @@ router.post("/register", checkUser, [
             return res.render('account', {
                 title: 'Account',
                 user: req.user,
-                cartLength,
+                cartLength:0,
                 alert: [{msg:'Registered.'}]
             })
         }
@@ -52,7 +47,7 @@ router.post("/register", checkUser, [
             return res.render('account', {
                 title: 'account',
                 user: req.user,
-                cartLength,
+                cartLength:0,
                 alert: [{msg:'Email is already registerd, Try logging in.'}]
             })
         }
@@ -69,17 +64,20 @@ router.post("/register", checkUser, [
             httpOnly:true
         });
         await user.save();
-        // create cart
-        const cart = new Cart({
-            userId: user.id,
-            products: []
-        })
-        await cart.save();
-
+        // create cart for every store
+        const stores = await Vendor.find();
+        for (let i = 0; i < stores.length; i++) {
+            const cart = new Cart({
+                userId: user.id,
+                vendorId: stores[i].id,
+                products: []
+            })
+            cart.save();
+        }
         res.status(201).render("account", {
             title: 'My account',
             user: req.user,
-            cartLength,
+            cartLength:0,
             alert: [{msg:'Registered successfully, Now you can login.'}]
         });
     } catch (error) {
@@ -94,19 +92,13 @@ router.post("/login", checkUser, [
     check('password','Please enter password!').notEmpty(),
   ],async(req, res)=>{
     try {
-        if (req.user) {
-            var cart = await Cart.findOne({ userId: req.user.id});
-            var cartLength = cart.products.length;
-        } else {
-            var cartLength = req.session.cart.products.length;
-        }
         const validationErrors = validationResult(req)
         if (validationErrors.errors.length > 0) {
             const alert = validationErrors.array()
             return res.render('account', {
                 title: 'account',
                 user: req.user,
-                cartLength,
+                cartLength:0,
                 alert
             })
         }
@@ -116,7 +108,7 @@ router.post("/login", checkUser, [
             return res.status(201).render("account", {
                 title: 'My account',
                 user: req.user,
-                cartLength,
+                cartLength:0,
                 alert: [{msg:'Invalid email or password!'}]
             });
         }
@@ -133,7 +125,7 @@ router.post("/login", checkUser, [
             return res.status(201).render("account", {
                 title: 'My account',
                 user: req.user,
-                cartLength,
+                cartLength:0,
                 alert: [{msg:'Invalid email or password!'}]
             });
         }
@@ -145,31 +137,35 @@ router.post("/login", checkUser, [
             // secure:true
         });
         // CART: session to db
-        const dbCart = await Cart.findOne({ userId: userExist.id});
-        const sessionProducts = req.session.cart.products;
-        if ( sessionProducts.length != 0 ) {
-            for (let i = 0; i < sessionProducts.length; i++) {
-                let itemIndex = dbCart.products.findIndex(p => p.productId == sessionProducts[i].productId);
-
-                if (itemIndex > -1) {
-                    //product exists in the dbCart, update the quantity
-                    let productItem = dbCart.products[itemIndex];
-                    // productItem.quantity = sessionProducts[i].quantity;
-                    productItem.quantity = productItem.quantity + sessionProducts[i].quantity;
-                    dbCart.products[itemIndex] = productItem;
-                } else {
-                    //product does not exists in dbCart, add new item
-                    dbCart.products.push({
-                        productId: sessionProducts[i].productId,
-                        quantity: sessionProducts[i].quantity,
-                        price: sessionProducts[i].totalprice
-                    });
+        const cartSession = req.session.cart;
+        console.log(req.session.cart);
+        for (const [key, value] of Object.entries(cartSession)) {
+            // console.log(`${key} ${value}`);
+            var cart = await Cart.findOne({ userId: userExist.id, vendorId: key});
+            if ( value.length != 0 ) {
+                for (let i = 0; i < value.length; i++) {
+                    let itemIndex = cart.products.findIndex(p => p.productId == value[i].productId);
+    
+                    if (itemIndex > -1) {
+                        //product exists in the cart, update the quantity
+                        let productItem = cart.products[itemIndex];
+                        // productItem.quantity = value[i].quantity;
+                        productItem.quantity = productItem.quantity + value[i].quantity;
+                        cart.products[itemIndex] = productItem;
+                    } else {
+                        //product does not exists in cart, add new item
+                        cart.products.push({
+                            productId: value[i].productId,
+                            quantity: value[i].quantity,
+                            // price: value[i].totalprice
+                        });
+                    }
                 }
+                // req.session.cart = undefined;
+                cartSession[key] = [];
+                await cart.save();
             }
-            req.session.cart = undefined;
-            await dbCart.save();
         }
-
         const redirect = req.session.redirectToUrl;
         req.session.redirectToUrl = undefined;
         res.redirect(redirect || '/account');

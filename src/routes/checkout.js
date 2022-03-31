@@ -11,7 +11,7 @@ const checkStore = require('../middleware/selectedStore');
 // GET checkout
 router.get("/", checkUser, checkStore, async (req,res) => {
     if (req.user) {
-        var cart = await Cart.findOne({ userId: req.user.id });
+        var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
         var cartLength = cart.products.length;
     } else {
         req.flash('danger','Please login first!');
@@ -48,10 +48,11 @@ router.post("/", [
   ], checkUser, checkStore, async (req, res, next) => {
     try {
         if (req.user) {
-            var cart = await Cart.findOne({ userId: req.user.id});
+            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
             var cartLength = cart.products.length;
         } else {
-            var cartLength = req.session.cart.products.length;
+            req.flash('danger','Please login first!');
+            return res.redirect('/signup');
         }
         const user = req.user;
         const validationErrors = validationResult(req)

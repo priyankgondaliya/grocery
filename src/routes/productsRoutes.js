@@ -54,7 +54,8 @@ router.get('/:cat/:sub?', checkUser, checkStore, async function(req,res){
             var cart = await Cart.findOne({ userId: req.user.id});
             var cartLength = cart.products.length;
         } else {
-            var cartLength = req.session.cart.products.length;
+            var storeId = req.store;
+            var cartLength = req.session.cart[storeId] ? req.session.cart[storeId].length : 0;
         }
         req.session.redirectToUrl = req.originalUrl;
         const {cat, sub} = req.params;

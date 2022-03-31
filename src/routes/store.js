@@ -2,7 +2,10 @@ const express = require('express');
 const router = express.Router();
 const GeoPoint = require('geopoint');
 
+const checkUser = require('../middleware/authMiddleware');
+
 const Vendor = require('../models/vendorModel');
+const Cart = require('../models/cartModel');
 
 // GET select store
 router.get('/', (req, res) => {
@@ -40,19 +43,27 @@ router.post('/nearstore', async (req, res) => {
     } else {
         res.render("selectstore",{
             title:  "Select Store",
-            user: req.user,
-            cartLength: 0,
             nearStores
         });
     }
 });
 
-router.get('/select/:id', async (req, res) => {
+router.get('/select/:id', checkUser, async (req, res) => {
     try {
         const id = req.params.id;
         const store = await Vendor.findById(id);
         if (store == null) {
             return res.redirect('/404');
+        }
+        // create cart
+        const cartExist = await Cart.find({ userId: req.user.id, vendorId: id });
+        if (!cartExist) {
+            const cart = new Cart({
+                userId: req.user.id,
+                vendorId: req.store,
+                products: []
+            })
+            cart.save();
         }
         res.cookie("selectStore", id, {
             expires: new Date( Date.now() + 90*24*60*60*1000 ),

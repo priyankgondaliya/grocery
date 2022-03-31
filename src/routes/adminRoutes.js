@@ -14,6 +14,7 @@ const Category = require('../models/category');
 const Subcategory = require('../models/subcategory');
 const Unit = require('../models/unitModel');
 const Order = require('../models/orderModel');
+const Vendor = require('../models/vendorModel');
 
 // const formatDate = require('../helpers/formateDate');
 
@@ -87,12 +88,14 @@ router.get("/product/detail/:id", checkAdmin, async (req,res)=>{
         const category = await Category.findById(product.category);
         const subcategory = await Subcategory.findById(product.subcategory);
         const unit = await Unit.findById(product.unit);
+        const vendor = await Vendor.findById(product.vendor);
         res.status(201).render("admin/product_detail", {
             title: 'Product Details',
             product,
             cat: category.name,
             subcat: subcategory.name,
-            unit: unit ? unit.name : ""
+            unit: unit ? unit.name : "",
+            store: vendor.storename
         });
     } catch (error) {
         if (error.name === 'CastError') {

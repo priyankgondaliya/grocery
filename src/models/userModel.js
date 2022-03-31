@@ -32,10 +32,10 @@ const userSchema = new mongoose.Schema ({
     phone: {
         type:String,
     },
-    admin: {
-        type:Boolean,
-        default:0
-    },
+    // admin: {
+    //     type:Boolean,
+    //     default:0
+    // },
     address: {
         house: {
             type: String,

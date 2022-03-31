@@ -210,7 +210,7 @@
     
     <!--===============================================================================================-->	
         <script src="/vendor/jquery/jquery-3.2.1.min.js"></script>
-
+        <!-- pagination products -->
         <script>
             (function($) {
             var pagify = {
@@ -332,7 +332,7 @@
 
         $(".products").pagify(99, ".single-prod");
         </script>
-
+        <!-- pagination subcats -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/simplePagination.js/1.6/jquery.simplePagination.js"></script>
         <!-- <script>
             var items = $(".subcats .single-sub");
@@ -354,13 +354,28 @@
             });
         </script> -->
         <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
+        <!-- autocomplete search -->
         <script type="text/javascript">
-            $('body').click(function() {
+            $( document ).ready(function() {
                 $('#searchResult').hide();
+            });
+            $(document).mouseup(function(e) 
+            {
+                var container = $("#search_div");
+                // if the target of the click isn't the container nor a descendant of the container
+                if (!container.is(e.target) && container.has(e.target).length === 0) 
+                {
+                    $('#searchResult').hide();
+                }
             });
             $('#search').keyup(function() {
                 if ($(this).val().length == 0) {
-                    $("#searchResult").empty();
+                    $("#searchResult").hide();
+                }
+            });
+            $('#search').focus(function() {
+                if ( $('#searchResult').children().length > 0 ) {
+                    $("#searchResult").show();
                 }
             });
             $('#search').autocomplete({
@@ -377,7 +392,7 @@
                                 $("#searchResult").empty();
                                 $('#searchResult').show();
                                 for (let i = 0; i < data.length; i++) {
-                                    $("#searchResult").append("<li value='"+data[i]._id+"'>"+data[i].productname+"</li>");                                
+                                    $("#searchResult").append(`<a href="/product/detail/${data._id}"><li>${data[i].productname}</li></a>`);                                
                                 }
                             },
                             error: function (xhr) {

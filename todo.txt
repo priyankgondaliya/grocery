@@ -1,7 +1,6 @@
 out of stock
 learn about dicount
-view details link in users table
-user info page
+user info page admin side
 promocode per category
 
 remove from wishlist api for AJAX
@@ -13,12 +12,23 @@ BUG: user can place order without address
 vendor delivery range
 elastic search api
 find store api
-
-REPORT:
 select store view
 select store api
 middleware for store
 only show selected store's products
+wishlist only show selected store's products
+show selected store in header
+elastic search view
+create cart per vendor at register
+create cart per vendor at google log in
+cart per vendor in session
+
+REPORT:
+add to cart
+update cart
+clear cart
+session to db cart at login
+
 
 Handle error: wrong id by user
 remove a product from cart if its deleted
@@ -28,9 +38,8 @@ Handle error: if unit id deleted
 show deleted product in recent order details
 pagination in products
 pagination in subcategory
-wishlist only show selected store's products
+do not store price in cart
 
 DOing:
-cart per vendor
-do not store price in cart
-show selected store in header
+create cart when select store
+after cart's created what if vendor is added

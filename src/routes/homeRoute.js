@@ -12,10 +12,11 @@ const Cart = require('../models/cartModel');
 // home
 router.get("/", checkUser, checkStore, async (req,res)=>{
     if (req.user) {
-        var cart = await Cart.findOne({ userId: req.user.id});
+        var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
         var cartLength = cart.products.length;
     } else {
-        var cartLength = req.session.cart.products.length;
+        const storeId = req.store;
+        var cartLength = req.session.cart[storeId] ? req.session.cart[storeId].length : 0;
     }
     req.session.redirectToUrl = req.originalUrl;
     const search = req.query.search;
@@ -52,6 +53,7 @@ router.get("/", checkUser, checkStore, async (req,res)=>{
     }
 });
 
+// autocomplete search api
 router.get('/autocomplete', checkStore, async (req, res) => {
     const search = req.query.term;
     const searchString = search.trim();

@@ -13,11 +13,11 @@ const Unit = require('../models/unitModel');
 router.post('/', checkUser, checkStore, async (req, res) => {
     try {
         if (req.user) {
-            var cart = await Cart.findOne({ userId: req.user.id});
+            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
             var cartLength = cart.products.length;
         } else {
-        req.flash('danger','Please login first!');
-        return res.redirect('/signup');
+            req.flash('danger','Please login first!');
+            return res.redirect('/signup');
         }
         // create order
         const user = req.user;

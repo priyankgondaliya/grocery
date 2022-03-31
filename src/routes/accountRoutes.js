@@ -8,13 +8,12 @@ const checkStore = require('../middleware/selectedStore');
 const Cart = require('../models/cartModel');
 const Order = require('../models/orderModel');
 
-router.get("/signup", checkUser, async (req,res)=>{
+router.get("/signup", checkUser, checkStore, async (req,res)=>{
     if (req.user) {
         return res.redirect('/account');
-        // var cart = await Cart.findOne({ userId: req.user.id});
-        // var cartLength = cart.products.length;
     } else {
-        var cartLength = req.session.cart.products.length;
+        const storeId = req.store;
+        var cartLength = req.session.cart[storeId] ? req.session.cart[storeId].length : 0;
     }
     res.status(201).render("account", {
         title: 'Signup | Signin',
@@ -27,7 +26,7 @@ router.get("/account", checkUser, checkStore, async (req,res)=>{
     if (!req.user) {
         return res.redirect('/signup');
     }
-    var cart = await Cart.findOne({ userId: req.user.id});
+    var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
     var orders = await Order.find({ user: req.user.id});
     let updated = []
     for (let i = 0; i < orders.length; i++) {

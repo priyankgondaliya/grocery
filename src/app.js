@@ -58,13 +58,14 @@ require('./helpers/googleAuth')
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get('*', function (req, res, next) {
-    // console.log("URL: "+req.url);
-    if (typeof req.session.cart == "undefined") {
-        req.session.cart = { products: [] };
-    }
-    next();
-})
+// app.get('*', function (req, res, next) {
+//     // console.log("URL: "+req.url);
+//     if (typeof req.session.cart == "undefined") {
+//         req.session.cart = {};
+//     }
+//     // console.log(req.session.cart);
+//     next();
+// })
 
 // Routes
 app.use('/admin/category', require('./routes/adminCategories'));
@@ -108,7 +109,7 @@ app.all('/404', checkUser, (req, res, next) => {
     });
 });
 app.all('*', (req, res, next) => {
-    // console.log(req.url);
+    console.log(req.url);
     res.status(404).redirect('/404');
 });
 

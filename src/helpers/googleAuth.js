@@ -2,6 +2,7 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth2').Strategy;
 const User = require('../models/userModel.js');
 const Cart = require('../models/cartModel');
+const Vendor = require('../models/vendorModel');
 
 passport.serializeUser(function(user, done) {
     /*
@@ -47,11 +48,16 @@ passport.use(new GoogleStrategy({
       // create cart
       const cartExist = await Cart.findOne({ userId: user.id })
       if (!cartExist) {
-        const cart = new Cart({
-          userId: user.id,
-          products: []
-        })
-        await cart.save();
+        // create cart for every store
+        const stores = await Vendor.find();
+        for (let i = 0; i < stores.length; i++) {
+            const cart = new Cart({
+                userId: user.id,
+                vendor: stores[i].id,
+                products: []
+            })
+            cart.save();
+        }
       }
       req.myUser = user;
     }
