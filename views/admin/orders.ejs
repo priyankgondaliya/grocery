@@ -21,7 +21,6 @@
                                             <th>Delivery Charge</th>
                                             <th>Payable Amount</th>
                                             <th>Discount Amount</th>
-                                            <th>Cashback</th>
                                             <th>Order Date</th>
                                             <th>Payment Mode</th>
                                             <th>Order Track</th>
@@ -35,14 +34,13 @@
                                                 <td>
                                                     <a href="/admin/order/detail/<%= orders[i].id %>"><i class="icon-eye m-r-5" style="font-size: 120%;"></i></a>
                                                 </td>
-                                                <td>#</td>
+                                                <td><%= orders[i].vendor %></td>
                                                 <td><%= orders[i].username %></td>
                                                 <td><%= orders[i].useraddress %></td>
                                                 <td><%= orders[i].totalamount %> &#8377;</td>
-                                                <td><%= orders[i].deliverycharge %></td>
+                                                <td><%= orders[i].deliverycharge %>  &#8377;</td>
                                                 <td><%= orders[i].payableamount %></td>
                                                 <td><%= orders[i].discountamount %></td>
-                                                <td><%= orders[i].cashback %></td>
                                                 <td><%= orders[i].date %></td>
                                                 <td><%= orders[i].paymentmode %></td>
                                                 <td>#</td>

@@ -17,6 +17,7 @@ const checkStore = function (req, res, next) {
             }
             req.store = cookie;
             req.storename = vendor.storename;
+            req.deliverycharge = vendor.deliverycharge;
             next();
         });
     } else {

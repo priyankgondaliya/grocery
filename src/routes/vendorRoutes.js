@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const { sendForgotPassMail } = require('../helpers/sendmail')
 const { check, validationResult } = require('express-validator');
+const formatDate = require('../helpers/formateDate');
 
 const sharp = require('sharp');
 const multer  = require('multer');
@@ -11,6 +12,10 @@ const fs = require('fs-extra');
 const checkVendor = require('../middleware/authVendorMiddleware');
 
 const Vendor = require('../models/vendorModel');
+const User = require('../models/userModel');
+const Order = require('../models/orderModel');
+const Product = require('../models/productModel');
+const Unit = require('../models/unitModel');
 
 const storage = multer.memoryStorage();
 const fileFilter = (req, file, cb) => {
@@ -187,11 +192,70 @@ router.post("/forgot", async (req, res, next) => {
 })
 
 // GET orders
-router.get("/orders", checkVendor, (req,res)=>{
+router.get("/orders", checkVendor, async (req,res)=>{
+    var orders = await Order.find({vendor: req.vendor.id});
+    let updated = []
+    for (let i = 0; i < orders.length; i++) {
+        let user = await User.findById(orders[i].user);
+        let username = `${user.firstname} ${user.lastname}`
+        let e = {
+            username,
+            id: orders[i].id,
+            useraddress: orders[i].useraddress,
+            totalamount: orders[i].totalamount,
+            deliverycharge: orders[i].deliverycharge,
+            payableamount: orders[i].payableamount,
+            discountamount: orders[i].discountamount,
+            paymentmode: orders[i].paymentmode,
+            // status: orders[i].status,
+            date: formatDate(new Date(orders[i].orderdate))
+        }
+        updated.push(e)
+    }
     res.status(201).render("vendor/orders",{
         title: 'Order List',
-        vendor: req.vendor
+        vendor: req.vendor,
+        orders: updated
     });
+});
+
+// GET order detail
+router.get("/order/detail/:id", checkVendor, async (req,res)=>{
+    try {
+        const id = req.params.id;
+        const order = await Order.findById(id);
+        let updated = [];
+        for (let i = 0; i < order.products.length; i++) {
+            let product = await Product.findById(order.products[i].productId);
+            let unit = null;
+            if (product) {
+                unit = await Unit.findById(product.unit);
+            }
+            let e = {
+                image: product ? product.image : "",
+                name: order.products[i].name,
+                quantity: order.products[i].quantity,
+                weight: order.products[i].weight,
+                price: order.products[i].price,
+                unit: unit ? unit.name : ""
+            }
+            updated.push(e)
+        }
+        res.status(201).render("vendor/order_detail", {
+            title: 'Order Details',
+            // offer,
+            vendor: req.vendor,
+            updated,
+        });
+    } catch (error) {
+        if (error.name === 'CastError' || error.name === 'TypeError') {
+            req.flash('danger',`Order not found!`);
+            res.redirect('/vendor/order');
+        } else {
+            console.log(error);
+            res.send(error)
+        }
+    }
 });
 
 module.exports = router;

@@ -9,6 +9,7 @@ const multer  = require('multer');
 const fs = require('fs-extra');
 
 const Vendor = require('../models/vendorModel');
+const Product = require('../models/productModel');
 
 const storage = multer.memoryStorage();
 const fileFilter = (req, file, cb) => {
@@ -232,6 +233,23 @@ router.post("/edit/:id", checkAdmin, upload.fields([
             console.log(error);
             res.send(error)
         }
+    }
+});
+
+// GET vendor products
+router.get("/products/:id", checkAdmin, async (req,res)=>{
+    try {
+        const id = req.params.id;
+        const products = await Product.find({vendor: id});
+        const vendor = await Vendor.findById(id);
+        res.status(201).render("admin/vendor_products", {
+            title: 'Vendor Products',
+            products,
+            vendor
+        });
+    } catch (error) {
+        console.log(error);
+        res.send(error)
     }
 });
 

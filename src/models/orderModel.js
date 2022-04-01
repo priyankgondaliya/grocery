@@ -31,10 +31,10 @@ const orderSchema = new mongoose.Schema ({
         type: String,
         required: true
     },
-    // deliverycharge: {
-    //     type: String,
-    //     required: true
-    // },
+    deliverycharge: {
+        type: String,
+        required: true
+    },
     // payableamount: {
     //     type: String,
     //     required: true

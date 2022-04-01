@@ -21,16 +21,13 @@ router.post('/', checkUser, checkStore, async (req, res) => {
         }
         // create order
         const user = req.user;
-        if (user.address == undefined) {
-            console.log(user.address);
+        const size = Object.keys(user.address).length;
+        if (size < 1) {
             req.flash('danger','Address is required!');
             return res.redirect('/checkout');
         }
         const address = `${user.address.house},${user.address.apartment},${user.address.landmark},${user.address.city},${user.address.state},${user.address.country}-${user.address.postal}`;
-        var totalamount = 0;
-        for (let i = 0; i < cart.products.length; i++) {
-            // var totalamount = totalamount + (cart.products[i].price * cart.products[i].quantity);
-        }
+        let totalamount = 0;
         var products = [];
         for (let i = 0; i < cart.products.length; i++) {
             const product = await Product.findById(cart.products[i].productId);
@@ -39,15 +36,16 @@ router.post('/', checkUser, checkStore, async (req, res) => {
                 quantity: cart.products[i].quantity,
                 name: product.productname,
                 weight: product.productweight,
-                price: cart.products[i].price,
-                vendor: req.store
+                price: product.totalprice,
             }
+            totalamount = totalamount + (product.totalprice * cart.products[i].quantity);
             products.push(pro);
         }
         const order = new Order({
-            // vendor
+            vendor: req.store,
             user: user.id,
             useraddress: address,
+            deliverycharge: req.deliverycharge,
             totalamount,
             products,
             paymentmode: req.body.pay
@@ -76,7 +74,7 @@ router.get('/detail/:id', checkUser, checkStore, async function(req,res){
             let product = await Product.findById(order.products[i].productId);
             let unit = null;
             if (product) {
-                let unit = await Unit.findById(product.unit);
+                unit = await Unit.findById(product.unit);
             }
             let e = {
                 image: product ? product.image : "",

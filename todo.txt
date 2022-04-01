@@ -24,10 +24,16 @@ create cart per vendor at google log in
 cart per vendor in session
 
 REPORT:
-add to cart
-update cart
-clear cart
+add to cart (db and session) updated
+update cart (db and session) updated
+clear cart (db and session) updated
 session to db cart at login
+session to db cart at login with google
+Error: after cart's created what if new vendor is added
+vendor: all orders api
+vendor: order details view
+vendor: order details api
+admin: products per vendor page
 
 
 Handle error: wrong id by user
@@ -42,4 +48,4 @@ do not store price in cart
 
 DOing:
 create cart when select store
-after cart's created what if vendor is added
+user can see others order

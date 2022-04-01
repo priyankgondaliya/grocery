@@ -14,39 +14,36 @@
                                             <th>Sr No.</th>
                                             <th>Action</th>
                                             <th>Details</th>
-                                            <th>Vendor</th>
-                                            <th>Order ID</th>
                                             <th>User Name</th>
                                             <th>User Address</th>
                                             <th>Total Amount</th>
                                             <th>Delivery Charge</th>
                                             <th>Payable Amount</th>
                                             <th>Discount Amount</th>
-                                            <th>Cashback</th>
-                                            <th>Time</th>
+                                            <th>Date</th>
                                             <th>Payment Mode</th>
                                             <th>Order Track</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <% for( let i = 0; i < orders.length; i++ ) { %>
                                             <tr>
-                                                <td>1</td>
-                                                <td>1</td>
-                                                <td>name</td>
-                                                <td>1</td>
-                                                <td>00</td>
-                                                <td>Name</td>
-                                                <td>Add</td>
-                                                <td>1</td>
-                                                <td>1</td>
-                                                <td>1</td>
-                                                <td>1</td>
-                                                <td>1</td>
-                                                <td>Time</td>
-                                                <td>cash</td>
-                                                <td>track</td>
+                                                <td><%= i+1 %></td>
+                                                <td>#</td>
+                                                <td>
+                                                    <a href="/vendor/order/detail/<%= orders[i].id %>"><i class="icon-eye m-r-5" style="font-size: 120%;"></i></a>
+                                                </td>
+                                                <td><%= orders[i].username %></td>
+                                                <td><%= orders[i].useraddress %></td>
+                                                <td><%= orders[i].totalamount %> &#8377;</td>
+                                                <td><%= orders[i].deliverycharge %>  &#8377;</td>
+                                                <td><%= orders[i].payableamount %></td>
+                                                <td><%= orders[i].discountamount %></td>
+                                                <td><%= orders[i].date %></td>
+                                                <td><%= orders[i].paymentmode %></td>
+                                                <td>#</td>
                                             </tr>
-                                        
+                                        <% } %>
                                     </tbody>
                                 </table>
                             </div>

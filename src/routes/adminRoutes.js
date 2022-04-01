@@ -230,18 +230,17 @@ router.get("/order", checkAdmin, async (req,res)=>{
     let updated = []
     for (let i = 0; i < orders.length; i++) {
         let user = await User.findById(orders[i].user);
+        let vendor = await Vendor.findById(orders[i].vendor);
         let username = `${user.firstname} ${user.lastname}`
         let e = {
             username,
+            vendor: vendor.storename,
             id: orders[i].id,
             useraddress: orders[i].useraddress,
             totalamount: orders[i].totalamount,
             deliverycharge: orders[i].deliverycharge,
-            deliveryrange: orders[i].deliveryrange,
-            deliveryrange: orders[i].deliveryrange,
             payableamount: orders[i].payableamount,
             discountamount: orders[i].discountamount,
-            cashback: orders[i].cashback,
             paymentmode: orders[i].paymentmode,
             // status: orders[i].status,
             date: formatDate(new Date(orders[i].orderdate))
@@ -265,7 +264,7 @@ router.get("/order/detail/:id", checkAdmin, async (req,res)=>{
             let product = await Product.findById(order.products[i].productId);
             let unit = null;
             if (product) {
-                let unit = await Unit.findById(product.unit);
+                unit = await Unit.findById(product.unit);
             }
             let e = {
                 image: product ? product.image : "",
@@ -283,7 +282,7 @@ router.get("/order/detail/:id", checkAdmin, async (req,res)=>{
             updated,
         });
     } catch (error) {
-        if (error.name === 'CastError') {
+        if (error.name === 'CastError' || error.name === 'TypeError') {
             req.flash('danger',`Order not found!`);
             res.redirect('/admin/order');
         } else {
