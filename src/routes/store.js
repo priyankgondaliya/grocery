@@ -56,14 +56,18 @@ router.get('/select/:id', checkUser, async (req, res) => {
             return res.redirect('/404');
         }
         // create cart
-        const cartExist = await Cart.find({ userId: req.user.id, vendorId: id });
-        if (!cartExist) {
-            const cart = new Cart({
-                userId: req.user.id,
-                vendorId: req.store,
-                products: []
-            })
-            cart.save();
+        if (req.user) {
+            const cartExist = await Cart.findOne({ userId: req.user.id, vendorId: id });
+            // console.log(cartExist);
+            if (!cartExist) {
+                const cart = new Cart({
+                    userId: req.user.id,
+                    vendorId: id,
+                    products: []
+                })
+                await cart.save();
+                // console.log(cart);
+            }
         }
         res.cookie("selectStore", id, {
             expires: new Date( Date.now() + 90*24*60*60*1000 ),

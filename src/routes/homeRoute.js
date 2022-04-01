@@ -16,7 +16,7 @@ router.get("/", checkUser, checkStore, async (req,res)=>{
         var cartLength = cart.products.length;
     } else {
         const storeId = req.store;
-        var cartLength = req.session.cart[storeId] ? req.session.cart[storeId].length : 0;
+        var cartLength = req.session.cart ? (req.session.cart[storeId] ? req.session.cart[storeId].length : 0) : 0;
     }
     req.session.redirectToUrl = req.originalUrl;
     const search = req.query.search;

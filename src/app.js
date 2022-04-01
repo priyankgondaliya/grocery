@@ -58,12 +58,17 @@ require('./helpers/googleAuth')
 app.use(passport.initialize());
 app.use(passport.session());
 
-// app.get('*', function (req, res, next) {
-//     // console.log("URL: "+req.url);
-//     if (typeof req.session.cart == "undefined") {
-//         req.session.cart = {};
+// app.all('*', function (req, res, next) {
+//     console.log("URL: "+req.url);
+//     const storeId = req.cookies['selectStore'];
+//     if (storeId) {
+//         if (typeof req.session.cart == undefined) {
+//             req.session.cart = {};
+//             req.session.cart[storeId] = [];
+//         } else if (typeof req.session.cart[storeId]) {
+//             req.session.cart[storeId] = [];
+//         }
 //     }
-//     // console.log(req.session.cart);
 //     next();
 // })
 

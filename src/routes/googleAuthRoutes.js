@@ -6,7 +6,7 @@ const checkStore = require('../middleware/selectedStore');
 const Cart = require('../models/cartModel');
 
 router.get('/', passport.authenticate('google', { scope: ['profile', 'email'] }));
-router.get('/callback', checkStore, passport.authenticate('google', { failureRedirect: '/failed' }),
+router.get('/callback', passport.authenticate('google', { failureRedirect: '/failed' }),
     async function(req, res) {
         const user = req.myUser;
         const token = await user.generateAuthToken();
@@ -15,12 +15,28 @@ router.get('/callback', checkStore, passport.authenticate('google', { failureRed
             httpOnly:true,
             // secure:true
         });
-
+        const storeId = req.cookies['selectStore'];
+        if (storeId) {
+            if (typeof req.session.cart == undefined) {
+                req.session.cart = {};
+                req.session.cart[storeId] = [];
+            } else if (typeof req.session.cart[storeId]) {
+                req.session.cart[storeId] = [];
+            }
+        }
         // CART: session to db
         const cartSession = req.session.cart;
         for (const [key, value] of Object.entries(cartSession)) {
             // console.log(`${key} ${value}`);
             var cart = await Cart.findOne({ userId: user.id, vendorId: key});
+            if (!cart) {
+                var cart = new Cart({
+                    userId: user.id,
+                    vendorId: key,
+                    products: []
+                })
+                await cart.save();
+            }
             if ( value.length != 0 ) {
                 for (let i = 0; i < value.length; i++) {
                     let itemIndex = cart.products.findIndex(p => p.productId == value[i].productId);

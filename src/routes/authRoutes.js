@@ -136,12 +136,29 @@ router.post("/login", checkUser, [
             httpOnly:true,
             // secure:true
         });
+        const storeId = req.cookies['selectStore'];
+        if (storeId) {
+            if (typeof req.session.cart == undefined) {
+                req.session.cart = {};
+                req.session.cart[storeId] = [];
+            } else if (typeof req.session.cart[storeId]) {
+                req.session.cart[storeId] = [];
+            }
+        }
         // CART: session to db
         const cartSession = req.session.cart;
         console.log(req.session.cart);
         for (const [key, value] of Object.entries(cartSession)) {
             // console.log(`${key} ${value}`);
             var cart = await Cart.findOne({ userId: userExist.id, vendorId: key});
+            if (!cart) {
+                var cart = new Cart({
+                    userId: userExist.id,
+                    vendorId: key,
+                    products: []
+                })
+                await cart.save();
+            }
             if ( value.length != 0 ) {
                 for (let i = 0; i < value.length; i++) {
                     let itemIndex = cart.products.findIndex(p => p.productId == value[i].productId);
@@ -161,7 +178,6 @@ router.post("/login", checkUser, [
                         });
                     }
                 }
-                // req.session.cart = undefined;
                 cartSession[key] = [];
                 await cart.save();
             }
@@ -176,7 +192,7 @@ router.post("/login", checkUser, [
 })
 
 // GET logout
-router.get("/logout", auth, async(req,res) => {
+router.get("/logout", checkUser, async(req,res) => {
     try {
         if (req.user) {
             req.user.tokens = req.user.tokens.filter((currElement)=>{
@@ -193,7 +209,7 @@ router.get("/logout", auth, async(req,res) => {
 })
 
 // GET logoutAll
-router.get("/logoutall", auth, async (req,res) => {
+router.get("/logoutall", checkUser, async (req,res) => {
     try {
         // logout from all device
         req.user.tokens = [];

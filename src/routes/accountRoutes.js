@@ -13,7 +13,7 @@ router.get("/signup", checkUser, checkStore, async (req,res)=>{
         return res.redirect('/account');
     } else {
         const storeId = req.store;
-        var cartLength = req.session.cart[storeId] ? req.session.cart[storeId].length : 0;
+        var cartLength = req.session.cart ? (req.session.cart[storeId] ? req.session.cart[storeId].length : 0) : 0;
     }
     res.status(201).render("account", {
         title: 'Signup | Signin',

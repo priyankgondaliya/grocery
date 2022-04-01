@@ -17,7 +17,7 @@ router.get("/about_us", checkUser, checkStore, async (req,res)=>{
             var cartLength = cart.products.length;
         } else {
             const storeId = req.store;
-            var cartLength = req.session.cart[storeId] ? req.session.cart[storeId].length : 0;
+            var cartLength = req.session.cart ? (req.session.cart[storeId] ? req.session.cart[storeId].length : 0) : 0;
         }
         const page = await Page.findOne({ title:'About Us'})
         const content = page.content;
@@ -42,7 +42,7 @@ router.get("/faqs", checkUser, checkStore, async (req,res)=>{
             var cartLength = cart.products.length;
         } else {
             const storeId = req.store;
-            var cartLength = req.session.cart[storeId] ? req.session.cart[storeId].length : 0;
+            var cartLength = req.session.cart ? (req.session.cart[storeId] ? req.session.cart[storeId].length : 0) : 0;
         }
         const page = await Page.findOne({ title:'FAQs'})
         const content = page.content;
@@ -67,7 +67,7 @@ router.get("/terms_con", checkUser, checkStore, async (req,res)=>{
             var cartLength = cart.products.length;
         } else {
             const storeId = req.store;
-            var cartLength = req.session.cart[storeId] ? req.session.cart[storeId].length : 0;
+            var cartLength = req.session.cart ? (req.session.cart[storeId] ? req.session.cart[storeId].length : 0) : 0;
         }
         const page = await Page.findOne({ title: 'Terms & Conditions' })
         const content = page.content;
@@ -92,7 +92,7 @@ router.get("/privacy_policy", checkUser, checkStore, async (req,res)=>{
             var cartLength = cart.products.length;
         } else {
             const storeId = req.store;
-            var cartLength = req.session.cart[storeId] ? req.session.cart[storeId].length : 0;
+            var cartLength = req.session.cart ? (req.session.cart[storeId] ? req.session.cart[storeId].length : 0) : 0;
         }
         const page = await Page.findOne({ title:'Privacy Policy'})
         const content = page.content;
@@ -117,7 +117,7 @@ router.get("/contact", checkUser, checkStore, async (req,res)=>{
             var cartLength = cart.products.length;
         } else {
             const storeId = req.store;
-            var cartLength = req.session.cart[storeId] ? req.session.cart[storeId].length : 0;
+            var cartLength = req.session.cart ? (req.session.cart[storeId] ? req.session.cart[storeId].length : 0) : 0;
         }
         const page = await Page.findOne({ title:'Contact'})
         const content = page.content;
@@ -150,7 +150,7 @@ router.post("/contact",[
             var cartLength = cart.products.length;
         } else {
             const storeId = req.store;
-            var cartLength = req.session.cart[storeId] ? req.session.cart[storeId].length : 0;
+            var cartLength = req.session.cart ? (req.session.cart[storeId] ? req.session.cart[storeId].length : 0) : 0;
         }
         const page = await Page.findOne({ title:'Contact'})
         const content = page.content;

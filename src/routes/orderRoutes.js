@@ -14,7 +14,7 @@ router.post('/', checkUser, checkStore, async (req, res) => {
     try {
         if (req.user) {
             var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
-            var cartLength = cart.products.length;
+            // var cartLength = cart.products.length;
         } else {
             req.flash('danger','Please login first!');
             return res.redirect('/signup');
@@ -29,7 +29,7 @@ router.post('/', checkUser, checkStore, async (req, res) => {
         const address = `${user.address.house},${user.address.apartment},${user.address.landmark},${user.address.city},${user.address.state},${user.address.country}-${user.address.postal}`;
         var totalamount = 0;
         for (let i = 0; i < cart.products.length; i++) {
-            var totalamount = totalamount + (cart.products[i].price * cart.products[i].quantity);
+            // var totalamount = totalamount + (cart.products[i].price * cart.products[i].quantity);
         }
         var products = [];
         for (let i = 0; i < cart.products.length; i++) {

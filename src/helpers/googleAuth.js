@@ -53,7 +53,7 @@ passport.use(new GoogleStrategy({
         for (let i = 0; i < stores.length; i++) {
             const cart = new Cart({
                 userId: user.id,
-                vendor: stores[i].id,
+                vendorId: stores[i].id,
                 products: []
             })
             cart.save();

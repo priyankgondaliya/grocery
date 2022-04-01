@@ -95,6 +95,7 @@ router.post("/add", checkAdmin, upload.fields([
             address : req.body.address,
             deliverycharge : req.body.deliverycharge,
             deliveryrange : req.body.deliveryrange,
+            approved : true,
             coords: {
                 lat: req.body.lat,
                 lng: req.body.lng

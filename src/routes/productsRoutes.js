@@ -16,7 +16,7 @@ router.get('/detail/:id', checkUser, checkStore, async function(req,res){
     req.session.redirectToUrl = req.originalUrl;
     try {
         if (req.user) {
-            var cart = await Cart.findOne({ userId: req.user.id});
+            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
             var cartLength = cart.products.length;
         } else {
             var cartLength = req.session.cart.products.length;
@@ -51,11 +51,11 @@ router.get('/detail/:id', checkUser, checkStore, async function(req,res){
 router.get('/:cat/:sub?', checkUser, checkStore, async function(req,res){
     try {
         if (req.user) {
-            var cart = await Cart.findOne({ userId: req.user.id});
+            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
             var cartLength = cart.products.length;
         } else {
             var storeId = req.store;
-            var cartLength = req.session.cart[storeId] ? req.session.cart[storeId].length : 0;
+            var cartLength = req.session.cart ? (req.session.cart[storeId] ? req.session.cart[storeId].length : 0) : 0;
         }
         req.session.redirectToUrl = req.originalUrl;
         const {cat, sub} = req.params;

@@ -22,6 +22,10 @@ const checkVendor = function (req, res, next) {
                         req.flash('danger','Please Login as Vendor first!');
                         return res.redirect('/vendor/login');
                     }
+                    // if (vendor.status != 'approved') {
+                    //     req.flash('danger','Waiting for approval!');
+                    //     return res.redirect('/vendor/login');
+                    // }
                     req.vendor = vendor;
                     next();
                 });
