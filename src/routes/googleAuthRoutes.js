@@ -19,10 +19,10 @@ router.get('/callback', passport.authenticate('google', { failureRedirect: '/fai
         console.log('session.cart');
         console.log(req.session.cart);
         if (storeId) {
-            if (typeof req.session.cart == undefined) {
+            if (req.session.cart == undefined) {
                 req.session.cart = {};
                 req.session.cart[storeId] = [];
-            } else if (typeof req.session.cart[storeId]) {
+            } else if (req.session.cart[storeId]) {
                 req.session.cart[storeId] = [];
             }
         }
