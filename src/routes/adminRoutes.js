@@ -237,6 +237,7 @@ router.get("/order", checkAdmin, async (req,res)=>{
             vendor: vendor.storename,
             id: orders[i].id,
             useraddress: orders[i].useraddress,
+            status: orders[i].status,
             totalamount: orders[i].totalamount,
             deliverycharge: orders[i].deliverycharge,
             payableamount: orders[i].payableamount,

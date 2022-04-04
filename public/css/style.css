@@ -16126,3 +16126,7 @@ ul.pro-amenities li span i {
         padding-right: 0
     }
 }
+
+.badge {
+    padding: 5px 10px;
+}
