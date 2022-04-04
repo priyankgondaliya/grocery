@@ -1,6 +1,4 @@
-out of stock
-learn about dicount
-user info page admin side
+learn about discount
 promocode per category
 
 remove from wishlist api for AJAX
@@ -46,5 +44,9 @@ pagination in subcategory
 do not store price in cart
 Error: create cart when select store
 Bug: user can see others order
+update instead of adding qty
 
 DOing:
+out of stock
+razorpay
+vendor order status

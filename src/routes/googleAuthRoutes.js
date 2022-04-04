@@ -16,20 +16,21 @@ router.get('/callback', passport.authenticate('google', { failureRedirect: '/fai
             // secure:true
         });
         const storeId = req.cookies['selectStore'];
-        console.log('session.cart');
-        console.log(req.session.cart);
+        // console.log('session.cart');
+        // console.log(req.session.cart);
         if (storeId) {
+            // console.log(storeId);
             if (req.session.cart == undefined) {
                 req.session.cart = {};
                 req.session.cart[storeId] = [];
-            } else if (req.session.cart[storeId]) {
+            } else if (!req.session.cart[storeId]) {
                 req.session.cart[storeId] = [];
             }
         }
         // CART: session to db
         const cartSession = req.session.cart;
-        console.log('cartSession');
-        console.log(cartSession);
+        // console.log('cartSession');
+        // console.log(cartSession);
         for (const [key, value] of Object.entries(cartSession)) {
             // console.log(`${key} ${value}`);
             var cart = await Cart.findOne({ userId: user.id, vendorId: key});
@@ -43,13 +44,15 @@ router.get('/callback', passport.authenticate('google', { failureRedirect: '/fai
             }
             if ( value.length != 0 ) {
                 for (let i = 0; i < value.length; i++) {
+                    // console.log(value[i]);
                     let itemIndex = cart.products.findIndex(p => p.productId == value[i].productId);
-    
+                    
                     if (itemIndex > -1) {
                         //product exists in the cart, update the quantity
                         let productItem = cart.products[itemIndex];
-                        // productItem.quantity = value[i].quantity;
-                        productItem.quantity = productItem.quantity + value[i].quantity;
+                        productItem.quantity = value[i].quantity;
+                        // console.log(value[i]);
+                        // productItem.quantity = productItem.quantity + value[i].quantity;
                         cart.products[itemIndex] = productItem;
                     } else {
                         //product does not exists in cart, add new item

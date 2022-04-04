@@ -141,13 +141,13 @@ router.post("/login", checkUser, [
             if (req.session.cart == undefined) {
                 req.session.cart = {};
                 req.session.cart[storeId] = [];
-            } else if (req.session.cart[storeId]) {
+            } else if (!req.session.cart[storeId]) {
                 req.session.cart[storeId] = [];
             }
         }
         // CART: session to db
         const cartSession = req.session.cart;
-        console.log(req.session.cart);
+        // console.log(req.session.cart);
         for (const [key, value] of Object.entries(cartSession)) {
             // console.log(`${key} ${value}`);
             var cart = await Cart.findOne({ userId: userExist.id, vendorId: key});
@@ -166,8 +166,8 @@ router.post("/login", checkUser, [
                     if (itemIndex > -1) {
                         //product exists in the cart, update the quantity
                         let productItem = cart.products[itemIndex];
-                        // productItem.quantity = value[i].quantity;
-                        productItem.quantity = productItem.quantity + value[i].quantity;
+                        productItem.quantity = value[i].quantity;
+                        // productItem.quantity = productItem.quantity + value[i].quantity;
                         cart.products[itemIndex] = productItem;
                     } else {
                         //product does not exists in cart, add new item
