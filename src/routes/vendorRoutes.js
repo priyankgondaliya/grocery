@@ -192,7 +192,7 @@ router.post("/forgot", async (req, res, next) => {
 })
 
 // GET orders
-router.get("/orders", checkVendor, async (req,res)=>{
+router.get("/order", checkVendor, async (req,res)=>{
     var orders = await Order.find({vendor: req.vendor.id});
     let updated = []
     for (let i = 0; i < orders.length; i++) {

@@ -19,7 +19,8 @@ router.get('/detail/:id', checkUser, checkStore, async function(req,res){
             var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
             var cartLength = cart.products.length;
         } else {
-            var cartLength = req.session.cart.products.length;
+            const storeId = req.store;
+            var cartLength = req.session.cart ? (req.session.cart[storeId] ? req.session.cart[storeId].length : 0) : 0;
         }
         const id = req.params.id;
         const product = await Product.findOne({_id: id, vendor: req.store});
@@ -38,10 +39,10 @@ router.get('/detail/:id', checkUser, checkStore, async function(req,res){
             user: req.user
         });
     } catch (error) {
+        console.log(error);
         if (error.name === 'CastError' || error.name === 'TypeError') {
             res.redirect('/404');
         } else {
-            console.log(error);
             res.send(error)
         }
     }

@@ -392,7 +392,7 @@
                                 $("#searchResult").empty();
                                 $('#searchResult').show();
                                 for (let i = 0; i < data.length; i++) {
-                                    $("#searchResult").append(`<a href="/product/detail/${data._id}"><li>${data[i].productname}</li></a>`);                                
+                                    $("#searchResult").append(`<a href="/products/detail/${data[i]._id}"><li>${data[i].productname}</li></a>`);                                
                                 }
                             },
                             error: function (xhr) {

@@ -7,12 +7,11 @@ const checkStore = function (req, res, next) {
         Vendor.findById(cookie, function (err, vendor) {
             if (err) {
                 console.log("ERROR: "+err.message);
-                // req.store = null;
                 // req.flash('danger','An error occoured!');
                 return res.redirect('/store');
             }
             if (!vendor) {
-                // req.flash('danger','Please Login as Vendor first!');
+                // req.flash('danger','msg');
                 return res.redirect('/store');
             }
             req.store = cookie;

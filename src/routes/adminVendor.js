@@ -249,7 +249,7 @@ router.get("/products/:id", checkAdmin, async (req,res)=>{
         });
     } catch (error) {
         console.log(error);
-        res.send(error)
+        res.send(error);
     }
 });
 

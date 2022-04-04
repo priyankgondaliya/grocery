@@ -57,6 +57,11 @@ const orderSchema = new mongoose.Schema ({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Vendor"
     },
+    status: {
+        type: String,
+        enum: ['Pending', 'Accepted', 'Rejected', 'Processing', 'Completed', 'Cancelled'],
+        default: 'Pending'
+    }
 })
 
 module.exports = new mongoose.model("Order", orderSchema);

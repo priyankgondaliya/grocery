@@ -101,25 +101,23 @@ app.use('/products', require('./routes/productsRoutes'));
 app.use('/wishlist', require('./routes/wishlistRoutes'));
 app.use('/newsletter', require('./routes/newsletterRoutes'));
 
-// app.use('/api/cart', require('./routes/cartRoutes'));
-
 app.use('/google', require('./routes/googleAuthRoutes'));
 
 // 404
-app.all('/404', checkUser, (req, res, next) => {
+app.all('/404', checkUser, (req, res) => {
     res.render("error",{
         title:  "404 | Not Found",
         user: req.user,
         cartLength: 0
     });
 });
-app.all('*', (req, res, next) => {
+app.all('*', (req, res) => {
     console.log(req.url);
     res.status(404).redirect('/404');
 });
 
 // error handler
-app.use((err, req, res, next) =>{
+app.use((err, req, res) =>{
     console.log(err);
     res.status(err.status || 500).json({
         status: "fail",

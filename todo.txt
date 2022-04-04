@@ -22,19 +22,18 @@ elastic search view
 create cart per vendor at register
 create cart per vendor at google log in
 cart per vendor in session
-
-REPORT:
 add to cart (db and session) updated
 update cart (db and session) updated
 clear cart (db and session) updated
 session to db cart at login
 session to db cart at login with google
+
+REPORT:
 Error: after cart's created what if new vendor is added
 vendor: all orders api
 vendor: order details view
 vendor: order details api
 admin: products per vendor page
-
 
 Handle error: wrong id by user
 remove a product from cart if its deleted
@@ -45,7 +44,7 @@ show deleted product in recent order details
 pagination in products
 pagination in subcategory
 do not store price in cart
+Error: create cart when select store
+Bug: user can see others order
 
 DOing:
-create cart when select store
-user can see others order

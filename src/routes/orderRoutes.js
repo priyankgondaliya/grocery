@@ -51,7 +51,10 @@ router.post('/', checkUser, checkStore, async (req, res) => {
             paymentmode: req.body.pay
         })
         await order.save();
-        res.redirect('/'); // redirect to this order's detail page
+        // reduce stock
+        // empty cart
+        res.redirect(`/order/detail/${order.id}`);
+        // res.redirect('/');
     } catch (error) {
         console.log(error);
         res.redirect('/404');
@@ -68,7 +71,7 @@ router.get('/detail/:id', checkUser, checkStore, async function(req,res){
             var cartLength = req.session.cart.products.length;
         }
         const id = req.params.id;
-        const order = await Order.findById(id);
+        const order = await Order.findOne({id: id,user: req.user.id});
         let updated = [];
         for (let i = 0; i < order.products.length; i++) {
             let product = await Product.findById(order.products[i].productId);
@@ -95,7 +98,7 @@ router.get('/detail/:id', checkUser, checkStore, async function(req,res){
             user: req.user
         });
     } catch (error) {
-        console.log(error);
+        console.log(error.message);
         res.redirect('/404');
     }
 });

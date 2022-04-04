@@ -243,12 +243,3 @@ router.get('/clear', checkUser, checkStore, async (req,res) => {
 });
 
 module.exports = router;
-
-// req.session.cart = {
-//     "id1": ["products"],
-//     "id2": ["products"],
-// }
-
-// req.session.cart = {
-//     "id": {id: id, products:[]},
-// }
