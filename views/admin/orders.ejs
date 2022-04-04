@@ -12,7 +12,7 @@
                                     <thead>
                                         <tr>
                                             <th>Sr No.</th>
-                                            <th>Action</th>
+                                            <th>Status</th>
                                             <th>Details</th>
                                             <th>Vendor</th>
                                             <th>User Name</th>
@@ -30,7 +30,7 @@
                                         <% for( let i = 0; i < orders.length; i++ ) { %>
                                             <tr>
                                                 <td><%= i+1 %></td>
-                                                <td>#</td>
+                                                <td><%= orders[i].status %></td>
                                                 <td>
                                                     <a href="/admin/order/detail/<%= orders[i].id %>"><i class="icon-eye m-r-5" style="font-size: 120%;"></i></a>
                                                 </td>
