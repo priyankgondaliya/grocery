@@ -138,10 +138,10 @@ router.post("/login", checkUser, [
         });
         const storeId = req.cookies['selectStore'];
         if (storeId) {
-            if (typeof req.session.cart == undefined) {
+            if (req.session.cart == undefined) {
                 req.session.cart = {};
                 req.session.cart[storeId] = [];
-            } else if (typeof req.session.cart[storeId]) {
+            } else if (req.session.cart[storeId]) {
                 req.session.cart[storeId] = [];
             }
         }
