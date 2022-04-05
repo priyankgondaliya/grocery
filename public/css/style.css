@@ -16129,4 +16129,5 @@ ul.pro-amenities li span i {
 
 .badge {
     padding: 5px 10px;
+    font-weight: normal !important;
 }

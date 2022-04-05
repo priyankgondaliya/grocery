@@ -25,13 +25,14 @@ update cart (db and session) updated
 clear cart (db and session) updated
 session to db cart at login
 session to db cart at login with google
-
-REPORT:
 Error: after cart's created what if new vendor is added
 vendor: all orders api
 vendor: order details view
 vendor: order details api
+
+REPORT:
 admin: products per vendor page
+reduce quantity from stock at order
 
 Handle error: wrong id by user
 remove a product from cart if its deleted

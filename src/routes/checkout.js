@@ -32,6 +32,7 @@ router.get("/", checkUser, checkStore, async (req,res) => {
         user: req.user,
         cartLength,
         storename: req.storename,
+        delivery: req.deliverycharge,
         myCart
     });
 });

@@ -35,12 +35,13 @@ const orderSchema = new mongoose.Schema ({
         type: String,
         required: true
     },
-    // payableamount: {
-    //     type: String,
-    //     required: true
-    // },
+    payableamount: {
+        type: String,
+        required: true
+    },
     discountamount: {
         type: String,
+        default: 0
     },
     orderdate: {
         type: Date,

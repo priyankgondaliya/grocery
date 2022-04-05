@@ -78,10 +78,24 @@
             
             <div class="flex-w flex-m bo-b-1 bocl15 w-full p-tb-18">
                 <span class="size-w-58 txt-m-109 cl3">
+                    Subtotal
+                </span>
+
+                <span class="size-w-59 txt-m-104 cl6">&#8377; <%= order.totalamount %></span>
+            </div>
+            <div class="flex-w flex-m bo-b-1 bocl15 w-full p-tb-18">
+                <span class="size-w-58 txt-m-109 cl3">
+                    Delivery charge
+                </span>
+
+                <span class="size-w-59 txt-m-104 cl6">&#8377; <%= order.deliverycharge %></span>
+            </div>
+            <div class="flex-w flex-m bo-b-1 bocl15 w-full p-tb-18">
+                <span class="size-w-58 txt-m-109 cl3">
                     Total
                 </span>
 
-                <span class="size-w-59 txt-m-104 cl10" id="grandTotal"></span>
+                <span class="size-w-59 txt-m-104 cl10">&#8377; <%= order.payableamount %></span>
             </div>
         </div>
     </div>
