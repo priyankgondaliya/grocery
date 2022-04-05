@@ -384,7 +384,7 @@
                         $("#searchResult").empty();
                     } else {
                         $.ajax({
-                            url: "http://localhost:3000/autocomplete?term="+req.term.trim(),
+                            url: "/autocomplete?term="+req.term.trim(),
                             // dataType: "jsonp",
                             type: "GET",
                             success: function (data) {
