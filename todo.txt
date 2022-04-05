@@ -33,6 +33,10 @@ vendor: order details api
 REPORT:
 admin: products per vendor page
 reduce quantity from stock at order
+promocode at checkout view
+promocode api 
+promocode validation
+apply promo and show discount and new price
 
 Error: when user login and session cart is undefined
 Handle error: wrong id by user

@@ -27,7 +27,6 @@ router.post('/', checkUser, checkStore, async (req, res) => {
             return res.redirect('/checkout');
         }
         const address = `${user.address.house},${user.address.apartment},${user.address.landmark},${user.address.city},${user.address.state},${user.address.country}-${user.address.postal}`;
-        let totalamount = 0;
         var products = [];
         for (let i = 0; i < cart.products.length; i++) {
             const product = await Product.findById(cart.products[i].productId);
@@ -41,23 +40,24 @@ router.post('/', checkUser, checkStore, async (req, res) => {
             // reduce stock
             product.qtyweight = product.qtyweight - cart.products[i].quantity;
             product.save();
-            // console.log(product.qtyweight);
-            totalamount = totalamount + (product.totalprice * cart.products[i].quantity);
             products.push(pro);
         }
-        var payableamount = parseFloat(totalamount) + parseFloat(req.deliverycharge);
+        var payableamount = cart.total + parseFloat(req.deliverycharge) - cart.discount;
+        // check promo
         const order = new Order({
             vendor: req.store,
             user: user.id,
             useraddress: address,
             deliverycharge: req.deliverycharge,
-            totalamount,
+            totalamount: cart.total,
+            discountamount: cart.discount,
             payableamount,
             products,
             paymentmode: req.body.pay
         })
         await order.save();
         console.log('Order created');
+        // manage promo
         // empty cart
         res.redirect(`/order/detail/${order.id}`);
         // res.redirect('/');

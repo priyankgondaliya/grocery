@@ -111,7 +111,7 @@ router.get("/add/:product", checkUser, checkStore, async (req, res)=>{
             if (typeof req.session.cart == "undefined") {
                 req.session.cart = {};
                 req.session.cart[storeId] = [];
-                req.session.cart.storeId.push({
+                req.session.cart[storeId].push({
                     productId: product.id,
                     quantity: 1,
                 });

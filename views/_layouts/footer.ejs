@@ -353,7 +353,7 @@
                 }
             });
         </script> -->
-        <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
+        <script src="https://code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
         <!-- autocomplete search -->
         <script type="text/javascript">
             $( document ).ready(function() {
@@ -391,8 +391,11 @@
                                 // console.log(data);
                                 $("#searchResult").empty();
                                 $('#searchResult').show();
+                                if (data.length == 0) {
+                                    $("#searchResult").append(`<li>No Products Found!</li>`);
+                                }
                                 for (let i = 0; i < data.length; i++) {
-                                    $("#searchResult").append(`<a href="/products/detail/${data[i]._id}"><li>${data[i].productname}</li></a>`);                                
+                                    $("#searchResult").append(`<a href="/products/detail/${data[i]._id}"><li>${data[i].productname}</li></a>`);
                                 }
                             },
                             error: function (xhr) {

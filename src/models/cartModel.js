@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Product = require('./productModel');
 
 const CartSchema = new mongoose.Schema({
     userId: {
@@ -19,7 +20,28 @@ const CartSchema = new mongoose.Schema({
         // name: String,
         // price: Number // what if price is changed
       }
-    ]
+    ],
+    total: {
+      type: Number
+    },
+    discount: {
+      type: Number
+    },
+    promo: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Promo'
+    }
 });
+
+// count total 
+CartSchema.pre("save",async function(next){
+  let totalamount = 0;
+  for (let i = 0; i < this.products.length; i++) {
+    const product = await Product.findById(this.products[i].productId);
+    totalamount = totalamount + (product.totalprice * this.products[i].quantity);
+  }
+  this.total = totalamount;
+  next();
+})
 
 module.exports = mongoose.model("Cart", CartSchema);

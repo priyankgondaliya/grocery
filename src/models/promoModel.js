@@ -6,7 +6,7 @@ var promoSchema = mongoose.Schema({
         required: true,
     },
     times:{
-        type: String,
+        type: Number,
     },
     date:{
         type: String,
@@ -15,13 +15,13 @@ var promoSchema = mongoose.Schema({
         type: String,
     },
     minAmount:{
-        type: String,
+        type: Number,
     },
     price:{
-        type: String,
-    },
+        type: Number,
+    }, // not used
     percentage:{
-        type: String,
+        type: Number,
     },
     desc:{
         type: String,

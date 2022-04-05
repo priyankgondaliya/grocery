@@ -32,42 +32,51 @@
 						<!-- <th class="column-3">Stock Status</th> -->
 						<th class="column-3">Add to cart</th>
 					</tr>
-
-					<% for( let i = 0; i < items.length; i++ ) { %>
+					<% if (items.length > 0) { %>
+						<% for( let i = 0; i < items.length; i++ ) { %>
+							<tr class="table_row">
+								<td class="column-1">
+									<div class="flex-w flex-m">
+										<div class="wrap-pic-w size-w-50 bo-all-1 bocl12 m-r-30">
+											<img src="<%= items[i].image %>" alt="IMG">
+										</div>
+		
+										<span>
+											<%= items[i].productname %>
+										</span>
+									</div>
+								</td>
+								<td class="column-2">
+									&#8377; <%= items[i].totalprice %>
+								</td>
+								<!-- <td class="column-3">
+									<div class="flex-t">
+										<img class="m-t-4 m-r-8" src="/images/icons/icon-list3.png" alt="IMG">
+										<span class="size-w-53 txt-m-104 cl6">
+											In Stock
+										</span>
+									</div>
+								</td> -->
+								<td class="column-3">
+									<div class="flex-w flex-sb-m">
+										<a href="/cart/add/<%= items[i].id %>" class="flex-c-m txt-s-103 cl6 size-a-2 how-btn1 bo-all-1 bocl11 hov-btn1 trans-04">
+											Add to cart
+											<span class="lnr lnr-chevron-right m-l-7"></span>
+											<span class="lnr lnr-chevron-right"></span>
+										</a>
+		
+										<div class="fs-15 hov-cl10 pointer">
+											<a href="/wishlist/remove/<%= items[i].id %>"><span class="lnr lnr-cross"></span></a>
+										</div>
+									</div>
+								</td>
+							</tr>
+						<% } %>
+					<% } else { %>
 						<tr class="table_row">
-							<td class="column-1">
+							<td class="column-1" colspan="4">
 								<div class="flex-w flex-m">
-									<div class="wrap-pic-w size-w-50 bo-all-1 bocl12 m-r-30">
-										<img src="<%= items[i].image %>" alt="IMG">
-									</div>
-	
-									<span>
-										<%= items[i].productname %>
-									</span>
-								</div>
-							</td>
-							<td class="column-2">
-								&#8377; <%= items[i].totalprice %>
-							</td>
-							<!-- <td class="column-3">
-								<div class="flex-t">
-									<img class="m-t-4 m-r-8" src="/images/icons/icon-list3.png" alt="IMG">
-									<span class="size-w-53 txt-m-104 cl6">
-										In Stock
-									</span>
-								</div>
-							</td> -->
-							<td class="column-3">
-								<div class="flex-w flex-sb-m">
-									<a href="/cart/add/<%= items[i].id %>" class="flex-c-m txt-s-103 cl6 size-a-2 how-btn1 bo-all-1 bocl11 hov-btn1 trans-04">
-										Add to cart
-										<span class="lnr lnr-chevron-right m-l-7"></span>
-										<span class="lnr lnr-chevron-right"></span>
-									</a>
-	
-									<div class="fs-15 hov-cl10 pointer">
-										<a href="/wishlist/remove/<%= items[i].id %>"><span class="lnr lnr-cross"></span></a>
-									</div>
+									Wishlist is empty.
 								</div>
 							</td>
 						</tr>
@@ -77,9 +86,11 @@
 
 			<div class="flex-w flex-sb-m p-t-30">
 				<div class="flex-w flex-m m-r-50 m-tb-10">
-					<a href="/wishlist/remove/all" class="flex-c-m txt-s-103 cl6 size-h-9 how-btn1 bo-all-1 bocl11 hov-btn1 trans-04 pointer p-rl-29 m-tb-10" onclick="return confirm('Are you sure?')">
-						Clear wishlist
-					</a>
+					<% if (items.length > 0) { %>
+						<a href="/wishlist/remove/all" class="flex-c-m txt-s-103 cl6 size-h-9 how-btn1 bo-all-1 bocl11 hov-btn1 trans-04 pointer p-rl-29 m-tb-10" onclick="return confirm('Are you sure?')">
+							Clear wishlist
+						</a>
+					<% } %>
 				</div>
 
 				<a href="/products/all" class="flex-c-m txt-s-103 cl0 bg10 size-h-9 hov-btn2 trans-04 pointer p-rl-29 m-tb-10">
