@@ -16,11 +16,8 @@ router.get('/callback', passport.authenticate('google', { failureRedirect: '/fai
             // secure:true
         });
         const storeId = req.cookies['selectStore'];
-        console.log('session.cart');
-        console.log(req.session.cart);
         if (storeId) {
             if (req.session.cart == undefined) {
-                console.log(storeId);
                 req.session.cart = {};
                 req.session.cart[storeId] = [];
             } else if (!req.session.cart[storeId]) {
@@ -29,8 +26,6 @@ router.get('/callback', passport.authenticate('google', { failureRedirect: '/fai
         }
         // CART: session to db
         const cartSession = req.session.cart;
-        console.log('cartSession');
-        console.log(cartSession);
         if (cartSession != undefined) {
             for (const [key, value] of Object.entries(cartSession)) {
                 // console.log(`${key} ${value}`);
