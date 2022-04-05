@@ -1,12 +1,12 @@
 <%- include('_layouts/header') %>
 	
 <div class="new_banner_wrapper">
-	<div class="container">
-		<form class="wrap-search-header flex-w">
+	<div class="container" id="search_div">
+		<form class="wrap-search-header flex-w" autocomplete="off">
+			<input class="plh1" id="search" type="text" name="search" value="<%= searchString %>" placeholder="Search..." style="border: 2px solid #81b03f;">
 			<button class="flex-c-m trans-04">
 				<span class="lnr lnr-magnifier"></span>
 			</button>
-			<input class="plh1" id="search" type="text" name="search" value="<%= searchString %>" placeholder="Search..." style="border: 2px solid #81b03f;">
 			<ul id="searchResult"></ul>
 		</form>
 		<ul class="category_banner_list">

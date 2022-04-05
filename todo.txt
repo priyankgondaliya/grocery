@@ -34,6 +34,7 @@ REPORT:
 admin: products per vendor page
 reduce quantity from stock at order
 
+Error: when user login and session cart is undefined
 Handle error: wrong id by user
 remove a product from cart if its deleted
 Vendor: only show logged vendor's products and offers
