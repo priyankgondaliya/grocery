@@ -1,15 +1,15 @@
 const mongoose = require('mongoose');
 
-const unitSchema = new mongoose.Schema ({
+const unitSchema = new mongoose.Schema({
     name: {
-        type:String,
-        required:true,
-        unique:true
+        type: String,
+        required: true,
+        unique: true
     },
-    date:{
+    date: {
         type: Date,
         default: Date.now,
-        required:true
+        required: true
     }
 })
 

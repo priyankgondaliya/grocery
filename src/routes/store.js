@@ -9,8 +9,8 @@ const Cart = require('../models/cartModel');
 
 // GET select store
 router.get('/', (req, res) => {
-    res.render("store",{
-        title:  "Store Page",
+    res.render("store", {
+        title: "Store Page",
         user: req.user,
         cartLength: 0,
         error: false
@@ -34,15 +34,15 @@ router.post('/nearstore', async (req, res) => {
     }
     // console.log(nearStores.length);
     if (nearStores.length == 0) {
-        res.render("store",{
-            title:  "Store Page",
+        res.render("store", {
+            title: "Store Page",
             user: req.user,
             cartLength: 0,
             error: true
         });
     } else {
-        res.render("selectstore",{
-            title:  "Select Store",
+        res.render("selectstore", {
+            title: "Select Store",
             nearStores
         });
     }
@@ -70,7 +70,7 @@ router.get('/select/:id', checkUser, async (req, res) => {
             }
         }
         res.cookie("selectStore", id, {
-            expires: new Date( Date.now() + 90*24*60*60*1000 ),
+            expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
             httpOnly: true,
             // secure:true
         });

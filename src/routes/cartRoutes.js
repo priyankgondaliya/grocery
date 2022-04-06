@@ -8,14 +8,14 @@ const Cart = require('../models/cartModel');
 const Product = require('../models/productModel');
 
 // Get cart
-router.get("/", checkUser, checkStore, async (req,res)=>{
+router.get("/", checkUser, checkStore, async (req, res) => {
     if (req.user) {
-        var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
+        var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
         var myCart = [];
         for (let i = 0; i < cart.products.length; i++) {
             var prod = await Product.findById(cart.products[i].productId);
             if (prod == null) {
-                cart.products.splice(i,1);
+                cart.products.splice(i, 1);
             } else {
                 prod.quantity = cart.products[i].quantity;
                 myCart.push(prod);
@@ -40,7 +40,7 @@ router.get("/", checkUser, checkStore, async (req,res)=>{
                 for (let i = 0; i < cart.length; i++) {
                     var prod = await Product.findById(cart[i].productId);
                     if (prod == null) {
-                        cart.splice(i,1);
+                        cart.splice(i, 1);
                     } else {
                         prod.quantity = cart[i].quantity;
                         myCart.push(prod);
@@ -60,7 +60,7 @@ router.get("/", checkUser, checkStore, async (req,res)=>{
 });
 
 // add to cart
-router.get("/add/:product", checkUser, checkStore, async (req, res)=>{
+router.get("/add/:product", checkUser, checkStore, async (req, res) => {
     try {
         const product = await Product.findById(req.params.product);
         if (product.vendor != req.store) {
@@ -71,11 +71,11 @@ router.get("/add/:product", checkUser, checkStore, async (req, res)=>{
         // check if user is logged
         if (req.user) {
             // change in mongo
-            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
+            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
             if (cart) {
                 //cart exists for user
                 let itemIndex = cart.products.findIndex(p => p.productId == product.id);
-    
+
                 if (itemIndex > -1) {
                     //product exists in the cart, update the quantity
                     let productItem = cart.products[itemIndex];
@@ -129,8 +129,8 @@ router.get("/add/:product", checkUser, checkStore, async (req, res)=>{
                 } else {
                     const cart = req.session.cart[storeId];
                     var newItem = true;
-                    for (var i=0; i < cart.length; i++) {
-                        if ( cart[i].productId == product.id) {
+                    for (var i = 0; i < cart.length; i++) {
+                        if (cart[i].productId == product.id) {
                             cart[i].quantity++;
                             newItem = false;
                             break;
@@ -156,20 +156,20 @@ router.get("/add/:product", checkUser, checkStore, async (req, res)=>{
         } else {
             console.log(error);
             res.send(error)
-        }        
+        }
     }
 })
 
 //GET update product
-router.get('/update/:product', checkUser, checkStore, async (req,res) => {
+router.get('/update/:product', checkUser, checkStore, async (req, res) => {
     // console.log(req.url);
     try {
         if (req.user) {
-            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
+            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
             var id = req.params.product;
             var action = req.query.action;
-        
-            for (var i=0; i<cart.products.length; i++) {
+
+            for (var i = 0; i < cart.products.length; i++) {
                 if (cart.products[i].productId == id) {
                     switch (action) {
                         case "add":
@@ -177,12 +177,12 @@ router.get('/update/:product', checkUser, checkStore, async (req,res) => {
                             break;
                         case "remove":
                             cart.products[i].quantity--;
-                            if (cart.products[i].quantity<1) {
-                                cart.products.splice(i,1);
+                            if (cart.products[i].quantity < 1) {
+                                cart.products.splice(i, 1);
                             }
                             break;
                         case "clear":
-                            cart.products.splice(i,1);
+                            cart.products.splice(i, 1);
                             break;
                         default:
                             console.log('Update problem');
@@ -197,8 +197,8 @@ router.get('/update/:product', checkUser, checkStore, async (req,res) => {
             var cart = req.session.cart[storeId];
             var id = req.params.product;
             var action = req.query.action;
-        
-            for (var i=0; i<cart.length; i++) {
+
+            for (var i = 0; i < cart.length; i++) {
                 if (cart[i].productId == id) {
                     switch (action) {
                         case "add":
@@ -206,12 +206,12 @@ router.get('/update/:product', checkUser, checkStore, async (req,res) => {
                             break;
                         case "remove":
                             cart[i].quantity--;
-                            if (cart[i].quantity<1) {
-                                cart.splice(i,1);
+                            if (cart[i].quantity < 1) {
+                                cart.splice(i, 1);
                             }
                             break;
                         case "clear":
-                            cart.splice(i,1);
+                            cart.splice(i, 1);
                             break;
                         default:
                             console.log('Update problem');
@@ -229,16 +229,16 @@ router.get('/update/:product', checkUser, checkStore, async (req,res) => {
 });
 
 // GET clear cart
-router.get('/clear', checkUser, checkStore, async (req,res) => {
+router.get('/clear', checkUser, checkStore, async (req, res) => {
     if (req.user) {
-        var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
+        var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
         cart.products = [];
         await cart.save();
     } else {
         var storeId = req.store;
         delete req.session.cart[storeId];
     }
-    req.flash('success','Cart cleared!');
+    req.flash('success', 'Cart cleared!');
     res.redirect('/cart');
 });
 

@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
-mongoose.connect(process.env.MONGO_URI ,{
-    useNewURlParser:true,
-    useUnifiedTopology:true,
+mongoose.connect(process.env.MONGO_URI, {
+    useNewURlParser: true,
+    useUnifiedTopology: true,
     // useCreateIndex:true
-}).then(()=>{
+}).then(() => {
     console.log('connection successful');
-}).catch((e)=>{
+}).catch((e) => {
     console.log('not connected');
 })

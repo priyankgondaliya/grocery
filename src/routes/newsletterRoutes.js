@@ -5,8 +5,8 @@ const { check, validationResult } = require('express-validator');
 
 // POST newsletter
 router.post("/", [
-    check('email','Please enter valid email.').isEmail(),
-  ], async(req,res)=>{
+    check('email', 'Please enter valid email.').isEmail(),
+], async (req, res) => {
     try {
         const validationErrors = validationResult(req)
         if (validationErrors.errors.length > 0) {
@@ -14,12 +14,12 @@ router.post("/", [
             return res.redirect('/')
         }
         const { email } = req.body;
-        const emailExist = await Newsletter.findOne({email});
+        const emailExist = await Newsletter.findOne({ email });
         if (emailExist) {
             req.flash('warning', 'Email in already in our newsletter list.')
             return res.redirect('/')
         }
-        const newsletter = new Newsletter({email});
+        const newsletter = new Newsletter({ email });
         await newsletter.save();
         req.flash('success', 'Email added in our newsletter list.')
         res.redirect('/')

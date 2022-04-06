@@ -19,45 +19,45 @@ const Vendor = require('../models/vendorModel');
 // const formatDate = require('../helpers/formateDate');
 
 // GET dashboard
-router.get("/", checkAdmin, async (req,res)=>{
-    res.render('admin/admin_dashboard',{
+router.get("/", checkAdmin, async (req, res) => {
+    res.render('admin/admin_dashboard', {
         title: 'Dashboard'
     })
 })
 
 // GET login
-router.get('/login', (req, res)=>{
-    res.render('admin/login',{
+router.get('/login', (req, res) => {
+    res.render('admin/login', {
         title: 'Admin Login'
     })
 })
 
 // POST login
 router.post("/login", [
-    check('email','Please enter valid email.').isEmail(),
-    check('password','Please enter password!').notEmpty(),
-  ],async(req, res)=>{
+    check('email', 'Please enter valid email.').isEmail(),
+    check('password', 'Please enter password!').notEmpty(),
+], async (req, res) => {
     try {
         const validationErrors = validationResult(req)
         if (validationErrors.errors.length > 0) {
-            req.flash('danger','Invalid email or password!');
+            req.flash('danger', 'Invalid email or password!');
             return res.redirect('/admin/login');
         }
         const { email, password } = req.body;
-        const userExist = await User.findOne({email});
+        const userExist = await User.findOne({ email });
         if (!userExist) {
-            req.flash('danger','Invalid email or password!');
+            req.flash('danger', 'Invalid email or password!');
             return res.redirect('/admin/login');
         }
         const isMatch = await bcrypt.compare(password, userExist.password);
         if (!isMatch) {
-            req.flash('danger','Invalid email or password!');
+            req.flash('danger', 'Invalid email or password!');
             return res.redirect('/admin/login');
         }
         const token = await userExist.generateAuthToken();
         res.cookie("jwtAdmin", token, {
-            expires:new Date( Date.now() + 90*24*60*60*1000 ),
-            httpOnly:true,
+            expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+            httpOnly: true,
             // secure:true
         });
         res.redirect('/admin');
@@ -68,7 +68,7 @@ router.post("/login", [
 })
 
 // GET products
-router.get("/product", checkAdmin, async (req,res)=>{
+router.get("/product", checkAdmin, async (req, res) => {
     const products = await Product.find();
     res.status(201).render("admin/products", {
         title: 'Product List',
@@ -77,12 +77,12 @@ router.get("/product", checkAdmin, async (req,res)=>{
 });
 
 // GET product detail
-router.get("/product/detail/:id", checkAdmin, async (req,res)=>{
+router.get("/product/detail/:id", checkAdmin, async (req, res) => {
     try {
         const id = req.params.id;
         const product = await Product.findById(id);
         if (product == null) {
-            req.flash('danger',`Product not found!`);
+            req.flash('danger', `Product not found!`);
             return res.redirect('/admin/product');
         }
         const category = await Category.findById(product.category);
@@ -99,7 +99,7 @@ router.get("/product/detail/:id", checkAdmin, async (req,res)=>{
         });
     } catch (error) {
         if (error.name === 'CastError') {
-            req.flash('danger',`Product not found!`);
+            req.flash('danger', `Product not found!`);
             res.redirect('/admin/product');
         } else {
             console.log(error);
@@ -109,12 +109,12 @@ router.get("/product/detail/:id", checkAdmin, async (req,res)=>{
 });
 
 // featured product
-router.post("/product/edit/:id", checkAdmin, async (req,res) => {
+router.post("/product/edit/:id", checkAdmin, async (req, res) => {
     try {
         const id = req.params.id;
         const product = await Product.findById(id);
         if (product == null) {
-            req.flash('danger',`Product not found!`);
+            req.flash('danger', `Product not found!`);
             return res.redirect('/admin/product');
         }
         if (req.body.featured) {
@@ -123,12 +123,12 @@ router.post("/product/edit/:id", checkAdmin, async (req,res) => {
             product.featured = false;
         }
         await product.save();
-        req.flash('success','Product edited successfully.')
+        req.flash('success', 'Product edited successfully.')
         res.redirect('/admin/product');
     } catch (error) {
         if (error.name === 'CastError') {
             console.log(error);
-            req.flash('danger',`Product not found!`);
+            req.flash('danger', `Product not found!`);
             res.redirect('/admin/Product');
         } else {
             console.log(error);
@@ -138,7 +138,7 @@ router.post("/product/edit/:id", checkAdmin, async (req,res) => {
 })
 
 // GET delete product
-router.get("/product/delete/:id", checkAdmin, async (req,res)=>{
+router.get("/product/delete/:id", checkAdmin, async (req, res) => {
     try {
         const id = req.params.id;
         const product = await Product.findByIdAndRemove(id);
@@ -146,11 +146,11 @@ router.get("/product/delete/:id", checkAdmin, async (req,res)=>{
         fs.remove(image, function (err) {
             if (err) { console.log(err); }
         })
-        req.flash('success',`Product Deleted successfully`);
+        req.flash('success', `Product Deleted successfully`);
         res.redirect('/admin/product')
     } catch (error) {
         if (error.name === 'CastError' || error.name === 'TypeError') {
-            req.flash('danger',`Product not found!`);
+            req.flash('danger', `Product not found!`);
             res.redirect('/admin/product');
         } else {
             console.log(error);
@@ -160,7 +160,7 @@ router.get("/product/delete/:id", checkAdmin, async (req,res)=>{
 });
 
 // GET offers
-router.get("/offer", checkAdmin, async (req,res)=>{
+router.get("/offer", checkAdmin, async (req, res) => {
     const offers = await Offer.find();
     res.status(201).render("admin/offers", {
         title: 'Offer List',
@@ -169,12 +169,12 @@ router.get("/offer", checkAdmin, async (req,res)=>{
 });
 
 // GET offer detail
-router.get("/offer/detail/:id", checkAdmin, async (req,res)=>{
+router.get("/offer/detail/:id", checkAdmin, async (req, res) => {
     try {
         const id = req.params.id;
         const offer = await Offer.findById(id);
         if (offer == null) {
-            req.flash('danger',`Offer not found!`);
+            req.flash('danger', `Offer not found!`);
             return res.redirect('/admin/offer');
         }
         const category = await Category.findById(offer.category);
@@ -189,7 +189,7 @@ router.get("/offer/detail/:id", checkAdmin, async (req,res)=>{
         });
     } catch (error) {
         if (error.name === 'CastError') {
-            req.flash('danger',`Offer not found!`);
+            req.flash('danger', `Offer not found!`);
             res.redirect('/admin/offer');
         } else {
             console.log(error);
@@ -199,23 +199,23 @@ router.get("/offer/detail/:id", checkAdmin, async (req,res)=>{
 });
 
 // GET delete offer
-router.get("/offer/delete/:id", checkAdmin, async (req,res)=>{
+router.get("/offer/delete/:id", checkAdmin, async (req, res) => {
     try {
         const id = req.params.id;
         const offer = await Offer.findByIdAndRemove(id);
         if (offer == null) {
-            req.flash('danger',`Offer not found!`);
+            req.flash('danger', `Offer not found!`);
             return res.redirect('/admin/offer');
         }
         image = "public" + offer.image;
         fs.remove(image, function (err) {
             if (err) { console.log(err); }
         })
-        req.flash('success',`Offer Deleted successfully`);
+        req.flash('success', `Offer Deleted successfully`);
         res.redirect('/admin/offer')
     } catch (error) {
         if (error.name === 'CastError') {
-            req.flash('danger',`Offer not found!`);
+            req.flash('danger', `Offer not found!`);
             res.redirect('/admin/offer');
         } else {
             console.log(error);
@@ -225,7 +225,7 @@ router.get("/offer/delete/:id", checkAdmin, async (req,res)=>{
 });
 
 // GET order
-router.get("/order", checkAdmin, async (req,res)=>{
+router.get("/order", checkAdmin, async (req, res) => {
     var orders = await Order.find();
     let updated = []
     for (let i = 0; i < orders.length; i++) {
@@ -249,14 +249,14 @@ router.get("/order", checkAdmin, async (req,res)=>{
         updated.push(e)
     }
     // console.log(updated);
-    res.status(201).render("admin/orders",{
+    res.status(201).render("admin/orders", {
         title: 'Order List',
         orders: updated
     });
 });
 
 // GET order detail
-router.get("/order/detail/:id", checkAdmin, async (req,res)=>{
+router.get("/order/detail/:id", checkAdmin, async (req, res) => {
     try {
         const id = req.params.id;
         const order = await Order.findById(id);
@@ -284,7 +284,7 @@ router.get("/order/detail/:id", checkAdmin, async (req,res)=>{
         });
     } catch (error) {
         if (error.name === 'CastError' || error.name === 'TypeError') {
-            req.flash('danger',`Order not found!`);
+            req.flash('danger', `Order not found!`);
             res.redirect('/admin/order');
         } else {
             console.log(error);

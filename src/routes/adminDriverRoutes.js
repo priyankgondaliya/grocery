@@ -5,7 +5,7 @@ const { check, validationResult } = require('express-validator');
 const checkAdmin = require('../middleware/authAdminMiddleware');
 
 const sharp = require('sharp');
-const multer  = require('multer');
+const multer = require('multer');
 const fs = require('fs-extra');
 
 const Driver = require('../models/driverModel');
@@ -14,21 +14,21 @@ const storage = multer.memoryStorage();
 const fileFilter = (req, file, cb) => {
     // reject a file
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-      cb(null, true);
+        cb(null, true);
     } else {
-      cb(null, false);
+        cb(null, false);
     }
 };
 const upload = multer({
     storage: storage,
     limits: {
-      fileSize: 1024 * 1024 * 5
+        fileSize: 1024 * 1024 * 5
     },
     fileFilter: fileFilter
 });
 
 // Get driver details
-router.get("/", checkAdmin, async (req,res) => {
+router.get("/", checkAdmin, async (req, res) => {
     const drivers = await Driver.find();
     res.status(201).render("admin/driver", {
         title: 'Driver List',
@@ -37,7 +37,7 @@ router.get("/", checkAdmin, async (req,res) => {
 });
 
 // Get add driver 
-router.get("/add", checkAdmin, (req,res)=>{
+router.get("/add", checkAdmin, (req, res) => {
     res.status(201).render("admin/add_driver", {
         title: 'Add Driver'
     });
@@ -49,15 +49,15 @@ router.post("/add", checkAdmin, upload.fields([
     { name: 'vehicleImage', maxCount: 1 },
     { name: 'frontImage', maxCount: 1 },
     { name: 'backImage', maxCount: 1 }
-  ]), [
-    check('name','Please enter Name.').notEmpty(),
-    check('email','Please enter valid email.').isEmail(),
-    check('password','Password should be atleast 6 characters long.').isLength({ min: 6 }),
-    check('number','Plaese enter contact number.').notEmpty(),
-    check('Bankname','Please enter bank name.').notEmpty(),
-    check('Accountnumber','Please enter account number.').notEmpty(),
-    check('IFSCcode','Plaese enter IFSC code.').notEmpty(),
-  ],async(req,res)=>{
+]), [
+    check('name', 'Please enter Name.').notEmpty(),
+    check('email', 'Please enter valid email.').isEmail(),
+    check('password', 'Password should be atleast 6 characters long.').isLength({ min: 6 }),
+    check('number', 'Plaese enter contact number.').notEmpty(),
+    check('Bankname', 'Please enter bank name.').notEmpty(),
+    check('Accountnumber', 'Please enter account number.').notEmpty(),
+    check('IFSCcode', 'Plaese enter IFSC code.').notEmpty(),
+], async (req, res) => {
     try {
         const validationErrors = validationResult(req)
         if (validationErrors.errors.length > 0) {
@@ -68,11 +68,11 @@ router.post("/add", checkAdmin, upload.fields([
                 alert
             })
         }
-        const driverExist = await Driver.findOne({email: req.body.email})
+        const driverExist = await Driver.findOne({ email: req.body.email })
         if (driverExist) {
             return res.render('admin/add_driver', {
                 title: 'Add Driver',
-                alert: [{msg:'Driver is already registerd with this Email.'}]
+                alert: [{ msg: 'Driver is already registerd with this Email.' }]
             })
         }
         const file1name = new Date().toISOString().replace(/:/g, '-') + req.files.driverImage[0].originalname;
@@ -80,13 +80,13 @@ router.post("/add", checkAdmin, upload.fields([
         const file3name = new Date().toISOString().replace(/:/g, '-') + req.files.frontImage[0].originalname;
         const file4name = new Date().toISOString().replace(/:/g, '-') + req.files.backImage[0].originalname;
         const driver = new Driver({
-            name : req.body.name,
-            email : req.body.email,
-            password : req.body.password,
-            number : req.body.number,
-            Bankname : req.body.Bankname,
-            Accountnumber : req.body.Accountnumber,
-            IFSCcode : req.body.IFSCcode
+            name: req.body.name,
+            email: req.body.email,
+            password: req.body.password,
+            number: req.body.number,
+            Bankname: req.body.Bankname,
+            Accountnumber: req.body.Accountnumber,
+            IFSCcode: req.body.IFSCcode
         })
         driver.image = `/uploads/driver/${driver.id}/` + file1name;
         driver.vehicleimage = `/uploads/driver/${driver.id}/` + file2name;
@@ -96,16 +96,16 @@ router.post("/add", checkAdmin, upload.fields([
         fs.access('./public/uploads/driver', (err) => { if (err) fs.mkdirSync('./public/uploads/driver'); });
         fs.access(`./public/uploads/driver/${driver.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/driver/${driver.id}`); });
         await sharp(req.files.driverImage[0].buffer)
-            .toFile(`./public/uploads/driver/${driver.id}/`+file1name);
+            .toFile(`./public/uploads/driver/${driver.id}/` + file1name);
         await sharp(req.files.vehicleImage[0].buffer)
-            .toFile(`./public/uploads/driver/${driver.id}/`+file2name);
+            .toFile(`./public/uploads/driver/${driver.id}/` + file2name);
         await sharp(req.files.frontImage[0].buffer)
-            .toFile(`./public/uploads/driver/${driver.id}/`+file3name);
+            .toFile(`./public/uploads/driver/${driver.id}/` + file3name);
         await sharp(req.files.backImage[0].buffer)
-            .toFile(`./public/uploads/driver/${driver.id}/`+file4name);
-        
+            .toFile(`./public/uploads/driver/${driver.id}/` + file4name);
+
         await driver.save();
-        req.flash('success','Driver added successfully')
+        req.flash('success', 'Driver added successfully')
         res.redirect('/admin/driver');
     } catch (error) {
         console.log(error);
@@ -114,12 +114,12 @@ router.post("/add", checkAdmin, upload.fields([
 })
 
 // GET edit driver
-router.get("/edit/:id", checkAdmin, async (req,res)=>{
+router.get("/edit/:id", checkAdmin, async (req, res) => {
     try {
         const id = req.params.id;
         const driver = await Driver.findById(id);
         if (driver == null) {
-            req.flash('danger',`Driver not found!`);
+            req.flash('danger', `Driver not found!`);
             return res.redirect('/admin/driver');
         }
         res.status(201).render("admin/edit_driver", {
@@ -128,7 +128,7 @@ router.get("/edit/:id", checkAdmin, async (req,res)=>{
         });
     } catch (error) {
         if (error.name === 'CastError') {
-            req.flash('danger',`Driver not found!`);
+            req.flash('danger', `Driver not found!`);
             res.redirect('/admin/driver');
         } else {
             console.log(error);
@@ -143,13 +143,13 @@ router.post('/edit/:id', checkAdmin, upload.fields([
     { name: 'vehicleImage', maxCount: 1 },
     { name: 'frontImage', maxCount: 1 },
     { name: 'backImage', maxCount: 1 }
-  ]), [
-    check('name','Please enter Name.').notEmpty(),
-    check('number','Plaese enter contact number.').notEmpty(),
-    check('Bankname','Please enter bank name.').notEmpty(),
-    check('Accountnumber','Please enter account number.').notEmpty(),
-    check('IFSCcode','Plaese enter IFSC code.').notEmpty(),
-  ], async (req,res) => {
+]), [
+    check('name', 'Please enter Name.').notEmpty(),
+    check('number', 'Plaese enter contact number.').notEmpty(),
+    check('Bankname', 'Please enter bank name.').notEmpty(),
+    check('Accountnumber', 'Please enter account number.').notEmpty(),
+    check('IFSCcode', 'Plaese enter IFSC code.').notEmpty(),
+], async (req, res) => {
     try {
         const validationErrors = validationResult(req)
         if (validationErrors.errors.length > 0) {
@@ -162,7 +162,7 @@ router.post('/edit/:id', checkAdmin, upload.fields([
         const id = req.params.id;
         const driver = await Driver.findById(id);
         if (driver == null) {
-            req.flash('danger',`Driver not found!`);
+            req.flash('danger', `Driver not found!`);
             return res.redirect('/admin/driver');
         }
         driver.name = req.body.name;
@@ -180,7 +180,7 @@ router.post('/edit/:id', checkAdmin, upload.fields([
             driver.image = `/uploads/driver/${driver.id}/` + filename;
             fs.access(`./public/uploads/driver/${driver.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/driver/${driver.id}`); });
             await sharp(req.files.driverImage[0].buffer)
-                .toFile(`./public/uploads/driver/${driver.id}/`+filename);
+                .toFile(`./public/uploads/driver/${driver.id}/` + filename);
         }
         if (typeof req.files.vehicleImage !== 'undefined') {
             oldImage = "public" + driver.vehicleimage;
@@ -191,7 +191,7 @@ router.post('/edit/:id', checkAdmin, upload.fields([
             driver.vehicleimage = `/uploads/driver/${driver.id}/` + filename;
             fs.access(`./public/uploads/driver/${driver.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/driver/${driver.id}`); });
             await sharp(req.files.vehicleImage[0].buffer)
-                .toFile(`./public/uploads/driver/${driver.id}/`+filename);
+                .toFile(`./public/uploads/driver/${driver.id}/` + filename);
         }
         if (typeof req.files.frontImage !== 'undefined') {
             oldImage = "public" + driver.frontimage;
@@ -202,7 +202,7 @@ router.post('/edit/:id', checkAdmin, upload.fields([
             driver.frontimage = `/uploads/driver/${driver.id}/` + filename;
             fs.access(`./public/uploads/driver/${driver.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/driver/${driver.id}`); });
             await sharp(req.files.frontImage[0].buffer)
-                .toFile(`./public/uploads/driver/${driver.id}/`+filename);
+                .toFile(`./public/uploads/driver/${driver.id}/` + filename);
         }
         if (typeof req.files.backImage !== 'undefined') {
             oldImage = "public" + driver.backimage;
@@ -213,40 +213,40 @@ router.post('/edit/:id', checkAdmin, upload.fields([
             driver.backimage = `/uploads/driver/${driver.id}/` + filename;
             fs.access(`./public/uploads/driver/${driver.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/driver/${driver.id}`); });
             await sharp(req.files.backImage[0].buffer)
-                .toFile(`./public/uploads/driver/${driver.id}/`+filename);
+                .toFile(`./public/uploads/driver/${driver.id}/` + filename);
         }
 
         await driver.save();
-        req.flash('success',`Driver Edited successfully`);
+        req.flash('success', `Driver Edited successfully`);
         res.redirect('/admin/driver')
     } catch (error) {
         console.log(error.message);
         if (error.code == 11000) {
-            req.flash('danger',`Driver already registed with '${req.body.email}'!`);
+            req.flash('danger', `Driver already registed with '${req.body.email}'!`);
             res.redirect(`/admin/driver/edit/${req.params.id}`);
         } else if (error.name === 'CastError') {
-            req.flash('danger',`Driver not found!`);
+            req.flash('danger', `Driver not found!`);
             res.redirect('/admin/driver');
         } else {
             res.send(error.message);
             console.log(error);
         }
-    }   
+    }
 });
 
 // GET delete driver
-router.get("/delete/:id", checkAdmin, async (req,res)=>{
+router.get("/delete/:id", checkAdmin, async (req, res) => {
     try {
         const id = req.params.id;
         const driver = await Driver.findByIdAndRemove(id);
 
         fs.rmSync(`./public/uploads/driver/${driver.id}`, { recursive: true, force: true });
-        
-        req.flash('success',`Driver Deleted successfully`);
+
+        req.flash('success', `Driver Deleted successfully`);
         res.redirect('/admin/driver');
     } catch (error) {
         if (error.name === 'CastError' || error.name === 'TypeError') {
-            req.flash('danger',`Driver not found!`);
+            req.flash('danger', `Driver not found!`);
             res.redirect('/admin/driver');
         } else {
             console.log(error);
@@ -256,7 +256,7 @@ router.get("/delete/:id", checkAdmin, async (req,res)=>{
 });
 
 // Get driver transaction
-router.get("/transaction", checkAdmin, (req,res)=>{
+router.get("/transaction", checkAdmin, (req, res) => {
     res.status(201).render("admin/driver_transaction", {
         title: 'Driver Transaction'
     });

@@ -6,10 +6,10 @@ const formatDate = require('../helpers/formateDate');
 const checkAdmin = require('../middleware/authAdminMiddleware');
 
 // Get newsletter
-router.get("/", checkAdmin, async (req,res) => {
+router.get("/", checkAdmin, async (req, res) => {
     try {
         const newsletters = await Newsletter.find(); //.limit(limit*1).skip((page-1)*limit);
-        
+
         let updated = []
         for (let i = 0; i < newsletters.length; i++) {
             let e = {
@@ -26,6 +26,6 @@ router.get("/", checkAdmin, async (req,res) => {
         res.status(400).send(error.message);
         console.log(error);
     }
-})                  
+})
 
 module.exports = router;

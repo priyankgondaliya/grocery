@@ -12,28 +12,28 @@ const Unit = require('../models/unitModel');
 const Cart = require('../models/cartModel');
 
 // product detail
-router.get('/detail/:id', checkUser, checkStore, async function(req,res){
+router.get('/detail/:id', checkUser, checkStore, async function (req, res) {
     req.session.redirectToUrl = req.originalUrl;
     try {
         if (req.user) {
-            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
+            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
             var cartLength = cart.products.length;
         } else {
             const storeId = req.store;
             var cartLength = req.session.cart ? (req.session.cart[storeId] ? req.session.cart[storeId].length : 0) : 0;
         }
         const id = req.params.id;
-        const product = await Product.findOne({_id: id, vendor: req.store});
+        const product = await Product.findOne({ _id: id, vendor: req.store });
         const category = await Category.findById(product.category);
         const subcategory = await Subcategory.findById(product.subcategory);
         const unit = await Unit.findById(product.unit);
-        res.render('product_detail',{
+        res.render('product_detail', {
             // title:'Product detail',
             title: product.productname,
             product,
             cat: category.name,
             subcat: subcategory.name,
-            unit: unit ? unit.name : "" ,
+            unit: unit ? unit.name : "",
             cartLength,
             storename: req.storename,
             user: req.user
@@ -49,34 +49,34 @@ router.get('/detail/:id', checkUser, checkStore, async function(req,res){
 });
 
 //GET products by category
-router.get('/:cat/:sub?', checkUser, checkStore, async function(req,res){
+router.get('/:cat/:sub?', checkUser, checkStore, async function (req, res) {
     try {
         if (req.user) {
-            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
+            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
             var cartLength = cart.products.length;
         } else {
             var storeId = req.store;
             var cartLength = req.session.cart ? (req.session.cart[storeId] ? req.session.cart[storeId].length : 0) : 0;
         }
         req.session.redirectToUrl = req.originalUrl;
-        const {cat, sub} = req.params;
+        const { cat, sub } = req.params;
         if (sub == undefined) {
             const cats = await Category.find();
             if (cat == 'all') {
                 var subcats = await Subcategory.find();
-                var prods = await Product.find({vendor: req.store});
+                var prods = await Product.find({ vendor: req.store });
                 var SubcatOf = `total`;
                 var ProdOf = `total`;
             } else {
-                var subcats = await Subcategory.find({category: cat});
-                var prods = await Product.find({category: cat, vendor: req.store});
+                var subcats = await Subcategory.find({ category: cat });
+                var prods = await Product.find({ category: cat, vendor: req.store });
                 const category = await Category.findById(cat);
                 const catName = category.name;
                 var SubcatOf = `of ${catName}`;
                 var ProdOf = `of ${catName}`;
             }
-            res.render('all_products',{
-                title:'Products page',
+            res.render('all_products', {
+                title: 'Products page',
                 subcats,
                 cats,
                 prods,
@@ -87,19 +87,19 @@ router.get('/:cat/:sub?', checkUser, checkStore, async function(req,res){
                 user: req.user
             });
         } else {
-            var prods = await Product.find({subcategory: sub, vendor: req.store});
+            var prods = await Product.find({ subcategory: sub, vendor: req.store });
             const subcategory = await Subcategory.findById(sub);
             const subName = subcategory.name;
             var ProdOf = `of ${subName}`;
-            res.render('products_per_subcat',{
-                title:'Products page',
+            res.render('products_per_subcat', {
+                title: 'Products page',
                 prods,
                 ProdOf,
                 cartLength,
                 storename: req.storename,
                 user: req.user
             });
-        }   
+        }
     } catch (error) {
         if (error.name === 'CastError' || error.name === 'TypeError') {
             console.log(error);

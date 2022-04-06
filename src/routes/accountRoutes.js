@@ -8,7 +8,7 @@ const checkStore = require('../middleware/selectedStore');
 const Cart = require('../models/cartModel');
 const Order = require('../models/orderModel');
 
-router.get("/signup", checkUser, checkStore, async (req,res)=>{
+router.get("/signup", checkUser, checkStore, async (req, res) => {
     if (req.user) {
         return res.redirect('/account');
     } else {
@@ -22,12 +22,12 @@ router.get("/signup", checkUser, checkStore, async (req,res)=>{
     });
 });
 
-router.get("/account", checkUser, checkStore, async (req,res)=>{
+router.get("/account", checkUser, checkStore, async (req, res) => {
     if (!req.user) {
         return res.redirect('/signup');
     }
-    var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
-    var orders = await Order.find({ user: req.user.id});
+    var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
+    var orders = await Order.find({ user: req.user.id });
     let updated = []
     for (let i = 0; i < orders.length; i++) {
         let e = {
@@ -42,7 +42,7 @@ router.get("/account", checkUser, checkStore, async (req,res)=>{
         updated.push(e)
     }
     var cartLength = cart.products.length;
-    res.render('my_account',{
+    res.render('my_account', {
         title: 'My account',
         user: req.user,
         orders: updated,

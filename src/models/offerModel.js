@@ -1,9 +1,9 @@
-const mongoose = require('mongoose'); 
+const mongoose = require('mongoose');
 
-const offerSchema = new mongoose.Schema ({
+const offerSchema = new mongoose.Schema({
     category: {
         type: String,
-        required:true
+        required: true
     },
     subcategory: {
         type: String,
@@ -13,7 +13,7 @@ const offerSchema = new mongoose.Schema ({
     },
     productname: {
         type: String,
-        required:true
+        required: true
     },
     productweight: {
         type: String,
@@ -26,15 +26,15 @@ const offerSchema = new mongoose.Schema ({
     },
     costprice: {
         type: String,
-        required:true
+        required: true
     },
     saleprice: {
         type: String,
-        required:true
+        required: true
     },
     discount: {
         type: String,
-        required:true
+        required: true
     },
     totalprice: {
         type: String,
@@ -46,11 +46,11 @@ const offerSchema = new mongoose.Schema ({
         type: String
     },
     title: {
-        type:String
+        type: String
     },
     description: {
-        type:String
+        type: String
     },
 })
 
-module.exports= new mongoose.model("Offer",offerSchema);
+module.exports = new mongoose.model("Offer", offerSchema);

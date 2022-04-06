@@ -12,28 +12,28 @@ require("./db/conn");
 const app = express();
 
 // view engine
-app.set("views", path.join(__dirname,"../views"));
-app.set('view engine','ejs');
+app.set("views", path.join(__dirname, "../views"));
+app.set('view engine', 'ejs');
 
 // static path
-app.use(express.static(path.join(__dirname,"../public")));
+app.use(express.static(path.join(__dirname, "../public")));
 
 //set global errors var
-app.locals.errors=null;
+app.locals.errors = null;
 
 //get all pages to pass to header.ejs
 const Contact = require('./models/contactDetailModel');
 const checkUser = require("./middleware/authMiddleware");
 const { json } = require("body-parser");
-Contact.findOne({}, function(err,contact){
-    if(err){
+Contact.findOne({}, function (err, contact) {
+    if (err) {
         console.log(err);
-    }else{
+    } else {
         app.locals.contact = contact;
     }
 });
 
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser(process.env.SESSION_SECRET));
 
@@ -47,8 +47,8 @@ app.use(require('cookie-session')({
 //Express Messages middleware
 app.use(require('connect-flash')());
 app.use(function (req, res, next) {
-  res.locals.messages = require('express-messages')(req, res);
-  next();
+    res.locals.messages = require('express-messages')(req, res);
+    next();
 });
 
 // require passport
@@ -81,13 +81,15 @@ app.use('/admin/promo', require('./routes/adminPromo'));
 app.use('/admin/user', require('./routes/adminUserRoutes'));
 app.use('/admin/vendor', require('./routes/adminVendor'));
 app.use('/admin/driver', require('./routes/adminDriverRoutes'));
+app.use('/admin/banner', require('./routes/adminBanner'));
 app.use('/admin', require('./routes/adminRoutes'));
 app.use('/admin', require('./routes/adminPagesRoutes'));
-app.use('/admin/banner', require('./routes/adminBanner'));
+app.use('/admin/*', (req, res) => res.render('admin/404'));
 
 app.use('/vendor/product', require('./routes/vendorProducts'));
 app.use('/vendor/offer', require('./routes/vendorOffers'));
 app.use('/vendor', require('./routes/vendorRoutes'));
+app.use('/vendor/*', (req, res) => res.render('vendor/404'));
 
 app.use('/', require('./routes/authRoutes'));
 app.use('/', require('./routes/cmsPages'));
@@ -104,20 +106,28 @@ app.use('/newsletter', require('./routes/newsletterRoutes'));
 app.use('/google', require('./routes/googleAuthRoutes'));
 
 // 404
-app.all('/404', checkUser, (req, res) => {
-    res.render("error",{
-        title:  "404 | Not Found",
+app.all('*', checkUser, (req, res) => {
+    // console.log(req.url);
+    res.render("error", {
+        title: "404 | Not Found",
         user: req.user,
         cartLength: 0
     });
 });
-app.all('*', (req, res) => {
-    console.log(req.url);
-    res.status(404).redirect('/404');
-});
+// app.all('/404', checkUser, (req, res) => {
+//     res.render("error",{
+//         title:  "404 | Not Found",
+//         user: req.user,
+//         cartLength: 0
+//     });
+// });
+// app.all('*', (req, res) => {
+//     console.log(req.url);
+//     res.status(404).redirect('/404');
+// });
 
 // error handler
-app.use((err, req, res) =>{
+app.use((err, req, res) => {
     console.log(err);
     res.status(err.status || 500).json({
         status: "fail",
@@ -126,6 +136,6 @@ app.use((err, req, res) =>{
 })
 
 const port = process.env.PORT || 3000;
-app.listen(port,()=>{
+app.listen(port, () => {
     console.log(`server is running on port ${port}`);
 })

@@ -7,7 +7,7 @@ const Promo = require('../models/promoModel');
 const checkAdmin = require('../middleware/authAdminMiddleware');
 
 // GET promo
-router.get("/", checkAdmin, async (req,res)=>{
+router.get("/", checkAdmin, async (req, res) => {
     const promos = await Promo.find();
     let updated = []
     for (let i = 0; i < promos.length; i++) {
@@ -24,15 +24,15 @@ router.get("/", checkAdmin, async (req,res)=>{
         }
         updated.push(e)
     }
-    res.status(201).render("admin/promo",{
+    res.status(201).render("admin/promo", {
         title: 'Promocode',
         promos: updated
     });
 });
 
 // GET add promo
-router.get("/add", checkAdmin, (req,res)=>{
-    res.status(201).render("admin/add_promo",{
+router.get("/add", checkAdmin, (req, res) => {
+    res.status(201).render("admin/add_promo", {
         title: 'Add Promocode',
     });
 });
@@ -40,7 +40,7 @@ router.get("/add", checkAdmin, (req,res)=>{
 // POST add promo
 router.post('/add', checkAdmin, async (req, res) => {
     try {
-        const promo = new Promo({ 
+        const promo = new Promo({
             promo: req.body.promo,
             times: req.body.times,
             date: new Date(req.body.date),
@@ -51,7 +51,7 @@ router.post('/add', checkAdmin, async (req, res) => {
             desc: req.body.desc
         });
         await promo.save();
-        req.flash('success','Promocode added successfully.')
+        req.flash('success', 'Promocode added successfully.')
         res.redirect('/admin/promo');
     } catch (error) {
         console.log(error);
@@ -60,12 +60,12 @@ router.post('/add', checkAdmin, async (req, res) => {
 })
 
 // GET edit promo
-router.get("/edit/:id", checkAdmin, async (req,res)=>{
+router.get("/edit/:id", checkAdmin, async (req, res) => {
     try {
         const id = req.params.id;
         const promo = await Promo.findById(id);
         if (promo == null) {
-            req.flash('danger',`Promo not found!`);
+            req.flash('danger', `Promo not found!`);
             return res.redirect('/admin/promo');
         }
         d = new Date(promo.date);
@@ -76,7 +76,7 @@ router.get("/edit/:id", checkAdmin, async (req,res)=>{
         });
     } catch (error) {
         if (error.name === 'CastError') {
-            req.flash('danger',`Promo not found!`);
+            req.flash('danger', `Promo not found!`);
             res.redirect('/admin/promo');
         } else {
             console.log(error);
@@ -86,7 +86,7 @@ router.get("/edit/:id", checkAdmin, async (req,res)=>{
 });
 
 // POST edit promo
-router.post("/edit/:id", checkAdmin, async (req,res)=>{
+router.post("/edit/:id", checkAdmin, async (req, res) => {
     try {
         const id = req.params.id;
         await Promo.findByIdAndUpdate(id, {
@@ -99,11 +99,11 @@ router.post("/edit/:id", checkAdmin, async (req,res)=>{
             percentage: req.body.percentage,
             desc: req.body.desc
         });
-        req.flash('success','Promo edited successfully.')
+        req.flash('success', 'Promo edited successfully.')
         res.redirect('/admin/promo');
     } catch (error) {
         if (error.name === 'CastError' || error.name === 'TypeError') {
-            req.flash('danger',`Promo not found!`);
+            req.flash('danger', `Promo not found!`);
             res.redirect('/admin/promo');
         } else {
             console.log(error);
@@ -113,14 +113,14 @@ router.post("/edit/:id", checkAdmin, async (req,res)=>{
 });
 
 // delete promo
-router.get("/delete/:id", checkAdmin, async (req,res)=>{
+router.get("/delete/:id", checkAdmin, async (req, res) => {
     try {
         await Promo.findByIdAndRemove(req.params.id);
-        req.flash('success','Promo deleted successfully.')
+        req.flash('success', 'Promo deleted successfully.')
         res.redirect('/admin/promo');
     } catch (error) {
         if (error.name === 'CastError' || error.name === 'TypeError') {
-            req.flash('danger',`Promo not found!`);
+            req.flash('danger', `Promo not found!`);
             res.redirect('/admin/promo');
         } else {
             console.log(error);

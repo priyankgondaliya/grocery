@@ -10,9 +10,9 @@ const Product = require('../models/productModel');
 const Cart = require('../models/cartModel');
 
 // home
-router.get("/", checkUser, checkStore, async (req,res)=>{
+router.get("/", checkUser, checkStore, async (req, res) => {
     if (req.user) {
-        var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
+        var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
         var cartLength = cart.products.length;
     } else {
         const storeId = req.store;
@@ -22,14 +22,14 @@ router.get("/", checkUser, checkStore, async (req,res)=>{
     const search = req.query.search;
     if (search) {   // search page
         const searchString = search.trim();
-        const regex = new RegExp(searchString.replace(/\s+/g,"\\s+"), "gi");
+        const regex = new RegExp(searchString.replace(/\s+/g, "\\s+"), "gi");
 
         const searchProds = await Product.find({ 'productname': { $regex: regex }, vendor: req.store });
-        const searchCats = await Category.find({ 'name': { $regex: regex }});
+        const searchCats = await Category.find({ 'name': { $regex: regex } });
 
         const allcats = await Category.find();
         const cats = await Category.find({ featured: true });
-        res.render("search",{
+        res.render("search", {
             title: `Search for ${searchString}`,
             user: req.user,
             cartLength,
@@ -42,7 +42,7 @@ router.get("/", checkUser, checkStore, async (req,res)=>{
     } else {    // homepage
         const cats = await Category.find({ featured: true });
         const prods = await Product.find({ featured: true, vendor: req.store });
-        res.render("index",{
+        res.render("index", {
             title: "Home",
             user: req.user,
             storename: req.storename,
@@ -57,7 +57,7 @@ router.get("/", checkUser, checkStore, async (req,res)=>{
 router.get('/autocomplete', checkStore, async (req, res) => {
     const search = req.query.term;
     const searchString = search.trim();
-    const regex = new RegExp(searchString.replace(/\s+/g,"\\s+"), "gi");
+    const regex = new RegExp(searchString.replace(/\s+/g, "\\s+"), "gi");
     const searchProds = await Product.find({ 'productname': { $regex: regex }, vendor: req.store });
     // res.json([{id: 1, name:'Product'},{id: 2, name:'Product2'}]);
     res.json(searchProds);

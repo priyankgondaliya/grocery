@@ -8,9 +8,9 @@ const Contact = require('../models/contactDetailModel');
 const checkAdmin = require('../middleware/authAdminMiddleware');
 
 // about us
-router.get("/about_us", checkAdmin, async (req,res)=>{
+router.get("/about_us", checkAdmin, async (req, res) => {
     try {
-        const page = await Page.findOne({ title:'About Us'})
+        const page = await Page.findOne({ title: 'About Us' })
         const content = page.content;
         res.status(201).render("admin/about", {
             title: 'About Us',
@@ -23,18 +23,18 @@ router.get("/about_us", checkAdmin, async (req,res)=>{
 });
 
 router.post('/about_us', checkAdmin, [
-    check('content','Content must have a value').notEmpty(),
-  ], async function(req,res){
+    check('content', 'Content must have a value').notEmpty(),
+], async function (req, res) {
     const validationErrors = validationResult(req)
     if (validationErrors.errors.length > 0) {
         req.flash('danger', 'Content must have a value.')
         return res.redirect('/admin/about_us')
     }
     try {
-        const page = await Page.findOne({ title:'About Us'})
+        const page = await Page.findOne({ title: 'About Us' })
         page.content = req.body.content;
         await page.save()
-        req.flash('success','Contact us details updated successfully.')
+        req.flash('success', 'Contact us details updated successfully.')
         res.redirect('/admin/about_us')
     } catch (error) {
         console.log(error);
@@ -43,9 +43,9 @@ router.post('/about_us', checkAdmin, [
 });
 
 // faqs
-router.get("/faqs", checkAdmin, async (req,res)=>{
+router.get("/faqs", checkAdmin, async (req, res) => {
     try {
-        const page = await Page.findOne({ title:'FAQs'})
+        const page = await Page.findOne({ title: 'FAQs' })
         const content = page.content;
         res.status(201).render("admin/faqs", {
             title: 'FAQs',
@@ -58,18 +58,18 @@ router.get("/faqs", checkAdmin, async (req,res)=>{
 });
 
 router.post('/faqs', checkAdmin, [
-    check('content','Content must have a value').notEmpty(),
-  ], async function(req,res){
+    check('content', 'Content must have a value').notEmpty(),
+], async function (req, res) {
     const validationErrors = validationResult(req)
     if (validationErrors.errors.length > 0) {
         req.flash('danger', 'Content must have a value.')
         return res.redirect('/admin/faqs')
     }
     try {
-        const page = await Page.findOne({ title:'FAQs'})
+        const page = await Page.findOne({ title: 'FAQs' })
         page.content = req.body.content;
         await page.save();
-        req.flash('success','FAQs details updated successfully.')
+        req.flash('success', 'FAQs details updated successfully.')
         res.redirect('/admin/faqs')
     } catch (error) {
         console.log(error);
@@ -78,12 +78,12 @@ router.post('/faqs', checkAdmin, [
 });
 
 // terms
-router.get("/terms_con", checkAdmin, async (req,res)=>{
+router.get("/terms_con", checkAdmin, async (req, res) => {
     try {
-        const page = await Page.findOne({ title:'Terms & Conditions'})
+        const page = await Page.findOne({ title: 'Terms & Conditions' })
         const content = page.content;
         res.status(201).render("admin/terms", {
-            title:'Terms & Conditions',
+            title: 'Terms & Conditions',
             content
         });
     } catch (error) {
@@ -93,18 +93,18 @@ router.get("/terms_con", checkAdmin, async (req,res)=>{
 });
 
 router.post('/terms_con', checkAdmin, [
-    check('content','Content must have a value').notEmpty(),
-  ], async function(req,res){
+    check('content', 'Content must have a value').notEmpty(),
+], async function (req, res) {
     const validationErrors = validationResult(req)
     if (validationErrors.errors.length > 0) {
         req.flash('danger', 'Content must have a value.')
         return res.redirect('/admin/terms_con')
     }
     try {
-        const page = await Page.findOne({ title:'Terms & Conditions'})
+        const page = await Page.findOne({ title: 'Terms & Conditions' })
         page.content = req.body.content;
         await page.save()
-        req.flash('success','Terms & Conditions details updated successfully.')
+        req.flash('success', 'Terms & Conditions details updated successfully.')
         res.redirect('/admin/terms_con')
     } catch (error) {
         console.log(error);
@@ -113,9 +113,9 @@ router.post('/terms_con', checkAdmin, [
 });
 
 // privacy
-router.get("/privacy_policy", checkAdmin, async (req,res)=>{
+router.get("/privacy_policy", checkAdmin, async (req, res) => {
     try {
-        const page = await Page.findOne({ title: 'Privacy Policy'})
+        const page = await Page.findOne({ title: 'Privacy Policy' })
         const content = page.content;
         res.status(201).render("admin/privacy", {
             title: 'Privacy Policy',
@@ -128,18 +128,18 @@ router.get("/privacy_policy", checkAdmin, async (req,res)=>{
 });
 
 router.post('/privacy_policy', checkAdmin, [
-    check('content','Content must have a value').notEmpty(),
-  ], async function(req,res){
+    check('content', 'Content must have a value').notEmpty(),
+], async function (req, res) {
     const validationErrors = validationResult(req)
     if (validationErrors.errors.length > 0) {
         req.flash('danger', 'Content must have a value.')
         return res.redirect('/admin/privacy_policy')
     }
     try {
-        const page = await Page.findOne({ title:'Privacy Policy'})
+        const page = await Page.findOne({ title: 'Privacy Policy' })
         page.content = req.body.content;
         await page.save()
-        req.flash('success','Privacy Policy updated successfully.')
+        req.flash('success', 'Privacy Policy updated successfully.')
         res.redirect('/admin/privacy_policy')
     } catch (error) {
         console.log(error);
@@ -148,9 +148,9 @@ router.post('/privacy_policy', checkAdmin, [
 });
 
 // contact
-router.get("/contact", checkAdmin, async (req,res)=>{
+router.get("/contact", checkAdmin, async (req, res) => {
     try {
-        const page = await Page.findOne({ title:'Contact'})
+        const page = await Page.findOne({ title: 'Contact' })
         const content = page.content;
         const contact = await Contact.findOne();
         res.status(201).render("admin/contact", {
@@ -166,12 +166,12 @@ router.get("/contact", checkAdmin, async (req,res)=>{
 
 router.post('/contact', checkAdmin, [
     // check('content','Content must have a value').notEmpty(),
-    check('phone','Phone must have a value').notEmpty(),
-    check('email','Email must have a valid value').isEmail(),
-    check('address','Address must have a value').notEmpty(),
-  ], async function(req,res){
+    check('phone', 'Phone must have a value').notEmpty(),
+    check('email', 'Email must have a valid value').isEmail(),
+    check('address', 'Address must have a value').notEmpty(),
+], async function (req, res) {
     try {
-        const page = await Page.findOne({ title:'Contact'})
+        const page = await Page.findOne({ title: 'Contact' })
         const contact = await Contact.findOne();
         const content = page.content;
 
@@ -193,8 +193,8 @@ router.post('/contact', checkAdmin, [
         await contact.save()
         // locals
         req.app.locals.contact = contact;
-        
-        req.flash('success','Contact deetails updated successfully.')
+
+        req.flash('success', 'Contact deetails updated successfully.')
         res.redirect('/admin/contact')
     } catch (error) {
         console.log(error);

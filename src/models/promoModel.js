@@ -1,35 +1,35 @@
 var mongoose = require('mongoose');
 
 var promoSchema = mongoose.Schema({
-    promo:{
+    promo: {
         type: String,
         required: true,
     },
-    times:{
+    times: {
         type: Number,
     },
-    date:{
+    date: {
         type: String,
     },
-    type:{
+    type: {
         type: String,
     },
-    minAmount:{
+    minAmount: {
         type: Number,
     },
-    price:{
+    price: {
         type: Number,
     }, // not used
-    percentage:{
+    percentage: {
         type: Number,
     },
-    desc:{
+    desc: {
         type: String,
     },
-    dateCreated:{
+    dateCreated: {
         type: Date,
         default: Date.now,
-        required:true
+        required: true
     }
 });
 

@@ -4,10 +4,10 @@ const jwt = require("jsonwebtoken");
 const validator = require("validator");
 const createError = require('http-errors');
 
-const vendorSchema = new mongoose.Schema ({
+const vendorSchema = new mongoose.Schema({
     storename: {
         type: String,
-        required:true
+        required: true
     },
     ownername: {
         type: String,
@@ -17,38 +17,38 @@ const vendorSchema = new mongoose.Schema ({
         type: String,
         required: true,
         unique: true,
-        validate(value){
-            if(!validator.isEmail(value)){
+        validate(value) {
+            if (!validator.isEmail(value)) {
                 throw new Error("email is invalid")
             }
         }
     },
     password: {
-        type:String,
-        required:true
+        type: String,
+        required: true
     },
     contact: {
-        type:Number,
-        required:true
+        type: Number,
+        required: true
     },
     deliverycharge: {
-        type:String
+        type: String
     },
     deliveryrange: {
-        type:String
+        type: String
     },
     image: {
-        type:String
+        type: String
     },
     idimage: {
-        type:String
+        type: String
     },
     addressimage: {
-        type:String
+        type: String
     },
     address: {
-       type:String,
-       required:true
+        type: String,
+        required: true
     },
     approved: {
         type: Boolean,
@@ -67,26 +67,26 @@ const vendorSchema = new mongoose.Schema ({
 })
 
 // generating tokens
-vendorSchema.methods.generateAuthToken = async function(){
+vendorSchema.methods.generateAuthToken = async function () {
     try {
         // console.log(this._id);
-        const token = jwt.sign({_id:this._id.toString()}, process.env.SECRET_KEY, { expiresIn: '90d' });
+        const token = jwt.sign({ _id: this._id.toString() }, process.env.SECRET_KEY, { expiresIn: '90d' });
         // this.tokens = this.tokens.concat({token:token})
         await this.save();
         // console.log(token);
         return token;
     } catch (error) {
         createError.BadRequest(error);
-        console.log("error: "+error);
+        console.log("error: " + error);
     }
 }
 
 // converting password into hash
-vendorSchema.pre("save",async function(next){
-    if(this.isModified("password")){
-        this.password = await bcrypt.hash(this.password,10);
+vendorSchema.pre("save", async function (next) {
+    if (this.isModified("password")) {
+        this.password = await bcrypt.hash(this.password, 10);
     }
     next();
 })
 
-module.exports = new mongoose.model("Vendor",vendorSchema);
+module.exports = new mongoose.model("Vendor", vendorSchema);

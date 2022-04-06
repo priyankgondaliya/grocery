@@ -13,17 +13,17 @@ const Unit = require('../models/unitModel');
 router.post('/', checkUser, checkStore, async (req, res) => {
     try {
         if (req.user) {
-            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
+            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
             // var cartLength = cart.products.length;
         } else {
-            req.flash('danger','Please login first!');
+            req.flash('danger', 'Please login first!');
             return res.redirect('/signup');
         }
         // create order
         const user = req.user;
         const size = Object.keys(user.address).length;
         if (size < 1) {
-            req.flash('danger','Address is required!');
+            req.flash('danger', 'Address is required!');
             return res.redirect('/checkout');
         }
         const address = `${user.address.house},${user.address.apartment},${user.address.landmark},${user.address.city},${user.address.state},${user.address.country}-${user.address.postal}`;
@@ -68,16 +68,16 @@ router.post('/', checkUser, checkStore, async (req, res) => {
 })
 
 // GET order detail
-router.get('/detail/:id', checkUser, checkStore, async function(req,res){
+router.get('/detail/:id', checkUser, checkStore, async function (req, res) {
     try {
         if (req.user) {
-            var cart = await Cart.findOne({ userId: req.user.id});
+            var cart = await Cart.findOne({ userId: req.user.id });
             var cartLength = cart.products.length;
         } else {
             var cartLength = req.session.cart.products.length;
         }
         const id = req.params.id;
-        const order = await Order.findOne({id: id,user: req.user.id});
+        const order = await Order.findOne({ id: id, user: req.user.id });
         let updated = [];
         for (let i = 0; i < order.products.length; i++) {
             let product = await Product.findById(order.products[i].productId);
@@ -95,8 +95,8 @@ router.get('/detail/:id', checkUser, checkStore, async function(req,res){
             }
             updated.push(e)
         }
-        res.render('order_detail',{
-            title:'Order detail',
+        res.render('order_detail', {
+            title: 'Order detail',
             order,
             updated,
             cartLength,

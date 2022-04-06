@@ -1,25 +1,25 @@
-const jwt=require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 const Vendor = require('../models/vendorModel');
 
 const checkVendor = function (req, res, next) {
     const token = req.cookies['jwtVendor'];
     if (token) {
-        jwt.verify(token, process.env.SECRET_KEY, function(err, decodedToken){
+        jwt.verify(token, process.env.SECRET_KEY, function (err, decodedToken) {
             if (err) {
-                console.log("ERROR: "+err.message);
+                console.log("ERROR: " + err.message);
                 req.vendor = null;
-                req.flash('danger','Invalid token! Please login again.');
+                req.flash('danger', 'Invalid token! Please login again.');
                 return res.redirect('/vendor/login');
             } else {
                 Vendor.findById(decodedToken._id, function (err, vendor) {
                     if (err) {
-                        console.log("ERROR: "+err.message);
+                        console.log("ERROR: " + err.message);
                         req.vendor = null;
-                        req.flash('danger','An error occoured!');
+                        req.flash('danger', 'An error occoured!');
                         return res.redirect('/vendor/login');
                     }
                     if (!vendor) {
-                        req.flash('danger','Please Login as Vendor first!');
+                        req.flash('danger', 'Please Login as Vendor first!');
                         return res.redirect('/vendor/login');
                     }
                     // if (vendor.status != 'approved') {
@@ -32,7 +32,7 @@ const checkVendor = function (req, res, next) {
             }
         });
     } else {
-        req.flash('danger','Please Login as Vendor first!');
+        req.flash('danger', 'Please Login as Vendor first!');
         return res.redirect('/vendor/login');
     }
 }

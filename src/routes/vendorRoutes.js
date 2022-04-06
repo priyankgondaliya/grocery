@@ -6,7 +6,7 @@ const { check, validationResult } = require('express-validator');
 const formatDate = require('../helpers/formateDate');
 
 const sharp = require('sharp');
-const multer  = require('multer');
+const multer = require('multer');
 const fs = require('fs-extra');
 
 const checkVendor = require('../middleware/authVendorMiddleware');
@@ -21,21 +21,21 @@ const storage = multer.memoryStorage();
 const fileFilter = (req, file, cb) => {
     // reject a file
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-      cb(null, true);
+        cb(null, true);
     } else {
-      cb(null, false);
+        cb(null, false);
     }
 };
 const upload = multer({
     storage: storage,
     limits: {
-      fileSize: 1024 * 1024 * 5
+        fileSize: 1024 * 1024 * 5
     },
     fileFilter: fileFilter
 });
 
 // GET dashboard
-router.get("/", checkVendor, (req,res)=>{
+router.get("/", checkVendor, (req, res) => {
     res.status(201).render("vendor/vendor_dashboard", {
         title: 'Vendor Dashboard',
         vendor: req.vendor
@@ -43,38 +43,38 @@ router.get("/", checkVendor, (req,res)=>{
 });
 
 // GET login
-router.get('/login', (req, res)=>{
-    res.render('vendor/login',{
+router.get('/login', (req, res) => {
+    res.render('vendor/login', {
         title: 'Vendor Login'
     })
 })
 
 // POST login
 router.post("/login", [
-    check('email','Please enter valid email.').isEmail(),
-    check('password','Please enter password!').notEmpty(),
-  ],async(req, res)=>{
+    check('email', 'Please enter valid email.').isEmail(),
+    check('password', 'Please enter password!').notEmpty(),
+], async (req, res) => {
     try {
         const validationErrors = validationResult(req)
         if (validationErrors.errors.length > 0) {
-            req.flash('danger','Invalid email or password!');
+            req.flash('danger', 'Invalid email or password!');
             return res.redirect('/vendor/login');
         }
         const { email, password } = req.body;
-        const vendorExist = await Vendor.findOne({email});
+        const vendorExist = await Vendor.findOne({ email });
         if (!vendorExist) {
-            req.flash('danger','Invalid email or password!');
+            req.flash('danger', 'Invalid email or password!');
             return res.redirect('/vendor/login');
         }
         const isMatch = await bcrypt.compare(password, vendorExist.password);
         if (!isMatch) {
-            req.flash('danger','Invalid email or password!');
+            req.flash('danger', 'Invalid email or password!');
             return res.redirect('/vendor/login');
         }
         const token = await vendorExist.generateAuthToken();
         res.cookie("jwtVendor", token, {
-            expires:new Date( Date.now() + 90*24*60*60*1000 ),
-            httpOnly:true,
+            expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+            httpOnly: true,
             // secure:true
         });
         res.redirect('/vendor');
@@ -85,8 +85,8 @@ router.post("/login", [
 })
 
 // GET register
-router.get('/register', (req, res)=>{
-    res.render('vendor/register',{
+router.get('/register', (req, res) => {
+    res.render('vendor/register', {
         title: 'Vendor Register'
     })
 })
@@ -96,14 +96,14 @@ router.post("/register", upload.fields([
     { name: 'image', maxCount: 1 },
     { name: 'idImage', maxCount: 1 },
     { name: 'addImage', maxCount: 1 },
-  ]), [
-    check('storename','Please enter Store name.').notEmpty(),
-    check('ownername','Please enter Owner name.').notEmpty(),
-    check('email','Please enter valid email.').isEmail(),
-    check('password','Password should be atleast 6 characters long.').isLength({ min: 6 }),
-    check('contact','Plaese enter contact number.').notEmpty(),
-    check('address','Plaese enter address.').notEmpty(),
-  ],async(req,res)=>{
+]), [
+    check('storename', 'Please enter Store name.').notEmpty(),
+    check('ownername', 'Please enter Owner name.').notEmpty(),
+    check('email', 'Please enter valid email.').isEmail(),
+    check('password', 'Password should be atleast 6 characters long.').isLength({ min: 6 }),
+    check('contact', 'Plaese enter contact number.').notEmpty(),
+    check('address', 'Plaese enter address.').notEmpty(),
+], async (req, res) => {
     try {
         const validationErrors = validationResult(req)
         if (validationErrors.errors.length > 0) {
@@ -114,25 +114,25 @@ router.post("/register", upload.fields([
                 alert
             })
         }
-        const vendorExist = await Vendor.findOne({email: req.body.email})
+        const vendorExist = await Vendor.findOne({ email: req.body.email })
         if (vendorExist) {
             return res.render('vendor/register', {
                 title: 'Vendor register',
-                alert: [{msg:'Vendor is already registerd with this Email.'}]
+                alert: [{ msg: 'Vendor is already registerd with this Email.' }]
             })
         }
         const file1name = new Date().toISOString().replace(/:/g, '-') + req.files.image[0].originalname;
         const file2name = new Date().toISOString().replace(/:/g, '-') + req.files.idImage[0].originalname;
         const file3name = new Date().toISOString().replace(/:/g, '-') + req.files.addImage[0].originalname;
         const vendor = new Vendor({
-            storename : req.body.storename,
-            ownername : req.body.ownername,
-            email : req.body.email,
-            password : req.body.password,
-            contact : req.body.contact,
-            address : req.body.address,
-            deliverycharge : req.body.deliverycharge,
-            deliveryrange : req.body.deliveryrange,
+            storename: req.body.storename,
+            ownername: req.body.ownername,
+            email: req.body.email,
+            password: req.body.password,
+            contact: req.body.contact,
+            address: req.body.address,
+            deliverycharge: req.body.deliverycharge,
+            deliveryrange: req.body.deliveryrange,
             coords: {
                 lat: req.body.lat,
                 lng: req.body.lng
@@ -145,14 +145,14 @@ router.post("/register", upload.fields([
         fs.access('./public/uploads/vendor', (err) => { if (err) fs.mkdirSync('./public/uploads/vendor'); });
         fs.access(`./public/uploads/vendor/${vendor.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/vendor/${vendor.id}`); });
         await sharp(req.files.image[0].buffer)
-            .toFile(`./public/uploads/vendor/${vendor.id}/`+file1name);
+            .toFile(`./public/uploads/vendor/${vendor.id}/` + file1name);
         await sharp(req.files.idImage[0].buffer)
-            .toFile(`./public/uploads/vendor/${vendor.id}/`+file2name);
+            .toFile(`./public/uploads/vendor/${vendor.id}/` + file2name);
         await sharp(req.files.addImage[0].buffer)
-            .toFile(`./public/uploads/vendor/${vendor.id}/`+file3name);
-        
+            .toFile(`./public/uploads/vendor/${vendor.id}/` + file3name);
+
         await vendor.save();
-        req.flash('success','Vendor added successfully')
+        req.flash('success', 'Vendor added successfully')
         res.redirect('/vendor/login');
     } catch (error) {
         console.log(error);
@@ -162,8 +162,8 @@ router.post("/register", upload.fields([
 
 // GET Forgot Pass
 router.get("/forgot", async (req, res) => {
-    res.render("vendor/forgot",{
-        title:  "Forgot Password"
+    res.render("vendor/forgot", {
+        title: "Forgot Password"
     });
 })
 
@@ -171,29 +171,29 @@ router.get("/forgot", async (req, res) => {
 router.post("/forgot", async (req, res, next) => {
     // generate pass
     let pass = (Math.random() + 1).toString(36).substring(5);
-    
+
     // set pass
     const email = req.body.email
     console.log(email);
-    const vendor = await Vendor.findOne({email});
+    const vendor = await Vendor.findOne({ email });
     if (!vendor) {
-        req.flash('danger','Please enter registered email id.');
+        req.flash('danger', 'Please enter registered email id.');
         return res.redirect('/vendor/forgot');
     }
     vendor.password = pass;
     await vendor.save();
-    
+
     // send mail
     sendForgotPassMail(email, pass)
-    console.log('pass : '+ pass);
-    
-    req.flash('success','A new password sent to your mail. Check your mail and Try logging in.');
+    console.log('pass: ' + pass);
+
+    req.flash('success', 'A new password sent to your mail. Check your mail and Try logging in.');
     return res.redirect('/vendor/forgot');
 })
 
 // GET orders
-router.get("/order", checkVendor, async (req,res)=>{
-    var orders = await Order.find({vendor: req.vendor.id});
+router.get("/order", checkVendor, async (req, res) => {
+    var orders = await Order.find({ vendor: req.vendor.id });
     let updated = []
     for (let i = 0; i < orders.length; i++) {
         let user = await User.findById(orders[i].user);
@@ -212,7 +212,7 @@ router.get("/order", checkVendor, async (req,res)=>{
         }
         updated.push(e)
     }
-    res.status(201).render("vendor/orders",{
+    res.status(201).render("vendor/orders", {
         title: 'Order List',
         vendor: req.vendor,
         orders: updated
@@ -220,7 +220,7 @@ router.get("/order", checkVendor, async (req,res)=>{
 });
 
 // GET order detail
-router.get("/order/detail/:id", checkVendor, async (req,res)=>{
+router.get("/order/detail/:id", checkVendor, async (req, res) => {
     try {
         const id = req.params.id;
         const order = await Order.findById(id);
@@ -249,7 +249,7 @@ router.get("/order/detail/:id", checkVendor, async (req,res)=>{
         });
     } catch (error) {
         if (error.name === 'CastError' || error.name === 'TypeError') {
-            req.flash('danger',`Order not found!`);
+            req.flash('danger', `Order not found!`);
             res.redirect('/vendor/order');
         } else {
             console.log(error);

@@ -1,21 +1,21 @@
 const mongoose = require('mongoose');
 const validator = require("validator");
 
-const newsletterSchema = new mongoose.Schema ({
+const newsletterSchema = new mongoose.Schema({
     email: {
-        type:String,
-        required:true,
-        unique:true,
-        validate(value){
-            if(!validator.isEmail(value)){
+        type: String,
+        required: true,
+        unique: true,
+        validate(value) {
+            if (!validator.isEmail(value)) {
                 throw new Error("email is invalid")
             }
         }
     },
-    date:{
+    date: {
         type: Date,
         default: Date.now,
-        required:true
+        required: true
     }
 })
 

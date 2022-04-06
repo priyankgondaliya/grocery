@@ -12,12 +12,12 @@ const Vendor = require('../models/vendorModel');
 
 // POST register
 router.post("/register", [
-    check('firstname','Please enter firstname.').notEmpty(),
-    check('lastname','Please enter lastname.').notEmpty(),
-    check('email','Please enter valid email.').isEmail(),
-    check('password','Password should be atleast 6 characters long.').isLength({ min: 6 }),
+    check('firstname', 'Please enter firstname.').notEmpty(),
+    check('lastname', 'Please enter lastname.').notEmpty(),
+    check('email', 'Please enter valid email.').isEmail(),
+    check('password', 'Password should be atleast 6 characters long.').isLength({ min: 6 }),
     // check('number','Plaese enter mobile number').notEmpty(),
-  ],async(req,res)=>{
+], async (req, res) => {
     try {
         const validationErrors = validationResult(req)
         // console.log(validationErrors.errors);
@@ -27,11 +27,11 @@ router.post("/register", [
             return res.render('account', {
                 title: 'Account',
                 user: req.user,
-                cartLength:0,
+                cartLength: 0,
                 alert
             })
         }
-        const userExist = await User.findOne({email: req.body.email})
+        const userExist = await User.findOne({ email: req.body.email })
         if (userExist && userExist.googleid) {
             // console.log(userExist.googleid);
             userExist.password = req.body.password;
@@ -39,29 +39,29 @@ router.post("/register", [
             return res.render('account', {
                 title: 'Account',
                 user: req.user,
-                cartLength:0,
-                alert: [{msg:'Registered.'}]
+                cartLength: 0,
+                alert: [{ msg: 'Registered.' }]
             })
         }
         if (userExist) {
             return res.render('account', {
                 title: 'account',
                 user: req.user,
-                cartLength:0,
-                alert: [{msg:'Email is already registerd, Try logging in.'}]
+                cartLength: 0,
+                alert: [{ msg: 'Email is already registerd, Try logging in.' }]
             })
         }
         const user = new User({
-            firstname : req.body.firstname,
-            lastname : req.body.lastname,
-            email : req.body.email,
-            password : req.body.password,
-            phone : req.body.phone
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
+            email: req.body.email,
+            password: req.body.password,
+            phone: req.body.phone
         })
         const token = await user.generateAuthToken();
         res.cookie("jwt", token, {
-            expires:new Date(Date.now()+ 600000),
-            httpOnly:true
+            expires: new Date(Date.now() + 600000),
+            httpOnly: true
         });
         await user.save();
         // create cart for every store
@@ -77,8 +77,8 @@ router.post("/register", [
         res.status(201).render("account", {
             title: 'My account',
             user: req.user,
-            cartLength:0,
-            alert: [{msg:'Registered successfully, Now you can login.'}]
+            cartLength: 0,
+            alert: [{ msg: 'Registered successfully, Now you can login.' }]
         });
     } catch (error) {
         console.log(error);
@@ -88,9 +88,9 @@ router.post("/register", [
 
 // POST login
 router.post("/login", checkUser, [
-    check('email','Please enter valid email.').isEmail(),
-    check('password','Please enter password!').notEmpty(),
-  ],async(req, res)=>{
+    check('email', 'Please enter valid email.').isEmail(),
+    check('password', 'Please enter password!').notEmpty(),
+], async (req, res) => {
     try {
         const validationErrors = validationResult(req)
         if (validationErrors.errors.length > 0) {
@@ -98,18 +98,18 @@ router.post("/login", checkUser, [
             return res.render('account', {
                 title: 'account',
                 user: req.user,
-                cartLength:0,
+                cartLength: 0,
                 alert
             })
         }
         const { email, password } = req.body;
-        const userExist = await User.findOne({email});
+        const userExist = await User.findOne({ email });
         if (!userExist) {
             return res.status(201).render("account", {
                 title: 'My account',
                 user: req.user,
-                cartLength:0,
-                alert: [{msg:'Invalid email or password!'}]
+                cartLength: 0,
+                alert: [{ msg: 'Invalid email or password!' }]
             });
         }
         if (!userExist.password) {
@@ -117,7 +117,7 @@ router.post("/login", checkUser, [
                 title: 'My account',
                 user: req.user,
                 cartLength,
-                alert: [{msg:'Please login with google.'}]
+                alert: [{ msg: 'Please login with google.' }]
             });
         }
         const isMatch = await bcrypt.compare(password, userExist.password);
@@ -125,15 +125,15 @@ router.post("/login", checkUser, [
             return res.status(201).render("account", {
                 title: 'My account',
                 user: req.user,
-                cartLength:0,
-                alert: [{msg:'Invalid email or password!'}]
+                cartLength: 0,
+                alert: [{ msg: 'Invalid email or password!' }]
             });
         }
         const token = await userExist.generateAuthToken();
         // console.log("the token part" + token);
         res.cookie("jwt", token, {
-            expires:new Date( Date.now() + 90*24*60*60*1000 ),
-            httpOnly:true,
+            expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+            httpOnly: true,
             // secure:true
         });
         const storeId = req.cookies['selectStore'];
@@ -151,7 +151,7 @@ router.post("/login", checkUser, [
         if (cartSession != undefined) {
             for (const [key, value] of Object.entries(cartSession)) {
                 // console.log(`${key} ${value}`);
-                var cart = await Cart.findOne({ userId: userExist.id, vendorId: key});
+                var cart = await Cart.findOne({ userId: userExist.id, vendorId: key });
                 if (!cart) {
                     var cart = new Cart({
                         userId: userExist.id,
@@ -160,10 +160,10 @@ router.post("/login", checkUser, [
                     })
                     await cart.save();
                 }
-                if ( value.length != 0 ) {
+                if (value.length != 0) {
                     for (let i = 0; i < value.length; i++) {
                         let itemIndex = cart.products.findIndex(p => p.productId == value[i].productId);
-        
+
                         if (itemIndex > -1) {
                             //product exists in the cart, update the quantity
                             let productItem = cart.products[itemIndex];
@@ -194,10 +194,10 @@ router.post("/login", checkUser, [
 })
 
 // GET logout
-router.get("/logout", checkUser, async(req,res) => {
+router.get("/logout", checkUser, async (req, res) => {
     try {
         if (req.user) {
-            req.user.tokens = req.user.tokens.filter((currElement)=>{
+            req.user.tokens = req.user.tokens.filter((currElement) => {
                 return currElement.token !== req.token
             })
             await req.user.save();
@@ -211,7 +211,7 @@ router.get("/logout", checkUser, async(req,res) => {
 })
 
 // GET logoutAll
-router.get("/logoutall", checkUser, async (req,res) => {
+router.get("/logoutall", checkUser, async (req, res) => {
     try {
         // logout from all device
         req.user.tokens = [];
@@ -226,12 +226,12 @@ router.get("/logoutall", checkUser, async (req,res) => {
 
 // Change Pass
 router.post("/changepass", checkUser, [
-    check('currentpass','Please enter current password!').notEmpty(),
-    check('newpass','Please enter new password!').notEmpty(),
-    check('cfnewpass','Please enter confirm new password!').notEmpty(),
-  ], checkUser, async (req, res, next) => {
+    check('currentpass', 'Please enter current password!').notEmpty(),
+    check('newpass', 'Please enter new password!').notEmpty(),
+    check('cfnewpass', 'Please enter confirm new password!').notEmpty(),
+], checkUser, async (req, res, next) => {
     if (req.user) {
-        var cart = await Cart.findOne({ userId: req.user.id});
+        var cart = await Cart.findOne({ userId: req.user.id });
         var cartLength = cart.products.length;
     } else {
         var cartLength = req.session.cart.products.length;
@@ -246,14 +246,14 @@ router.post("/changepass", checkUser, [
             alert
         })
     }
-    const {currentpass, newpass, cfnewpass} = req.body;
+    const { currentpass, newpass, cfnewpass } = req.body;
     const user = req.user;
     if (user.password == undefined) {
         return res.status(201).render("my_account", {
             title: "My account",
             user: req.user,
             cartLength,
-            alert: [{msg:'You have logged in with google.'}]
+            alert: [{ msg: 'You have logged in with google.' }]
         });
     }
     const isMatch = await bcrypt.compare(currentpass, user.password);
@@ -262,15 +262,15 @@ router.post("/changepass", checkUser, [
             title: "My account",
             user: req.user,
             cartLength,
-            alert: [{msg:'Password you entered is wrong.'}]
+            alert: [{ msg: 'Password you entered is wrong.' }]
         });
     }
-    if (currentpass == newpass ) {
+    if (currentpass == newpass) {
         return res.status(201).render("my_account", {
             title: "My account",
             user: req.user,
             cartLength,
-            alert: [{msg:'New password can not be same as current password.'}]
+            alert: [{ msg: 'New password can not be same as current password.' }]
         });
     }
     if (cfnewpass !== newpass) {
@@ -278,7 +278,7 @@ router.post("/changepass", checkUser, [
             title: "My account",
             user: req.user,
             cartLength,
-            alert: [{msg:'Password and confirm password does not match!'}]
+            alert: [{ msg: 'Password and confirm password does not match!' }]
         });
     }
     // await User.findOneAndUpdate({email: user.email}, {password: newpass})
@@ -288,20 +288,20 @@ router.post("/changepass", checkUser, [
         title: "My account",
         user: req.user,
         cartLength,
-        alert: [{msg:'Password changed.'}]
+        alert: [{ msg: 'Password changed.' }]
     });
 })
 
 // Forgot Pass
 router.get("/forgot_pass", checkUser, async (req, res) => {
     if (req.user) {
-        var cart = await Cart.findOne({ userId: req.user.id});
+        var cart = await Cart.findOne({ userId: req.user.id });
         var cartLength = cart.products.length;
     } else {
         var cartLength = req.session.cart.products.length;
     }
-    res.render("forgot_pass",{
-        title:  "Forgot password",
+    res.render("forgot_pass", {
+        title: "Forgot password",
         user: req.user,
         cartLength,
     });
@@ -310,28 +310,28 @@ router.get("/forgot_pass", checkUser, async (req, res) => {
 router.post("/forgot_pass", checkUser, async (req, res, next) => {
     try {
         if (req.user) {
-            var cart = await Cart.findOne({ userId: req.user.id});
+            var cart = await Cart.findOne({ userId: req.user.id });
             var cartLength = cart.products.length;
         } else {
             var cartLength = req.session.cart.products.length;
         }
         // generate pass
         let pass = (Math.random() + 1).toString(36).substring(5);
-    
+
         // set pass
         const email = req.body.email
-        const user = await User.findOne({email})
+        const user = await User.findOne({ email })
         if (!user) {
-            return res.render("forgot_pass",{
-                title:  "Forgot password",
+            return res.render("forgot_pass", {
+                title: "Forgot password",
                 usre: req.user,
                 cartLength,
-                alert: [{msg:'Please enter registered email id.'}]
+                alert: [{ msg: 'Please enter registered email id.' }]
             });
         }
         user.password = pass;
         await user.save();
-    
+
         // send mail
         sendForgotPassMail(email, pass)
         // console.log('email : '+ email);
@@ -340,7 +340,7 @@ router.post("/forgot_pass", checkUser, async (req, res, next) => {
             title: 'My account',
             user: req.user,
             cartLength,
-            alert: [{msg:'A new password sent to your mail. Check your mail and Try logging in.'}],
+            alert: [{ msg: 'A new password sent to your mail. Check your mail and Try logging in.' }],
         });
     } catch (error) {
         console.log(error);
@@ -350,17 +350,17 @@ router.post("/forgot_pass", checkUser, async (req, res, next) => {
 
 // post address
 router.post("/address", [
-    check('house','Please enter House number!').notEmpty(),
-    check('apartment','Please enter Apartment!').notEmpty(),
-    check('landmark','Please enter Landmark!').notEmpty(),
-    check('city','Please enter City!').notEmpty(),
-    check('state','Please enter State!').notEmpty(),
-    check('country','Please enter Country!').notEmpty(),
-    check('postal','Please enter Postal code!').isNumeric()
-  ], checkUser, async (req, res, next) => {
+    check('house', 'Please enter House number!').notEmpty(),
+    check('apartment', 'Please enter Apartment!').notEmpty(),
+    check('landmark', 'Please enter Landmark!').notEmpty(),
+    check('city', 'Please enter City!').notEmpty(),
+    check('state', 'Please enter State!').notEmpty(),
+    check('country', 'Please enter Country!').notEmpty(),
+    check('postal', 'Please enter Postal code!').isNumeric()
+], checkUser, async (req, res, next) => {
     try {
         if (req.user) {
-            var cart = await Cart.findOne({ userId: req.user.id});
+            var cart = await Cart.findOne({ userId: req.user.id });
             var cartLength = cart.products.length;
         } else {
             var cartLength = req.session.cart.products.length;
@@ -388,7 +388,7 @@ router.post("/address", [
         await user.save();
         return res.render('my_account', {
             title: 'My account',
-            alert: [{msg:'Address updated successfully.'}],
+            alert: [{ msg: 'Address updated successfully.' }],
             cartLength,
             user
         })

@@ -4,8 +4,8 @@ const mongoose = require('mongoose');
 const SubcategorySchema = mongoose.Schema({
     name: {
         type: String,
-        required:true,
-        unique:true
+        required: true,
+        unique: true
     },
     category: {
         type: mongoose.Schema.ObjectId,
@@ -14,13 +14,13 @@ const SubcategorySchema = mongoose.Schema({
     // categoryName: {
     //     type: String,
     // },
-    image:{
+    image: {
         type: String,
     },
-    date:{
+    date: {
         type: Date,
         default: Date.now,
-        required:true
+        required: true
     }
 });
 

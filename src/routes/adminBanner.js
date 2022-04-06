@@ -5,21 +5,21 @@ const { check, validationResult } = require('express-validator');
 const checkAdmin = require('../middleware/authAdminMiddleware');
 
 const sharp = require('sharp');
-const multer  = require('multer');
+const multer = require('multer');
 const fs = require('fs-extra');
 const storage = multer.memoryStorage();
 const fileFilter = (req, file, cb) => {
     // reject a file
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-      cb(null, true);
+        cb(null, true);
     } else {
-      cb(null, false);
+        cb(null, false);
     }
 };
 const upload = multer({
     storage: storage,
     limits: {
-      fileSize: 1024 * 1024 * 5
+        fileSize: 1024 * 1024 * 5
     },
     fileFilter: fileFilter
 });
@@ -29,7 +29,7 @@ const Banner = require("../models/banner");
 const formatDate = require('../helpers/formateDate');
 
 // GET banner
-router.get("/", checkAdmin, async (req,res)=>{
+router.get("/", checkAdmin, async (req, res) => {
     const banners = await Banner.find();
     let updated = []
     for (let i = 0; i < banners.length; i++) {
@@ -46,13 +46,13 @@ router.get("/", checkAdmin, async (req,res)=>{
     });
 });
 // GET add banner
-router.get("/add", checkAdmin, (req,res)=>{
+router.get("/add", checkAdmin, (req, res) => {
     res.status(201).render("admin/add_banners", {
         title: 'Add Banner'
     });
 });
 // add new banner
-router.post("/add", checkAdmin, upload.single('image'),async (req,res)=>{
+router.post("/add", checkAdmin, upload.single('image'), async (req, res) => {
     try {
         const validationErrors = validationResult(req)
         if (validationErrors.errors.length > 0) {
@@ -64,14 +64,14 @@ router.post("/add", checkAdmin, upload.single('image'),async (req,res)=>{
         }
         const filename = new Date().toISOString().replace(/:/g, '-') + req.file.originalname;
         const banner = new Banner({
-            image : '/uploads/banner/' + filename
+            image: '/uploads/banner/' + filename
         })
         fs.access('./public/uploads/banner', (err) => { if (err) fs.mkdirSync('./public/uploads/banner'); });
         await sharp(req.file.buffer)
-            .resize({ width:1000, height:723 })
-            .toFile('./public/uploads/banner/'+filename);
+            .resize({ width: 1000, height: 723 })
+            .toFile('./public/uploads/banner/' + filename);
         await banner.save();
-        req.flash('success',`Banner added successfully`);
+        req.flash('success', `Banner added successfully`);
         res.redirect('/admin/banner');
     } catch (error) {
         console.log(error);
@@ -79,12 +79,12 @@ router.post("/add", checkAdmin, upload.single('image'),async (req,res)=>{
     }
 })
 // GET edit Banner
-router.get("/edit/:id", checkAdmin, async (req,res)=>{
+router.get("/edit/:id", checkAdmin, async (req, res) => {
     try {
         const id = req.params.id;
         const banner = await Banner.findById(id);
         if (banner == null) {
-            req.flash('danger',`Banner not found!`);
+            req.flash('danger', `Banner not found!`);
             return res.redirect('/admin/banner');
         }
         res.status(201).render("admin/edit_banners", {
@@ -93,7 +93,7 @@ router.get("/edit/:id", checkAdmin, async (req,res)=>{
         });
     } catch (error) {
         if (error.name === 'CastError') {
-            req.flash('danger',`Banner not found!`);
+            req.flash('danger', `Banner not found!`);
             res.redirect('/admin/banner');
         } else {
             console.log(error);
@@ -104,7 +104,7 @@ router.get("/edit/:id", checkAdmin, async (req,res)=>{
 
 
 // POST edit banner
-router.post("/edit/:id", checkAdmin, upload.single('image'),async (req,res)=>{
+router.post("/edit/:id", checkAdmin, upload.single('image'), async (req, res) => {
     try {
         const validationErrors = validationResult(req)
         if (validationErrors.errors.length > 0) {
@@ -118,7 +118,7 @@ router.post("/edit/:id", checkAdmin, upload.single('image'),async (req,res)=>{
         const id = req.params.id;
         const banner = await Banner.findById(id);
         if (banner == null) {
-            req.flash('danger',`Banner not found!`);
+            req.flash('danger', `Banner not found!`);
             return res.redirect('/admin/banner');
         }
         if (typeof req.file !== 'undefined') {
@@ -131,14 +131,14 @@ router.post("/edit/:id", checkAdmin, upload.single('image'),async (req,res)=>{
             fs.access('./public/uploads/banner', (err) => { if (err) fs.mkdirSync('./public/uploads/banner'); });
             await sharp(req.file.buffer)
                 // .resize({ width:1000, height:723 })
-                .toFile('./public/uploads/banner/'+filename);
+                .toFile('./public/uploads/banner/' + filename);
         }
         await banner.save();
-        req.flash('success','Banner edited successfully.')
+        req.flash('success', 'Banner edited successfully.')
         res.redirect('/admin/banner');
     } catch (error) {
         if (error.name === 'CastError') {
-            req.flash('danger',`Banner not found!`);
+            req.flash('danger', `Banner not found!`);
             res.redirect('/admin/banner');
         } else {
             console.log(error);
@@ -147,7 +147,7 @@ router.post("/edit/:id", checkAdmin, upload.single('image'),async (req,res)=>{
     }
 });
 // GET delete banner
-router.get("/delete/:id", checkAdmin, async (req,res)=>{
+router.get("/delete/:id", checkAdmin, async (req, res) => {
     try {
         const id = req.params.id;
         const banner = await Banner.findByIdAndRemove(id);
@@ -155,11 +155,11 @@ router.get("/delete/:id", checkAdmin, async (req,res)=>{
         fs.remove(image, function (err) {
             if (err) { console.log(err); }
         })
-        req.flash('success',`Banner Deleted successfully`);
+        req.flash('success', `Banner Deleted successfully`);
         res.redirect('/admin/banner')
     } catch (error) {
-        if (error.name === 'CastError'  || error.name === 'TypeError') {
-            req.flash('danger',`Banner not found!`);
+        if (error.name === 'CastError' || error.name === 'TypeError') {
+            req.flash('danger', `Banner not found!`);
             res.redirect('/admin/banner');
         } else {
             console.log(error);
@@ -168,5 +168,4 @@ router.get("/delete/:id", checkAdmin, async (req,res)=>{
     }
 });
 
-//exports
 module.exports = router;

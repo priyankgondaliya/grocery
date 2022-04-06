@@ -2,13 +2,13 @@ const mongoose = require('mongoose');
 
 //Contact schema
 const ContactSchema = mongoose.Schema({
-    phone :{
+    phone: {
         type: String,
     },
-    email :{
+    email: {
         type: String,
     },
-    address :{
+    address: {
         type: String,
     }
 });

@@ -2,12 +2,12 @@ var mongoose = require('mongoose');
 
 //page schema
 var pageSchema = mongoose.Schema({
-    title:{
+    title: {
         type: String,
         required: true,
         unique: true,
     },
-    content:{
+    content: {
         type: String,
         // required:true
     },

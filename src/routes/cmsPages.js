@@ -10,16 +10,16 @@ const Cart = require('../models/cartModel');
 const checkStore = require('../middleware/selectedStore');
 
 // about us
-router.get("/about_us", checkUser, checkStore, async (req,res)=>{
+router.get("/about_us", checkUser, checkStore, async (req, res) => {
     try {
         if (req.user) {
-            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
+            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
             var cartLength = cart.products.length;
         } else {
             const storeId = req.store;
             var cartLength = req.session.cart ? (req.session.cart[storeId] ? req.session.cart[storeId].length : 0) : 0;
         }
-        const page = await Page.findOne({ title:'About Us'})
+        const page = await Page.findOne({ title: 'About Us' })
         const content = page.content;
         res.status(201).render("cms", {
             title: 'About Us',
@@ -35,16 +35,16 @@ router.get("/about_us", checkUser, checkStore, async (req,res)=>{
 });
 
 // faqs
-router.get("/faqs", checkUser, checkStore, async (req,res)=>{
+router.get("/faqs", checkUser, checkStore, async (req, res) => {
     try {
         if (req.user) {
-            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
+            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
             var cartLength = cart.products.length;
         } else {
             const storeId = req.store;
             var cartLength = req.session.cart ? (req.session.cart[storeId] ? req.session.cart[storeId].length : 0) : 0;
         }
-        const page = await Page.findOne({ title:'FAQs'})
+        const page = await Page.findOne({ title: 'FAQs' })
         const content = page.content;
         res.status(201).render("cms", {
             title: 'FAQs',
@@ -60,10 +60,10 @@ router.get("/faqs", checkUser, checkStore, async (req,res)=>{
 });
 
 // terms
-router.get("/terms_con", checkUser, checkStore, async (req,res)=>{
+router.get("/terms_con", checkUser, checkStore, async (req, res) => {
     try {
         if (req.user) {
-            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
+            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
             var cartLength = cart.products.length;
         } else {
             const storeId = req.store;
@@ -85,19 +85,19 @@ router.get("/terms_con", checkUser, checkStore, async (req,res)=>{
 });
 
 // privacy
-router.get("/privacy_policy", checkUser, checkStore, async (req,res)=>{
+router.get("/privacy_policy", checkUser, checkStore, async (req, res) => {
     try {
         if (req.user) {
-            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
+            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
             var cartLength = cart.products.length;
         } else {
             const storeId = req.store;
             var cartLength = req.session.cart ? (req.session.cart[storeId] ? req.session.cart[storeId].length : 0) : 0;
         }
-        const page = await Page.findOne({ title:'Privacy Policy'})
+        const page = await Page.findOne({ title: 'Privacy Policy' })
         const content = page.content;
         res.status(201).render("cms", {
-            title:'Privacy Policy',
+            title: 'Privacy Policy',
             user: req.user,
             cartLength,
             storename: req.storename,
@@ -110,16 +110,16 @@ router.get("/privacy_policy", checkUser, checkStore, async (req,res)=>{
 });
 
 // contact
-router.get("/contact", checkUser, checkStore, async (req,res)=>{
+router.get("/contact", checkUser, checkStore, async (req, res) => {
     try {
         if (req.user) {
-            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
+            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
             var cartLength = cart.products.length;
         } else {
             const storeId = req.store;
             var cartLength = req.session.cart ? (req.session.cart[storeId] ? req.session.cart[storeId].length : 0) : 0;
         }
-        const page = await Page.findOne({ title:'Contact'})
+        const page = await Page.findOne({ title: 'Contact' })
         const content = page.content;
         // const contact = await Contact.findOne()
         res.status(201).render("contact", {
@@ -137,22 +137,22 @@ router.get("/contact", checkUser, checkStore, async (req,res)=>{
 });
 
 // POST message
-router.post("/contact",[
-    check('name','Please enter your name.').notEmpty(),
-    check('email','Please enter valid email.').isEmail(),
-    check('address','Please enter address.').notEmpty(),
-    check('phone','Please enter phone number.').notEmpty(),
-    check('message','Please enter a message.').notEmpty(),
-  ], checkUser, checkStore, async(req,res)=>{
+router.post("/contact", [
+    check('name', 'Please enter your name.').notEmpty(),
+    check('email', 'Please enter valid email.').isEmail(),
+    check('address', 'Please enter address.').notEmpty(),
+    check('phone', 'Please enter phone number.').notEmpty(),
+    check('message', 'Please enter a message.').notEmpty(),
+], checkUser, checkStore, async (req, res) => {
     try {
         if (req.user) {
-            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
+            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
             var cartLength = cart.products.length;
         } else {
             const storeId = req.store;
             var cartLength = req.session.cart ? (req.session.cart[storeId] ? req.session.cart[storeId].length : 0) : 0;
         }
-        const page = await Page.findOne({ title:'Contact'})
+        const page = await Page.findOne({ title: 'Contact' })
         const content = page.content;
         const validationErrors = validationResult(req)
         if (validationErrors.errors.length > 0) {
@@ -167,10 +167,10 @@ router.post("/contact",[
             })
         }
         const message = new Message({
-            name : req.body.name,
-            email : req.body.email,
-            address : req.body.address,
-            phone : req.body.phone,
+            name: req.body.name,
+            email: req.body.email,
+            address: req.body.address,
+            phone: req.body.phone,
             message: req.body.message
         })
         await message.save();
@@ -179,7 +179,7 @@ router.post("/contact",[
             user: req.user,
             cartLength,
             storename: req.storename,
-            alert: [{msg:'Message sent successfully.'}],
+            alert: [{ msg: 'Message sent successfully.' }],
             content
         });
     } catch (error) {

@@ -5,7 +5,7 @@ const { check, validationResult } = require('express-validator');
 const checkAdmin = require('../middleware/authAdminMiddleware');
 
 const sharp = require('sharp');
-const multer  = require('multer');
+const multer = require('multer');
 const fs = require('fs-extra');
 
 const Vendor = require('../models/vendorModel');
@@ -15,21 +15,21 @@ const storage = multer.memoryStorage();
 const fileFilter = (req, file, cb) => {
     // reject a file
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-      cb(null, true);
+        cb(null, true);
     } else {
-      cb(null, false);
+        cb(null, false);
     }
 };
 const upload = multer({
     storage: storage,
     limits: {
-      fileSize: 1024 * 1024 * 5
+        fileSize: 1024 * 1024 * 5
     },
     fileFilter: fileFilter
 });
 
 // GET vendors
-router.get("/", checkAdmin, async (req,res)=>{
+router.get("/", checkAdmin, async (req, res) => {
     try {
         const vendors = await Vendor.find();
         res.status(201).render("admin/vendor", {
@@ -43,7 +43,7 @@ router.get("/", checkAdmin, async (req,res)=>{
 });
 
 // GET add vendors
-router.get("/add", checkAdmin, async (req,res)=>{
+router.get("/add", checkAdmin, async (req, res) => {
     try {
         res.status(201).render("admin/add_vendor", {
             title: 'Add Vendor',
@@ -59,14 +59,14 @@ router.post("/add", checkAdmin, upload.fields([
     { name: 'image', maxCount: 1 },
     { name: 'idImage', maxCount: 1 },
     { name: 'addImage', maxCount: 1 },
-  ]), [
-    check('storename','Please enter Store name.').notEmpty(),
-    check('ownername','Please enter Owner name.').notEmpty(),
-    check('email','Please enter valid email.').isEmail(),
-    check('password','Password should be atleast 6 characters long.').isLength({ min: 6 }),
-    check('contact','Plaese enter contact number.').notEmpty(),
-    check('address','Plaese enter address.').notEmpty(),
-  ],async(req,res)=>{
+]), [
+    check('storename', 'Please enter Store name.').notEmpty(),
+    check('ownername', 'Please enter Owner name.').notEmpty(),
+    check('email', 'Please enter valid email.').isEmail(),
+    check('password', 'Password should be atleast 6 characters long.').isLength({ min: 6 }),
+    check('contact', 'Plaese enter contact number.').notEmpty(),
+    check('address', 'Plaese enter address.').notEmpty(),
+], async (req, res) => {
     try {
         const validationErrors = validationResult(req)
         if (validationErrors.errors.length > 0) {
@@ -77,26 +77,26 @@ router.post("/add", checkAdmin, upload.fields([
                 alert
             })
         }
-        const vendorExist = await Vendor.findOne({email: req.body.email})
+        const vendorExist = await Vendor.findOne({ email: req.body.email })
         if (vendorExist) {
             return res.render('admin/add_vendor', {
                 title: 'Add Vendor',
-                alert: [{msg:'Vendor is already registerd with this Email.'}]
+                alert: [{ msg: 'Vendor is already registerd with this Email.' }]
             })
         }
         const file1name = new Date().toISOString().replace(/:/g, '-') + req.files.image[0].originalname;
         const file2name = new Date().toISOString().replace(/:/g, '-') + req.files.idImage[0].originalname;
         const file3name = new Date().toISOString().replace(/:/g, '-') + req.files.addImage[0].originalname;
         const vendor = new Vendor({
-            storename : req.body.storename,
-            ownername : req.body.ownername,
-            email : req.body.email,
-            password : req.body.password,
-            contact : req.body.contact,
-            address : req.body.address,
-            deliverycharge : req.body.deliverycharge,
-            deliveryrange : req.body.deliveryrange,
-            approved : true,
+            storename: req.body.storename,
+            ownername: req.body.ownername,
+            email: req.body.email,
+            password: req.body.password,
+            contact: req.body.contact,
+            address: req.body.address,
+            deliverycharge: req.body.deliverycharge,
+            deliveryrange: req.body.deliveryrange,
+            approved: true,
             coords: {
                 lat: req.body.lat,
                 lng: req.body.lng
@@ -109,14 +109,14 @@ router.post("/add", checkAdmin, upload.fields([
         fs.access('./public/uploads/vendor', (err) => { if (err) fs.mkdirSync('./public/uploads/vendor'); });
         fs.access(`./public/uploads/vendor/${vendor.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/vendor/${vendor.id}`); });
         await sharp(req.files.image[0].buffer)
-            .toFile(`./public/uploads/vendor/${vendor.id}/`+file1name);
+            .toFile(`./public/uploads/vendor/${vendor.id}/` + file1name);
         await sharp(req.files.idImage[0].buffer)
-            .toFile(`./public/uploads/vendor/${vendor.id}/`+file2name);
+            .toFile(`./public/uploads/vendor/${vendor.id}/` + file2name);
         await sharp(req.files.addImage[0].buffer)
-            .toFile(`./public/uploads/vendor/${vendor.id}/`+file3name);
-        
+            .toFile(`./public/uploads/vendor/${vendor.id}/` + file3name);
+
         await vendor.save();
-        req.flash('success','Vendor added successfully')
+        req.flash('success', 'Vendor added successfully')
         res.redirect('/admin/vendor');
     } catch (error) {
         console.log(error);
@@ -125,12 +125,12 @@ router.post("/add", checkAdmin, upload.fields([
 })
 
 // GET edit vendor
-router.get("/edit/:id", checkAdmin, async (req,res)=>{
+router.get("/edit/:id", checkAdmin, async (req, res) => {
     try {
         const id = req.params.id;
         const vendor = await Vendor.findById(id);
         if (vendor == null) {
-            req.flash('danger',`Vendor not found!`);
+            req.flash('danger', `Vendor not found!`);
             return res.redirect('/admin/vendor');
         }
         res.status(201).render("admin/edit_vendor", {
@@ -139,7 +139,7 @@ router.get("/edit/:id", checkAdmin, async (req,res)=>{
         });
     } catch (error) {
         if (error.name === 'CastError') {
-            req.flash('danger',`Vendor not found!`);
+            req.flash('danger', `Vendor not found!`);
             res.redirect('/admin/vendor');
         } else {
             console.log(error);
@@ -153,12 +153,12 @@ router.post("/edit/:id", checkAdmin, upload.fields([
     { name: 'image', maxCount: 1 },
     { name: 'idImage', maxCount: 1 },
     { name: 'addImage', maxCount: 1 },
-  ]), [
-    check('storename','Please enter Store name.').notEmpty(),
-    check('ownername','Please enter Owner name.').notEmpty(),
-    check('contact','Plaese enter contact number.').notEmpty(),
-    check('address','Plaese enter address.').notEmpty(),
-  ],async (req,res)=>{
+]), [
+    check('storename', 'Please enter Store name.').notEmpty(),
+    check('ownername', 'Please enter Owner name.').notEmpty(),
+    check('contact', 'Plaese enter contact number.').notEmpty(),
+    check('address', 'Plaese enter address.').notEmpty(),
+], async (req, res) => {
     try {
         const validationErrors = validationResult(req)
         if (validationErrors.errors.length > 0) {
@@ -172,7 +172,7 @@ router.post("/edit/:id", checkAdmin, upload.fields([
         const id = req.params.id;
         const vendor = await Vendor.findById(id);
         if (vendor == null) {
-            req.flash('danger',`Vendor not found!`);
+            req.flash('danger', `Vendor not found!`);
             return res.redirect('/admin/vendor');
         }
         vendor.storename = req.body.storename;
@@ -182,7 +182,7 @@ router.post("/edit/:id", checkAdmin, upload.fields([
         vendor.deliverycharge = req.body.deliverycharge;
         vendor.deliveryrange = req.body.deliveryrange;
         if (req.body.lat && req.body.lng) {
-            vendor.coords =  {
+            vendor.coords = {
                 lat: req.body.lat,
                 lng: req.body.lng
             }
@@ -197,7 +197,7 @@ router.post("/edit/:id", checkAdmin, upload.fields([
             vendor.image = `/uploads/vendor/${vendor.id}/` + filename;
             fs.access(`./public/uploads/vendor/${vendor.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/vendor/${vendor.id}`); });
             await sharp(req.files.image[0].buffer)
-                .toFile(`./public/uploads/vendor/${vendor.id}/`+filename);
+                .toFile(`./public/uploads/vendor/${vendor.id}/` + filename);
         }
         if (typeof req.files.idImage !== 'undefined') {
             oldImage = "public" + vendor.idimage;
@@ -208,7 +208,7 @@ router.post("/edit/:id", checkAdmin, upload.fields([
             vendor.idimage = `/uploads/vendor/${vendor.id}/` + filename;
             fs.access(`./public/uploads/vendor/${vendor.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/vendor/${vendor.id}`); });
             await sharp(req.files.idImage[0].buffer)
-                .toFile(`./public/uploads/vendor/${vendor.id}/`+filename);
+                .toFile(`./public/uploads/vendor/${vendor.id}/` + filename);
         }
         if (typeof req.files.addImage !== 'undefined') {
             oldImage = "public" + vendor.addressimage;
@@ -219,15 +219,15 @@ router.post("/edit/:id", checkAdmin, upload.fields([
             vendor.addressimage = `/uploads/vendor/${vendor.id}/` + filename;
             fs.access(`./public/uploads/vendor/${vendor.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/vendor/${vendor.id}`); });
             await sharp(req.files.addImage[0].buffer)
-                .toFile(`./public/uploads/vendor/${vendor.id}/`+filename);
+                .toFile(`./public/uploads/vendor/${vendor.id}/` + filename);
         }
 
         await vendor.save();
-        req.flash('success','Vendor edited successfully.')
+        req.flash('success', 'Vendor edited successfully.')
         res.redirect('/admin/vendor');
     } catch (error) {
         if (error.name === 'CastError') {
-            req.flash('danger',`Vendor not found!`);
+            req.flash('danger', `Vendor not found!`);
             res.redirect('/admin/vendor');
         } else {
             console.log(error);
@@ -237,10 +237,10 @@ router.post("/edit/:id", checkAdmin, upload.fields([
 });
 
 // GET vendor products
-router.get("/products/:id", checkAdmin, async (req,res)=>{
+router.get("/products/:id", checkAdmin, async (req, res) => {
     try {
         const id = req.params.id;
-        const products = await Product.find({vendor: id});
+        const products = await Product.find({ vendor: id });
         const vendor = await Vendor.findById(id);
         res.status(201).render("admin/vendor_products", {
             title: 'Vendor Products',
@@ -254,18 +254,18 @@ router.get("/products/:id", checkAdmin, async (req,res)=>{
 });
 
 // GET delete vendor
-router.get("/delete/:id", checkAdmin, async (req,res)=>{
+router.get("/delete/:id", checkAdmin, async (req, res) => {
     try {
         const id = req.params.id;
         const vendor = await Vendor.findByIdAndRemove(id);
 
         fs.rmSync(`./public/uploads/vendor/${vendor.id}`, { recursive: true, force: true });
-        
-        req.flash('success',`Vendor Deleted successfully`);
+
+        req.flash('success', `Vendor Deleted successfully`);
         res.redirect('/admin/vendor');
     } catch (error) {
         if (error.name === 'CastError' || error.name === 'TypeError') {
-            req.flash('danger',`Vendor not found!`);
+            req.flash('danger', `Vendor not found!`);
             res.redirect('/admin/vendor');
         } else {
             console.log(error);
@@ -275,7 +275,7 @@ router.get("/delete/:id", checkAdmin, async (req,res)=>{
 });
 
 // GET vendors
-router.get("/contact", checkAdmin, async (req,res)=>{
+router.get("/contact", checkAdmin, async (req, res) => {
     try {
         const vendors = await Vendor.find();
         res.status(201).render("admin/vendorcontact", {

@@ -506,7 +506,7 @@
 			var validateReturn = validate();
 			var orderForm = document.getElementById('orderForm');
 			var paymentMode = document.querySelector('input[name="pay"]:checked').value;
-			if (validate) {
+			if (validateReturn) {
 				console.log("Validate returned true");
 				if (paymentMode == 'razorpay') {
 					orderForm.setAttribute("action","/#");

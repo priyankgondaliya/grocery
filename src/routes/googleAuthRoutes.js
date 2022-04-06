@@ -1,18 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const checkStore = require('../middleware/selectedStore');
 
 const Cart = require('../models/cartModel');
 
 router.get('/', passport.authenticate('google', { scope: ['profile', 'email'] }));
 router.get('/callback', passport.authenticate('google', { failureRedirect: '/failed' }),
-    async function(req, res) {
+    async function (req, res) {
         const user = req.myUser;
         const token = await user.generateAuthToken();
         res.cookie("jwt", token, {
-            expires:new Date( Date.now() + 90*24*60*60*1000 ),
-            httpOnly:true,
+            expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+            httpOnly: true,
             // secure:true
         });
         const storeId = req.cookies['selectStore'];
@@ -29,7 +28,7 @@ router.get('/callback', passport.authenticate('google', { failureRedirect: '/fai
         if (cartSession != undefined) {
             for (const [key, value] of Object.entries(cartSession)) {
                 // console.log(`${key} ${value}`);
-                var cart = await Cart.findOne({ userId: user.id, vendorId: key});
+                var cart = await Cart.findOne({ userId: user.id, vendorId: key });
                 if (!cart) {
                     var cart = new Cart({
                         userId: user.id,
@@ -38,11 +37,11 @@ router.get('/callback', passport.authenticate('google', { failureRedirect: '/fai
                     })
                     await cart.save();
                 }
-                if ( value.length != 0 ) {
+                if (value.length != 0) {
                     for (let i = 0; i < value.length; i++) {
                         // console.log(value[i]);
                         let itemIndex = cart.products.findIndex(p => p.productId == value[i].productId);
-                        
+
                         if (itemIndex > -1) {
                             //product exists in the cart, update the quantity
                             let productItem = cart.products[itemIndex];

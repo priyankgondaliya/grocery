@@ -2,13 +2,13 @@ const mongoose = require('mongoose');
 
 //banner schema
 const BannerSchema = mongoose.Schema({
-    image:{
+    image: {
         type: String,
     },
-    date:{
+    date: {
         type: Date,
         default: Date.now,
-        required:true
+        required: true
     }
 });
 

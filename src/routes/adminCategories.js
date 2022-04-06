@@ -5,7 +5,7 @@ const { check, validationResult } = require('express-validator');
 const checkAdmin = require('../middleware/authAdminMiddleware');
 
 const sharp = require('sharp');
-const multer  = require('multer');
+const multer = require('multer');
 const fs = require('fs-extra');
 const formatDate = require('../helpers/formateDate');
 
@@ -13,15 +13,15 @@ const storage = multer.memoryStorage();
 const fileFilter = (req, file, cb) => {
     // reject a file
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-      cb(null, true);
+        cb(null, true);
     } else {
-      cb(null, false);
+        cb(null, false);
     }
 };
 const upload = multer({
     storage: storage,
     limits: {
-      fileSize: 1024 * 1024 * 10
+        fileSize: 1024 * 1024 * 10
     },
     fileFilter: fileFilter
 });
@@ -30,7 +30,7 @@ const upload = multer({
 const Category = require('../models/category');
 
 // GET category
-router.get("/", checkAdmin, async (req,res)=>{
+router.get("/", checkAdmin, async (req, res) => {
     const cats = await Category.find();
     let updated = []
     for (let i = 0; i < cats.length; i++) {
@@ -50,19 +50,19 @@ router.get("/", checkAdmin, async (req,res)=>{
 });
 
 // GET add category
-router.get("/add", checkAdmin, (req,res)=>{
-    res.status(201).render("admin/add_category", {
+router.get("/add", checkAdmin, (req, res) => {
+    res.render("admin/add_category", {
         title: 'Add Category'
     });
 });
 
 // POST add category
 router.post('/add', checkAdmin, upload.single('image'), [
-    check('name','Category name must have a value').notEmpty(),
-    check('tax','Category tax must have a value').notEmpty(),
-],async (req,res) => {
+    check('name', 'Category name must have a value').notEmpty(),
+    check('tax', 'Category tax must have a value').notEmpty(),
+], async (req, res) => {
     try {
-        const {name, tax} = req.body;
+        const { name, tax } = req.body;
         const validationErrors = validationResult(req)
         if (validationErrors.errors.length > 0) {
             const alert = validationErrors.array()
@@ -82,29 +82,29 @@ router.post('/add', checkAdmin, upload.single('image'), [
         }
         fs.access('./public/uploads/category', (err) => { if (err) fs.mkdirSync('./public/uploads/category'); });
         await sharp(req.file.buffer)
-            .resize({ width:1000, height:723 })
-            .toFile('./public/uploads/category/'+filename);
+            .resize({ width: 1000, height: 723 })
+            .toFile('./public/uploads/category/' + filename);
         await cat.save();
-        req.flash('success',`Category added successfully`);
+        req.flash('success', `Category added successfully`);
         res.redirect('/admin/category')
     } catch (error) {
         if (error.code == 11000) {
-            req.flash('danger',`Category name '${req.body.name}' already exist!`);
+            req.flash('danger', `Category name '${req.body.name}' already exist!`);
             res.redirect('/admin/category');
         } else {
             console.log(error);
             res.send(error.message);
         }
-    }   
+    }
 });
 
 // GET edit category
-router.get("/edit/:id", checkAdmin, async (req,res)=>{
+router.get("/edit/:id", checkAdmin, async (req, res) => {
     try {
         const id = req.params.id;
         const cat = await Category.findById(id);
         if (cat == null) {
-            req.flash('danger',`Category not found!`);
+            req.flash('danger', `Category not found!`);
             return res.redirect('/admin/category');
         }
         res.status(201).render("admin/edit_category", {
@@ -113,7 +113,7 @@ router.get("/edit/:id", checkAdmin, async (req,res)=>{
         });
     } catch (error) {
         if (error.name === 'CastError') {
-            req.flash('danger',`Category not found!`);
+            req.flash('danger', `Category not found!`);
             res.redirect('/admin/category');
         } else {
             console.log(error);
@@ -124,11 +124,11 @@ router.get("/edit/:id", checkAdmin, async (req,res)=>{
 
 // POST Edit category
 router.post('/edit/:id', checkAdmin, upload.single('image'), [
-    check('name','Category name must have a value').notEmpty(),
-    check('tax','Category tax must have a value').notEmpty(),
-],async (req,res) => {
+    check('name', 'Category name must have a value').notEmpty(),
+    check('tax', 'Category tax must have a value').notEmpty(),
+], async (req, res) => {
     try {
-        const {name, tax} = req.body;
+        const { name, tax } = req.body;
         const validationErrors = validationResult(req)
         if (validationErrors.errors.length > 0) {
             const alert = validationErrors.array()
@@ -140,7 +140,7 @@ router.post('/edit/:id', checkAdmin, upload.single('image'), [
         const id = req.params.id;
         const cat = await Category.findById(id);
         if (cat == null) {
-            req.flash('danger',`Category not found!`);
+            req.flash('danger', `Category not found!`);
             return res.redirect('/admin/category');
         }
         cat.name = name;
@@ -159,29 +159,29 @@ router.post('/edit/:id', checkAdmin, upload.single('image'), [
             cat.image = '/uploads/category/' + filename;
             fs.access('./public/uploads/category', (err) => { if (err) fs.mkdirSync('./public/uploads/category'); });
             await sharp(req.file.buffer)
-                .resize({ width:1000, height:723 })
-                .toFile('./public/uploads/category/'+filename);
+                .resize({ width: 1000, height: 723 })
+                .toFile('./public/uploads/category/' + filename);
         }
         await cat.save();
-        req.flash('success',`Category Edited successfully`);
+        req.flash('success', `Category Edited successfully`);
         res.redirect('/admin/category')
     } catch (error) {
         console.log(error.message);
         if (error.code == 11000) {
-            req.flash('danger',`Category name '${req.body.name}' already exist!`);
+            req.flash('danger', `Category name '${req.body.name}' already exist!`);
             res.redirect(`/admin/category/edit/${req.params.id}`);
         } else if (error.name === 'CastError') {
-            req.flash('danger',`Category not found!`);
+            req.flash('danger', `Category not found!`);
             res.redirect('/admin/category');
         } else {
             res.send(error.message);
             console.log(error);
         }
-    }   
+    }
 });
 
 // GET delete category
-router.get("/delete/:id", checkAdmin, async (req,res)=>{
+router.get("/delete/:id", checkAdmin, async (req, res) => {
     try {
         const id = req.params.id;
         const cat = await Category.findByIdAndRemove(id);
@@ -189,11 +189,11 @@ router.get("/delete/:id", checkAdmin, async (req,res)=>{
         fs.remove(image, function (err) {
             if (err) { console.log(err); }
         })
-        req.flash('success',`Category Deleted successfully`);
+        req.flash('success', `Category Deleted successfully`);
         res.redirect('/admin/category')
     } catch (error) {
         if (error.name === 'CastError' || error.name === 'TypeError') {
-            req.flash('danger',`Category not found!`);
+            req.flash('danger', `Category not found!`);
             res.redirect('/admin/category');
         } else {
             console.log(error);
@@ -202,5 +202,4 @@ router.get("/delete/:id", checkAdmin, async (req,res)=>{
     }
 });
 
-//exports
 module.exports = router;

@@ -6,7 +6,7 @@ const checkStore = function (req, res, next) {
     if (cookie) {
         Vendor.findById(cookie, function (err, vendor) {
             if (err) {
-                console.log("ERROR: "+err.message);
+                console.log("ERROR: " + err.message);
                 // req.flash('danger','An error occoured!');
                 return res.redirect('/store');
             }

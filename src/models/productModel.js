@@ -1,9 +1,9 @@
-const mongoose = require('mongoose'); 
+const mongoose = require('mongoose');
 
-const productSchema = new mongoose.Schema ({
+const productSchema = new mongoose.Schema({
     category: {
         type: String,
-        required:true
+        required: true
     },
     subcategory: {
         type: String,
@@ -13,11 +13,11 @@ const productSchema = new mongoose.Schema ({
     },
     productname: {
         type: String,
-        required:true
+        required: true
     },
     type: {
         type: String,
-        required:true
+        required: true
     },
     productweight: {
         type: String,
@@ -30,7 +30,7 @@ const productSchema = new mongoose.Schema ({
     },
     saleprice: {
         type: String,
-        required:true
+        required: true
     },
     totalprice: {
         type: String,
@@ -39,10 +39,10 @@ const productSchema = new mongoose.Schema ({
         type: String
     },
     title: {
-        type:String
+        type: String
     },
     description: {
-        type:String
+        type: String
     },
     featured: {
         type: Boolean,

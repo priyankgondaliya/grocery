@@ -9,20 +9,20 @@ const Cart = require('../models/cartModel');
 const checkStore = require('../middleware/selectedStore');
 
 // GET wishlist
-router.get("/", checkUser, checkStore, async (req,res)=>{
+router.get("/", checkUser, checkStore, async (req, res) => {
     if (!req.user) {
         req.session.redirectToUrl = req.originalUrl;
         return res.redirect('/signup');
     }
     req.session.redirectToUrl = req.originalUrl;
-    var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store});
+    var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
     var cartLength = cart.products.length;
     const wishlist = req.user.wishlist;
     let items = [];
     for (let i = 0; i < wishlist.length; i++) {
-        let p = await Product.findOne({_id: wishlist[i], vendor: req.store});
+        let p = await Product.findOne({ _id: wishlist[i], vendor: req.store });
         if (p == null) {
-            wishlist.splice(i,1);
+            wishlist.splice(i, 1);
         } else {
             items.push(p);
         }
@@ -37,8 +37,8 @@ router.get("/", checkUser, checkStore, async (req,res)=>{
 });
 
 // GET add wishlist
-router.get("/add/:id", checkUser, async (req,res)=>{
-    if(!req.user){
+router.get("/add/:id", checkUser, async (req, res) => {
+    if (!req.user) {
         return res.redirect('/signup');
     }
     try {
@@ -67,7 +67,7 @@ router.get("/add/:id", checkUser, async (req,res)=>{
 });
 
 // GET remove wishlist api
-router.get("/remove/:id", checkUser, async (req,res)=>{
+router.get("/remove/:id", checkUser, async (req, res) => {
     if (!req.user) {
         return res.redirect('/signup');
     }
@@ -94,8 +94,8 @@ router.get("/remove/:id", checkUser, async (req,res)=>{
 });
 
 // GET add wishlist api
-router.get("/api/add/:id", checkUser, async (req,res)=>{
-    if(!req.user){
+router.get("/api/add/:id", checkUser, async (req, res) => {
+    if (!req.user) {
         return res.json({ status: "fail" })
     }
     try {
@@ -122,7 +122,7 @@ router.get("/api/add/:id", checkUser, async (req,res)=>{
 });
 
 // GET remove wishlist api
-router.get("/api/remove/:id", checkUser, async (req,res)=>{
+router.get("/api/remove/:id", checkUser, async (req, res) => {
     if (!req.user) {
         return res.json({ status: "fail" })
     }
