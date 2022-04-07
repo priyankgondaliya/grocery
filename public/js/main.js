@@ -548,6 +548,8 @@
                 var qty = parseInt($(this).parent().find('#qty').val())
                 var total = price * qty
                 $(this).parent().parent().parent().find('.total').html(`&#8377; ${total}`);
+                $(this).parent().parent().find('#stockErr').attr('hidden','true');
+                $(this).next().next().show();
             } else {
                 // remove
                 $(this).parent().parent().parent().remove();
@@ -567,13 +569,19 @@
         $('.btn-num-product-up').on('click', function(){
             var numProduct = Number($(this).prev().val());
             var id = $(this).parent().find('#id').val();
-            $(this).prev().val(numProduct + 1);
-            var price = parseFloat($(this).parent().parent().parent().find('#price').text())
-            var qty = parseInt($(this).parent().find('#qty').val())
-            var total = price * qty
-            $(this).parent().parent().parent().find('.total').html(`&#8377; ${total}`);
+            var thisbtn = this;
             $.get(`/cart/update/${id}?action=add`, function(data, status){
-                // console.log("request sent");
+                console.log(status);
+                if (data.status == 'fail') {
+                    $(thisbtn).parent().parent().find('#stockErr').removeAttr('hidden');
+                    $(thisbtn).hide();
+                } else {
+                    $(thisbtn).prev().val(numProduct + 1);
+                    var price = parseFloat($(thisbtn).parent().parent().parent().find('#price').text())
+                    var qty = parseInt($(thisbtn).parent().find('#qty').val())
+                    var total = price * qty
+                    $(thisbtn).parent().parent().parent().find('.total').html(`&#8377; ${total}`);
+                }
             });
             const array = document.getElementsByClassName("total");
             let grandTotal = 0;

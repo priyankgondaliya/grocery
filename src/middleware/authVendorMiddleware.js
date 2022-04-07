@@ -22,10 +22,14 @@ const checkVendor = function (req, res, next) {
                         req.flash('danger', 'Please Login as Vendor first!');
                         return res.redirect('/vendor/login');
                     }
-                    // if (vendor.status != 'approved') {
-                    //     req.flash('danger','Waiting for approval!');
-                    //     return res.redirect('/vendor/login');
-                    // }
+                    if (vendor.status == 'Rejected') {
+                        req.flash('danger', 'Sorry! You are rejected.');
+                        return res.redirect('/vendor/login');
+                    }
+                    if (vendor.status != 'Approved') {
+                        req.flash('danger', 'Waiting for approval!');
+                        return res.redirect('/vendor/login');
+                    }
                     req.vendor = vendor;
                     next();
                 });

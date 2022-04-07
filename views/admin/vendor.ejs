@@ -47,7 +47,19 @@
                                                 <td>
                                                     <a href="/admin/vendor/edit/<%= vendors[i].id %>"><i class="icon-pencil" style="font-size: 120%;"></i></a>
                                                 </td>
-                                                <td>Approved</td>
+                                                <td>
+                                                    <% if (!vendors[i].status) { %>
+                                                        <div style="display: flex; flex-direction: row;">
+                                                            <a href="/admin/vendor/<%= vendors[i].id %>/approve" class="btn btn-success m-r-5">Approve</a>
+                                                            <a href="/admin/vendor/<%= vendors[i].id %>/reject" class="btn btn-danger" onclick="return confirm('Are you sure you want to Reject this vendor?')">Reject</a>
+                                                        </div>
+                                                    <% } else { %>
+                                                        <!-- <div style="width: max-content; margin-top: 10px;">
+                                                            <span style="padding: 5px 10px; background: #ADD8E6; color: #0283cc; border-radius: 5px; font-size: 14px;">Approved</span>
+                                                        </div> -->
+                                                        <%= vendors[i].status %>
+                                                    <% } %>
+                                                </td>
                                                 <td>
                                                     <a href="/admin/vendor/products/<%= vendors[i].id %>"><i class="icon-eye" style="font-size: 120%;"></i></a>
                                                 </td>

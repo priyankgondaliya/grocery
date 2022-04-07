@@ -33,12 +33,20 @@ admin: products per vendor page
 reduce quantity from stock at order
 promocode at checkout view
 promocode api
-
-REPORT:
 promocode validation
 apply promo and show discount and new price
-
+update instead of adding qty
 Error: when user login and session cart is undefined
+vendor order status
+User side cancel order
+Admin: approve or reject vendor
+Vendor: Only Approved vendors can login
+Only approved vendors on select store
+
+REPORT:
+remove promocode
+out of stock
+
 Handle error: wrong id by user
 remove a product from cart if its deleted
 Vendor: only show logged vendor's products and offers
@@ -50,10 +58,6 @@ pagination in subcategory
 do not store price in cart
 Error: create cart when select store
 Bug: user can see others order
-update instead of adding qty
 
 DOing:
-remove promocode
-vendor order status
-out of stock
 razorpay

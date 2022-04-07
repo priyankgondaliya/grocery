@@ -67,7 +67,23 @@ router.post('/promo', checkUser, checkStore, async (req, res) => {
         cart.promo = promo.id;
         cart.discount = discount;
         cart.save();
-        res.send({ status: 'success', promo: promo.promo, discount, total: cart.total - discount });
+        res.send({ status: 'success', promo: promo.promo, discount, total: cart.total - discount + parseFloat(req.deliverycharge) });
+    } catch (error) {
+        res.status(400).send(error);
+        console.log(error);
+    }
+})
+
+// POST remove promo
+router.get('/promo/remove', checkUser, checkStore, async (req, res) => {
+    try {
+        // const code = req.body.code;
+        // const promo = await Promo.findOne({ promo: code });
+        const cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
+        cart.promo = undefined;
+        cart.discount = 0;
+        cart.save();
+        res.send({ status: 'success', total: cart.total + parseFloat(req.deliverycharge) });
     } catch (error) {
         res.status(400).send(error);
         console.log(error);

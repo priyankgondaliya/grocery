@@ -207,7 +207,7 @@ router.get("/order", checkVendor, async (req, res) => {
             payableamount: orders[i].payableamount,
             discountamount: orders[i].discountamount,
             paymentmode: orders[i].paymentmode,
-            // status: orders[i].status,
+            status: orders[i].status,
             date: formatDate(new Date(orders[i].orderdate))
         }
         updated.push(e)
@@ -218,6 +218,30 @@ router.get("/order", checkVendor, async (req, res) => {
         orders: updated
     });
 });
+
+// GET order accept/reject
+router.get("/order/:id/:action", checkVendor, async (req, res) => {
+    try {
+        const id = req.params.id;
+        const action = req.params.action;
+        if (action == 'accept') {
+            await Order.findByIdAndUpdate( id, { status: 'Accepted' });
+        } else if (action == 'reject') {
+            await Order.findByIdAndUpdate( id, { status: 'Rejected' });
+        } else {
+            req.flash('danger', 'Invalid action!');
+        }
+        res.redirect('/vendor/order');
+    } catch (error) {
+        console.log(error.message);
+        if (error.name === 'CastError' || error.name === 'TypeError') {
+            req.flash('danger', `Order not found!`);
+            res.redirect('/account');
+        } else {
+            res.send(error);
+        }
+    }
+})
 
 // GET order detail
 router.get("/order/detail/:id", checkVendor, async (req, res) => {

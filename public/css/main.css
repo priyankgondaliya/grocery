@@ -5338,3 +5338,13 @@ ul#searchResult > li {
 .new_banner_wrapper button {
   order: initial;
 }
+
+.outofstock {
+  text-align: center;
+  width: inherit;
+  margin: 0 15px;
+  font-size: larger;
+  padding: 5px 10px;
+  background-color: red;
+  color: white;
+}

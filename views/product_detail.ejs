@@ -61,11 +61,15 @@
 						</p>
 
 						<div class="flex-w flex-m p-t-55 p-b-30">
-							<a href="/cart/add/<%= product.id %>">
-								<button class="flex-c-m txt-s-103 cl0 bg10 size-a-2 hov-btn2 trans-04 m-b-30">
-									Add to cart
-								</button>
-							</a>
+							<% if (product.qtyweight < 1) { %>
+								<div class="outofstock" style="margin: 0;">Out of stock</div>
+							<% } else { %>
+								<a href="/cart/add/<%= product.id %>">
+									<button class="flex-c-m txt-s-103 cl0 bg10 size-a-2 hov-btn2 trans-04 m-b-30">
+										Add to cart
+									</button>
+								</a>
+							<% } %>
 						</div>
 
 						<div class="txt-s-107 p-b-6">

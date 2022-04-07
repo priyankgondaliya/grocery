@@ -67,8 +67,26 @@ router.post('/', checkUser, checkStore, async (req, res) => {
     }
 })
 
+// GET cancel order
+router.get('/cancel/:id', checkUser, async (req, res) => {
+    try {
+        const id = req.params.id;
+        await Order.findByIdAndUpdate(id, { status: 'Cancelled' });
+        res.redirect('/account');
+    } catch (error) {
+        console.log(error.message);
+        if (error.name === 'CastError' || error.name === 'TypeError') {
+            req.flash('danger', `Order not found!`);
+            res.redirect('/account');
+            // res.redirect('/404');
+        } else {
+            res.send(error)
+        }
+    }
+})
+
 // GET order detail
-router.get('/detail/:id', checkUser, checkStore, async function (req, res) {
+router.get('/detail/:id', checkUser, checkStore, async (req, res) => {
     try {
         if (req.user) {
             var cart = await Cart.findOne({ userId: req.user.id });

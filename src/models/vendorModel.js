@@ -50,9 +50,9 @@ const vendorSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    approved: {
-        type: Boolean,
-        default: false
+    status: {
+        type: String,
+        enum: ['Approved', 'Rejected'],
     },
     coords: {
         lat: {

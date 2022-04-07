@@ -37,6 +37,9 @@
 					<% }) %>
 				</div>
 			<% } %>
+			<div class="w-75 p-3" style="margin: auto;">
+				<%- messages('messages', locals) %>
+			</div>
 			<!-- Tab03 -->
 			<div class="tab03">
 				<div class="row">
@@ -121,17 +124,35 @@
 												<th>Total</th>
 												<th>Pay With</th>
 												<th>Detail</th>
+												<th>Cancel Order</th>
 											</tr>
 										</thead>
 										<tbody>
 											<% for( let i = 0; i < orders.length; i++ ) { %>
 												<tr>
-													<td><%= i+1 %></td>
-													<td><%= orders[i].date %></td>
-													<td>#</td>
-													<td>&#8377; <%= orders[i].totalamount %></td>
-													<td><%= orders[i].paymentmode %></td>
-													<td><a href="/order/detail/<%= orders[i].id %>"><i class="fa fa-info" style="color: black;"></i></a></td>
+													<td style="vertical-align: middle;"><%= i+1 %></td>
+													<td style="vertical-align: middle;"><%= orders[i].date %></td>
+													<td style="vertical-align: middle;">
+														<% if (orders[i].status == 'Pending' || orders[i].status == 'Processing') { %>
+															<div class="text-warning"><%= orders[i].status %></div>
+														<% } else if (orders[i].status == 'Accepted' || orders[i].status == 'Completed') { %>
+															<div class="text-success"><%= orders[i].status %></div>
+														<% } else if (orders[i].status == 'Rejected' || orders[i].status == 'Cancelled') { %>
+															<div class="text-danger"><%= orders[i].status %></div>
+														<% } %>
+													</td style="vertical-align: middle;">
+													<td style="vertical-align: middle;">&#8377; <%= orders[i].totalamount %></td>
+													<td style="vertical-align: middle;"><%= orders[i].paymentmode %></td>
+													<td style="vertical-align: middle;"><a href="/order/detail/<%= orders[i].id %>"><i class="fa fa-info" style="color: black;"></i></a></td>
+													<td style="vertical-align: middle;">
+														<% if (orders[i].status == 'Cancelled' || orders[i].status == 'Rejected') { %>
+															<div class="text-danger">Order Cancelled</div>
+														<% } else if (orders[i].status == 'Completed') { %>
+															<div class="text-success">Order Completed</div>
+														<% } else { %>
+															<a href="/order/cancel/<%= orders[i].id %>" class="btn btn-danger" onclick="return confirm('Are you sure want to cancel the order?')">Cancel</a>
+														<% } %>
+													</td>
 												</tr>
 											<% } %>
 										</tbody>

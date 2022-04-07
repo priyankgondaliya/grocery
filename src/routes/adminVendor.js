@@ -96,7 +96,7 @@ router.post("/add", checkAdmin, upload.fields([
             address: req.body.address,
             deliverycharge: req.body.deliverycharge,
             deliveryrange: req.body.deliveryrange,
-            approved: true,
+            status: 'Approved',
             coords: {
                 lat: req.body.lat,
                 lng: req.body.lng
@@ -252,6 +252,31 @@ router.get("/products/:id", checkAdmin, async (req, res) => {
         res.send(error);
     }
 });
+
+// GET vendor approve/reject
+router.get("/:id/:action", checkAdmin, async (req, res) => {
+    try {
+        const id = req.params.id;
+        const action = req.params.action;
+        if (action == 'approve') {
+            await Vendor.findByIdAndUpdate(id, { status: 'Approved' });
+        } else if (action == 'reject') {
+            await Vendor.findByIdAndUpdate(id, { status: 'Rejected' });
+        } else {
+            req.flash('danger', 'Invalid action!');
+        }
+        req.flash('success', `Vendor updated successfully.`);
+        res.redirect('/admin/vendor');
+    } catch (error) {
+        console.log(error.message);
+        if (error.name === 'CastError' || error.name === 'TypeError') {
+            req.flash('danger', `Vendor not found!`);
+            res.redirect('/admin/vendor');
+        } else {
+            res.send(error);
+        }
+    }
+})
 
 // GET delete vendor
 router.get("/delete/:id", checkAdmin, async (req, res) => {

@@ -160,10 +160,12 @@ router.get("/add/:product", checkUser, checkStore, async (req, res) => {
     }
 })
 
-//GET update product
+// GET update cart
 router.get('/update/:product', checkUser, checkStore, async (req, res) => {
     // console.log(req.url);
     try {
+        const product = await Product.findById(req.params.product);
+        const totalqty = product.qtyweight;
         if (req.user) {
             var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
             var id = req.params.product;
@@ -173,7 +175,11 @@ router.get('/update/:product', checkUser, checkStore, async (req, res) => {
                 if (cart.products[i].productId == id) {
                     switch (action) {
                         case "add":
-                            cart.products[i].quantity++;
+                            if (totalqty > cart.products[i].quantity) {
+                                cart.products[i].quantity++;
+                            } else {
+                                return res.send({status: 'fail', totalqty});
+                            }
                             break;
                         case "remove":
                             cart.products[i].quantity--;
@@ -202,7 +208,11 @@ router.get('/update/:product', checkUser, checkStore, async (req, res) => {
                 if (cart[i].productId == id) {
                     switch (action) {
                         case "add":
-                            cart[i].quantity++;
+                            if (totalqty > cart.quantity) {
+                                cart.quantity++;
+                            } else {
+                                return res.send({status: 'fail', totalqty});
+                            }
                             break;
                         case "remove":
                             cart[i].quantity--;
@@ -221,7 +231,8 @@ router.get('/update/:product', checkUser, checkStore, async (req, res) => {
                 }
             }
         }
-        res.redirect('/cart');
+        // res.redirect('/cart');
+        res.send({status: 'success'});
     } catch (error) {
         console.log(error);
         res.send(error)

@@ -86,7 +86,7 @@
 
 			<!-- enter code -->
 			<div class="p-t-17 p-b-70">
-				<form action="javascript:void(0)">
+				<form action="javascript:void(0)" autocomplete="off">
 					<div class="txt-s-101 txt-center">
 						<span class="cl3">
 							Have a coupon?
@@ -331,7 +331,7 @@
 							</span>
 						</div>
 						<% if (promo) { %>
-							<div class="flex-w flex-m txt-m-103 bo-b-1 bocl15 p-tb-23">
+							<div id="discountDiv" class="flex-w flex-m txt-m-103 bo-b-1 bocl15 p-tb-23">
 								<span class="size-w-61 cl6">
 									Discount (<%= promo.promo %>)
 								</span>
@@ -731,7 +731,6 @@
 					data: {code},
 					dataType: 'json',
 					success: function(data) {
-						console.log(data);
 						if (data.status == 'fail') {
 							swal({
 								icon: 'error',
@@ -748,7 +747,7 @@
 							`);
 							// add new price
 							$('#after').after(`
-								<div class="flex-w flex-m txt-m-103 bo-b-1 bocl15 p-tb-23">
+								<div id="discountDiv" class="flex-w flex-m txt-m-103 bo-b-1 bocl15 p-tb-23">
 									<span class="size-w-61 cl6">
 										Discount (${data.promo})
 									</span>
@@ -770,6 +769,31 @@
 					}
 				})
 			}
+		}
+		function removeCode() {
+			$.ajax({
+					url: '/checkout/promo/remove',
+					method: 'GET',
+					success: function(data) {
+						$('#promo').val('');
+						$('#promo').removeAttr('disabled');
+						$('#promo_btn').replaceWith(`
+							<button id="promo_btn" class="bg10 size-a-36 txt-s-105 cl0 p-rl-15 trans-04 hov-btn2 mt-4 mt-sm-0 w-full-sm" onclick="checkCode()">
+								Apply coupon
+							</button>
+						`);
+						// add new price
+						$('#discountDiv').remove();
+						$('#setTotal').text('₹ '+ data.total);
+					},
+					error: function() {
+						swal({
+							icon: 'error',
+							title: 'Opps...',
+							text: 'An error occured!'
+						})
+					}
+				})
 		}
 	</script>
 <!--===============================================================================================-->

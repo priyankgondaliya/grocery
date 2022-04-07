@@ -36,7 +36,7 @@ router.get("/account", checkUser, checkStore, async (req, res) => {
             // totalamount: orders[i].totalamount,
             totalamount: orders[i].payableamount,
             paymentmode: orders[i].paymentmode,
-            // status: orders[i].status,
+            status: orders[i].status,
             date: formatDate(new Date(orders[i].orderdate))
         }
         updated.push(e)

@@ -22,7 +22,7 @@ router.post('/nearstore', async (req, res) => {
     const lat = parseFloat(req.body.lat);
     const lng = parseFloat(req.body.lng);
 
-    const vendors = await Vendor.find();
+    const vendors = await Vendor.find({ status: 'Approved' });
     let nearStores = [];
     for (let i = 0; i < vendors.length; i++) {
         let point1 = new GeoPoint(lat, lng);

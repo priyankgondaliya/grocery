@@ -27,7 +27,7 @@ const checkUser = require("./middleware/authMiddleware");
 const { json } = require("body-parser");
 Contact.findOne({}, function (err, contact) {
     if (err) {
-        console.log(err);
+        console.log(err.message);
     } else {
         app.locals.contact = contact;
     }
