@@ -27,7 +27,7 @@ router.get("/", checkUser, checkStore, async (req, res) => {
         var myCart = [];
         var cartLength = 0;
         const storeId = req.store;
-        if (typeof req.session.cart == undefined) {
+        if (req.session.cart == undefined) {
             req.session.cart = {};
             req.session.cart[storeId] = [];
         } else {
@@ -166,6 +166,7 @@ router.get('/update/:product', checkUser, checkStore, async (req, res) => {
     try {
         const product = await Product.findById(req.params.product);
         const totalqty = product.qtyweight;
+        // console.log(product);
         if (req.user) {
             var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
             var id = req.params.product;
@@ -208,6 +209,8 @@ router.get('/update/:product', checkUser, checkStore, async (req, res) => {
                 if (cart[i].productId == id) {
                     switch (action) {
                         case "add":
+                            console.log(totalqty);
+                            console.log(cart.quantity);
                             if (totalqty > cart.quantity) {
                                 cart.quantity++;
                             } else {
@@ -231,13 +234,101 @@ router.get('/update/:product', checkUser, checkStore, async (req, res) => {
                 }
             }
         }
-        // res.redirect('/cart');
-        res.send({status: 'success'});
+        res.redirect('/cart');
     } catch (error) {
         console.log(error);
         res.send(error)
     }
 });
+
+// GET update cart api
+router.get('/api/update/:product', checkUser, checkStore, async (req, res) => {
+    // console.log(req.url);
+    try {
+        const product = await Product.findById(req.params.product);
+        const totalqty = product.qtyweight;
+        if (req.user) {
+            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
+            var id = req.params.product;
+            var action = req.query.action;
+
+            for (var i = 0; i < cart.products.length; i++) {
+                if (cart.products[i].productId == id) {
+                    switch (action) {
+                        case "add":
+                            if (totalqty > cart.products[i].quantity) {
+                                cart.products[i].quantity++;
+                                res.send({status: 'success', totalqty: cart.products[i].quantity});
+                            } else {
+                                return res.send({status: 'fail'});
+                            }
+                            break;
+                        case "remove":
+                            cart.products[i].quantity--;
+                            if (cart.products[i].quantity < 1) {
+                                cart.products.splice(i, 1);
+                            }
+                            res.send({status: 'success'});
+                            break;
+                        case "clear":
+                            cart.products.splice(i, 1);
+                            res.send({status: 'success'});
+                            break;
+                        default:
+                            console.log('Update problem');
+                            res.send({status: 'success'});
+                            break;
+                    }
+                    break;
+                }
+            }
+            await cart.save();
+            // res.send({status: 'success'});
+        } else {
+            var storeId = req.store;
+            var cart = req.session.cart[storeId];
+            var id = req.params.product;
+            var action = req.query.action;
+
+            for (var i = 0; i < cart.length; i++) {
+                if (cart[i].productId == id) {
+                    switch (action) {
+                        case "add":
+                            if (totalqty > cart[i].quantity) {
+                                cart[i].quantity++;
+                                res.send({status: 'success', totalqty: cart[i].quantity});
+                            } else {
+                                return res.send({status: 'fail', totalqty});
+                            }
+                            break;
+                        case "remove":
+                            cart[i].quantity--;
+                            if (cart[i].quantity < 1) {
+                                cart.splice(i, 1);
+                            }
+                            res.send({status: 'success'});
+                            break;
+                        case "clear":
+                            cart.splice(i, 1);
+                            res.send({status: 'success'});
+                            break;
+                        default:
+                            console.log('Update problem');
+                            res.send({status: 'success'});
+                            break;
+                    }
+                    break;
+                }
+            }
+            // res.send({status: 'success'});
+        }
+        // res.send({status: 'success'});
+    } catch (error) {
+        console.log(error);
+        res.send(error)
+    }
+});
+
 
 // GET clear cart
 router.get('/clear', checkUser, checkStore, async (req, res) => {

@@ -539,7 +539,7 @@
         $('.btn-num-product-down').on('click', function(){
             var numProduct = Number($(this).next().val());
             var id = $(this).parent().find('#id').val();
-            $.get(`/cart/update/${id}?action=remove`, function(data, status){
+            $.get(`/cart/api/update/${id}?action=remove`, function(data, status){
                 // console.log("request sent");
             });
             if(numProduct > 1){
@@ -570,17 +570,26 @@
             var numProduct = Number($(this).prev().val());
             var id = $(this).parent().find('#id').val();
             var thisbtn = this;
-            $.get(`/cart/update/${id}?action=add`, function(data, status){
-                console.log(status);
-                if (data.status == 'fail') {
-                    $(thisbtn).parent().parent().find('#stockErr').removeAttr('hidden');
-                    $(thisbtn).hide();
+            $.get(`/cart/api/update/${id}?action=add`, function(data, status){
+                if (status == 'success') {
+                    // console.log(data);
+                    if (data.status == 'fail') {
+                        $(thisbtn).parent().parent().find('#stockErr').removeAttr('hidden');
+                        $(thisbtn).hide();
+                    } else {
+                        // $(thisbtn).prev().val(numProduct + 1);
+                        $(thisbtn).prev().val(data.totalqty);
+                        var price = parseFloat($(thisbtn).parent().parent().parent().find('#price').text())
+                        var qty = parseInt($(thisbtn).parent().find('#qty').val())
+                        var total = price * qty
+                        $(thisbtn).parent().parent().parent().find('.total').html(`&#8377; ${total}`);
+                    }
                 } else {
-                    $(thisbtn).prev().val(numProduct + 1);
-                    var price = parseFloat($(thisbtn).parent().parent().parent().find('#price').text())
-                    var qty = parseInt($(thisbtn).parent().find('#qty').val())
-                    var total = price * qty
-                    $(thisbtn).parent().parent().parent().find('.total').html(`&#8377; ${total}`);
+                    swal({
+                        icon: 'error',
+                        title: 'Opps...',
+                        text: 'An error occured!'
+                    })
                 }
             });
             const array = document.getElementsByClassName("total");
