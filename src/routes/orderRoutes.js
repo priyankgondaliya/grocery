@@ -1,5 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const Razorpay = require('razorpay')
+
+const razorpay = new Razorpay({
+    key_id: process.env.RAZOR_PAY_KEY_ID,
+    key_secret: process.env.RAZOR_PAY_KEY_SECRET,
+})
 
 const checkUser = require('../middleware/authMiddleware');
 const checkStore = require('../middleware/selectedStore');
@@ -22,7 +28,7 @@ router.post('/', checkUser, checkStore, async (req, res) => {
         // create order
         const user = req.user;
         const size = Object.keys(user.address).length;
-        if (size < 1) {
+        if (size < 7 || Object.values(user.address).includes(undefined)) {
             req.flash('danger', 'Address is required!');
             return res.redirect('/checkout');
         }
@@ -65,6 +71,38 @@ router.post('/', checkUser, checkStore, async (req, res) => {
         console.log(error);
         res.redirect('/404');
     }
+})
+
+// GET order razor
+router.post('/razor', checkUser, checkStore, async (req, res) => {
+    const user = req.user;
+    const size = Object.keys(user.address).length;
+    if (size < 7 || Object.values(user.address).includes(undefined)) {
+        return res.send({status: 'fail', msg: 'Address is required!'});
+    }
+    const cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
+    const discount = cart.discount ? cart.discount : 0;
+    const total = cart.total + parseFloat(req.deliverycharge) - discount;
+    let options = {
+        amount: total * 100,
+        currency: "INR",
+    };
+    razorpay.orders.create(options, function (err, order) {
+        res.json(order)
+    })
+})
+
+router.post('/is-order-complete', (req, res) => {
+    razorpay.payments.fetch(req.body.razorpay_payment_id).then((paymentDocument) => {
+        // console.log(paymentDocument);
+        if (paymentDocument.status == 'captured') {
+            // create order
+            // console.log('wow');
+            res.redirect('/')
+        } else {
+            res.redirect('/account')
+        }
+    })
 })
 
 // GET cancel order

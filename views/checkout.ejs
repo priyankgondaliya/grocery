@@ -507,9 +507,9 @@
 			var orderForm = document.getElementById('orderForm');
 			var paymentMode = document.querySelector('input[name="pay"]:checked').value;
 			if (validateReturn) {
-				console.log("Validate returned true");
 				if (paymentMode == 'razorpay') {
-					orderForm.setAttribute("action","/#");
+					// orderForm.setAttribute("action","/#");
+					razor()
 					return false
 				} else {
 					orderForm.setAttribute("action","/order");
@@ -796,6 +796,49 @@
 				})
 		}
 	</script>
+	<!-- razorpay -->
+	<!-- <script src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+	<script>
+		function razor() {
+			axios.post('/order/razor').then((info) => {
+				if (info.data.status == 'fail') {
+					swal({
+						icon: 'error',
+						title: 'Opps...',
+						text: info.data.msg
+					})
+				} else {
+					var options = {
+						"key": "rzp_test_NMyPMTlTRVnLis",
+						"amount": "50000",
+						"currency": "INR",
+						"name": "Grocery",
+						"description": "Test Transaction",
+						"image": "/images/icons/favicon.png",
+						"order_id": info.data.id,
+						"callback_url": "/order/is-order-complete",
+						// "redirect": true,
+						"theme": {
+							"color": "#81B03F"
+						}
+					};
+					var rzp1 = new Razorpay(options);
+					rzp1.open();
+					// rzp1.on('payment.failed', function (response){
+					// 	console.log("Payment failed");
+					// 	// alert(response.error.code);
+					// 	swal({
+					// 		icon: 'error',
+					// 		title: 'Opps...',
+					// 		text: response.error.description
+					// 	})
+					// })
+				}
+			})
+		}
+    </script>
 <!--===============================================================================================-->
 	<script src="/vendor/animsition/js/animsition.min.js"></script>
 <!--===============================================================================================-->
