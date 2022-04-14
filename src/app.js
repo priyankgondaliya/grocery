@@ -24,7 +24,12 @@ app.locals.errors = null;
 //get all pages to pass to header.ejs
 const Contact = require('./models/contactDetailModel');
 const checkUser = require("./middleware/authMiddleware");
-const { json } = require("body-parser");
+const bodyParser = require("body-parser");
+app.use(bodyParser.json({
+    verify: (req, res, buf) => {
+        req.rawBody = buf
+    }
+}))
 Contact.findOne({}, function (err, contact) {
     if (err) {
         console.log(err.message);

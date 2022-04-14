@@ -380,7 +380,7 @@
             });
             $('#search').autocomplete({
                 source: function (req, res) {
-                    if (req.term.trim().length == 0) {
+                    if (req.term.replace('/','').replace('\\','').trim().length == 0) {
                         $("#searchResult").empty();
                     } else {
                         $.ajax({

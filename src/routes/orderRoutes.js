@@ -1,3 +1,5 @@
+const bodyParser = require('body-parser');
+const { application } = require('express');
 const express = require('express');
 const router = express.Router();
 const Razorpay = require('razorpay')
@@ -6,6 +8,9 @@ const razorpay = new Razorpay({
     key_id: process.env.RAZOR_PAY_KEY_ID,
     key_secret: process.env.RAZOR_PAY_KEY_SECRET,
 })
+
+const Stripe = require('stripe');
+const stripe = Stripe(process.env.STRIPE_KEY_SECRET);
 
 const checkUser = require('../middleware/authMiddleware');
 const checkStore = require('../middleware/selectedStore');
@@ -48,7 +53,8 @@ router.post('/', checkUser, checkStore, async (req, res) => {
             product.save();
             products.push(pro);
         }
-        var payableamount = cart.total + parseFloat(req.deliverycharge) - cart.discount;
+        const discount = cart.discount ? cart.discount : 0;
+        const payableamount = cart.total + parseFloat(req.deliverycharge) - discount;
         // check promo
         const order = new Order({
             vendor: req.store,
@@ -56,7 +62,7 @@ router.post('/', checkUser, checkStore, async (req, res) => {
             useraddress: address,
             deliverycharge: req.deliverycharge,
             totalamount: cart.total,
-            discountamount: cart.discount,
+            discountamount: discount,
             payableamount,
             products,
             paymentmode: req.body.pay
@@ -73,12 +79,13 @@ router.post('/', checkUser, checkStore, async (req, res) => {
     }
 })
 
+// razor
 // GET order razor
 router.post('/razor', checkUser, checkStore, async (req, res) => {
     const user = req.user;
     const size = Object.keys(user.address).length;
     if (size < 7 || Object.values(user.address).includes(undefined)) {
-        return res.send({status: 'fail', msg: 'Address is required!'});
+        return res.send({ status: 'fail', msg: 'Address is required!' });
     }
     const cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
     const discount = cart.discount ? cart.discount : 0;
@@ -92,7 +99,20 @@ router.post('/razor', checkUser, checkStore, async (req, res) => {
     })
 })
 
+// POST is complete
 router.post('/is-order-complete', (req, res) => {
+    let body = req.body.razorpay_order_id + "|" + req.body.razorpay_payment_id;
+    var crypto = require("crypto");
+    var expectedSignature = crypto.createHmac('sha256', process.env.RAZOR_PAY_KEY_SECRET)
+        .update(body.toString())
+        .digest('hex');
+    console.log("sig received ", req.body.razorpay_signature);
+    console.log("sig generated ", expectedSignature);
+    // var response = { "signatureIsValid": "false" }
+    if (expectedSignature === req.body.razorpay_signature) {
+        // response = { "signatureIsValid": "true" }
+    }
+
     razorpay.payments.fetch(req.body.razorpay_payment_id).then((paymentDocument) => {
         // console.log(paymentDocument);
         if (paymentDocument.status == 'captured') {
@@ -104,6 +124,74 @@ router.post('/is-order-complete', (req, res) => {
         }
     })
 })
+
+// stripe
+// GET order stripe
+router.post('/stripe', checkUser, checkStore, async (req, res) => {
+    try {
+        const user = req.user;
+        const size = Object.keys(user.address).length;
+        if (size < 7 || Object.values(user.address).includes(undefined)) {
+            return res.send({ status: 'fail', msg: 'Address is required!' });
+        }
+        const cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
+        const discount = cart.discount ? cart.discount : 0;
+        const total = cart.total + parseFloat(req.deliverycharge) - discount;
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount: total * 100,
+            currency: 'inr',
+            payment_method: 'pm_card_visa',
+            payment_method_types: ['card'],
+        });
+        // console.log(paymentIntent);
+        res.json({ client_secret: paymentIntent.client_secret })
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ error: error.message })
+    }
+})
+
+// webhooks
+router.post('/webhook', async (req, res) => {
+    let data, eventType;
+    // Check if webhook signing is configured.
+    if (process.env.STRIPE_WEBHOOK_SECRET) {
+        // Retrieve the event by verifying the signature using the raw body and secret.
+        let event;
+        let signature = req.headers['stripe-signature'];
+        try {
+            event = stripe.webhooks.constructEvent(
+                req.rawBody,
+                signature,
+                process.env.STRIPE_WEBHOOK_SECRET
+            );
+        } catch (err) {
+            console.log(`⚠️  Webhook signature verification failed.`);
+            console.log(err.message);
+            return res.sendStatus(400);
+        }
+        data = event.data;
+        eventType = event.type;
+    } else {
+        // Webhook signing is recommended, but if the secret is not configured in `config.js`,
+        // we can retrieve the event data directly from the request body.
+        data = req.body.data;
+        eventType = req.body.type;
+    }
+
+    if (eventType === 'payment_intent.created') {
+        console.log('💰 Payment created!');
+    }
+    if (eventType === 'payment_intent.succeeded') {
+        // Funds have been captured
+        // Fulfill any orders, e-mail receipts, etc
+        // To cancel the payment after capture you will need to issue a Refund (https://stripe.com/docs/api/refunds)
+        console.log('💰 Payment captured!');
+    } else if (eventType === 'payment_intent.payment_failed') {
+        console.log('❌ Payment failed.');
+    }
+    res.sendStatus(200);
+});
 
 // GET cancel order
 router.get('/cancel/:id', checkUser, async (req, res) => {

@@ -367,20 +367,31 @@
                         </div>
 
 						<form action="/order" id="orderForm" method="post" onsubmit="event.preventDefault(); handleOrder()">
-							<div class="bo-all-1 bocl15 p-b-25 m-b-30">
+							<div class="bo-all-1 bocl15 m-b-30">
 								<div class="flex-w flex-m bo-b-1 bocl15 p-rl-20 p-tb-16">
 									<input class="m-r-15" id="radio1" type="radio" name="pay" value="cod" checked="checked">
 									<label class="txt-m-103 cl6" for="radio1">
 										Cash on delivery
 									</label>
 								</div>
-	
-								<div class="flex-w flex-m p-rl-20 p-t-17 p-b-10">
+
+								<div class="flex-w flex-m bo-b-1 bocl15 p-rl-20 p-t-17 p-b-16">
 									<input class="m-r-15" id="radio2" type="radio" name="pay" value="razorpay">
 									<label class="txt-m-103 cl6" for="radio2">
 										Pay With Razorpay
 									</label>
 								</div>
+
+								<div class="flex-w flex-m bocl15 p-rl-20 p-t-16 p-b-10">
+									<input class="m-r-15" id="radio3" type="radio" name="pay" value="stripe">
+									<label class="txt-m-103 cl6" for="radio3">
+										Pay with Stripe
+									</label>
+								</div>
+								<div id="card-element">
+									<!-- A Stripe Element will be inserted here. -->
+								</div>
+								<div id="card-errors"></div>
 							</div>
 	
 							<button class="flex-c-m txt-s-105 cl0 bg10 size-a-21 hov-btn2 trans-04 p-rl-10">
@@ -510,6 +521,9 @@
 				if (paymentMode == 'razorpay') {
 					// orderForm.setAttribute("action","/#");
 					razor()
+					return false
+				} else if (paymentMode == 'stripe') {
+					stripeFunc()
 					return false
 				} else {
 					orderForm.setAttribute("action","/order");
@@ -796,10 +810,11 @@
 				})
 		}
 	</script>
-	<!-- razorpay -->
+	<!-- razorpay/stripe -->
 	<!-- <script src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+	<script src="https://js.stripe.com/v3/"></script>
 	<script>
 		function razor() {
 			axios.post('/order/razor').then((info) => {
@@ -812,31 +827,82 @@
 				} else {
 					var options = {
 						"key": "rzp_test_NMyPMTlTRVnLis",
-						"amount": "50000",
+						// "amount": "50000",
 						"currency": "INR",
 						"name": "Grocery",
 						"description": "Test Transaction",
 						"image": "/images/icons/favicon.png",
 						"order_id": info.data.id,
 						"callback_url": "/order/is-order-complete",
-						// "redirect": true,
 						"theme": {
 							"color": "#81B03F"
 						}
 					};
 					var rzp1 = new Razorpay(options);
 					rzp1.open();
-					// rzp1.on('payment.failed', function (response){
-					// 	console.log("Payment failed");
-					// 	// alert(response.error.code);
-					// 	swal({
-					// 		icon: 'error',
-					// 		title: 'Opps...',
-					// 		text: response.error.description
-					// 	})
-					// })
 				}
 			})
+		}
+
+		var stripe = Stripe('pk_test_51KmAsMSFDsxAPQcWMDhzB1a3zmOOzyvfhDMLkgImwlAc4Xh5Kt1UsAVXzuEKQBqR0TBMUQsT71P8s5bQADThQFT700gLx3982p');
+		var elements = stripe.elements();
+		var style = {
+			base: {
+				// Add your base input styles here. For example:
+				fontSize: '16px',
+				color: '#32325d',
+			},
+		};
+
+		let card;
+		$('input[type=radio][name=pay]').change(function() {
+			$('#card-errors').hide();
+			if (this.value == 'stripe') {
+				card = elements.create('card', { hidePostalCode: true, style: style });
+				card.mount('#card-element');
+			} else {
+				card = elements.getElement('card');
+				if (card) {
+					card.destroy();
+				}
+			}
+		});
+
+		function stripeFunc() {
+			stripe.createToken(card).then(function(result) {
+				if (result.error) {
+					// Inform the customer that there was an error.
+					$('#card-errors').show();
+					var errorElement = document.getElementById('card-errors');
+					errorElement.textContent = result.error.message;
+				} else {
+					// Send the token to your server.
+					axios.post('/order/stripe').then((res) => {
+						if (res.data) {
+							console.log(res.data);
+							stripe.confirmCardPayment(res.data.client_secret,
+							{
+							payment_method: { card },
+							// return_url: 'https://example.com/return_url'
+							}
+							).then(function(response) {
+								if (response.error) {
+									// Handle error here
+									console.log('An error occured!');
+									console.log(response.error.code);
+									console.log(response.error.message);
+								} else if (response.paymentIntent && response.paymentIntent.status === 'succeeded') {
+									// Handle successful payment 
+									console.log('amazing....')
+								}
+							});
+						} else {
+							console.log("Opps! An error occured.");
+							console.log(res);
+						}
+					})
+				}
+			});
 		}
     </script>
 <!--===============================================================================================-->
