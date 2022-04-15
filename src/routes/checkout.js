@@ -23,19 +23,29 @@ router.get("/", checkUser, checkStore, async (req, res) => {
         req.flash('success', "Cart is empty can not checkout.")
         return res.redirect('/cart');
     }
+    // let validQuantity = true;
     for (let i = 0; i < cart.products.length; i++) {
         var prod = await Product.findById(cart.products[i].productId);
         prod.quantity = cart.products[i].quantity;
+        if (prod.qtyweight < cart.products[i].quantity) {
+            req.flash('danger', `Only ${prod.qtyweight} ${prod.productname} available.`);
+            return res.redirect('/cart');
+        }
         myCart.push(prod);
     }
     myCart.discount = cart.discount ? cart.discount : 0;
     myCart.total = cart.total;
     const promo = cart.promo ? await Promo.findById(cart.promo) : null;
     const total = cart.total + parseFloat(req.deliverycharge) - myCart.discount;
+    let isAddressValid = true;
+    if (Object.keys(req.user.address).length < 7 || Object.values(req.user.address).includes(undefined)) {
+        isAddressValid = false;
+    }
     res.status(201).render("checkout", {
         title: 'Checkout',
         user: req.user,
         cartLength,
+        isAddressValid,
         storename: req.storename,
         delivery: req.deliverycharge,
         myCart,
@@ -44,7 +54,7 @@ router.get("/", checkUser, checkStore, async (req, res) => {
     });
 });
 
-// POST check promo
+// POST check promo api
 router.post('/promo', checkUser, checkStore, async (req, res) => {
     try {
         const code = req.body.code;
@@ -74,7 +84,7 @@ router.post('/promo', checkUser, checkStore, async (req, res) => {
     }
 })
 
-// POST remove promo
+// POST remove promo api
 router.get('/promo/remove', checkUser, checkStore, async (req, res) => {
     try {
         // const code = req.body.code;

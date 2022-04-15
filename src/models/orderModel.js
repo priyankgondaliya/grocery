@@ -54,6 +54,9 @@ const orderSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    paymentId: {
+        type: String,
+    },
     vendor: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Vendor"
@@ -62,7 +65,16 @@ const orderSchema = new mongoose.Schema({
         type: String,
         enum: ['Pending', 'Accepted', 'Rejected', 'Processing', 'Completed', 'Cancelled'],
         default: 'Pending'
-    }
+    },
+    canceldate: {
+        type: Date,
+    },
+    acceptdate: {
+        type: Date,
+    },
+    rejectdate: {
+        type: Date,
+    },
 })
 
 module.exports = new mongoose.model("Order", orderSchema);

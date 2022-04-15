@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const { sendForgotPassMail } = require('../helpers/sendmail')
 const { check, validationResult } = require('express-validator');
 const formatDate = require('../helpers/formateDate');
+const isToday = require('../helpers/isToday')
 
 const sharp = require('sharp');
 const multer = require('multer');
@@ -35,10 +36,28 @@ const upload = multer({
 });
 
 // GET dashboard
-router.get("/", checkVendor, (req, res) => {
+router.get("/", checkVendor, async (req, res) => {
+    const orders = await Order.find({ vendor: req.vendor.id });
+    newOrders = 0;
+    for (let i = 0; i < orders.length; i++) {
+        if (isToday(orders[i].orderdate)) {
+            newOrders++;
+        }
+    }
+    const products = await Product.find({ vendor: req.vendor.id });
+    newProducts = 0;
+    for (let i = 0; i < products.length; i++) {
+        if (isToday(products[i].date)) {
+            newProducts++;
+        }
+    }
     res.status(201).render("vendor/vendor_dashboard", {
         title: 'Vendor Dashboard',
-        vendor: req.vendor
+        vendor: req.vendor,
+        orders: orders.length,
+        newOrders,
+        products: products.length,
+        newProducts
     });
 });
 
@@ -47,6 +66,12 @@ router.get('/login', (req, res) => {
     res.render('vendor/login', {
         title: 'Vendor Login'
     })
+})
+
+// GET logout
+router.get("/logout", checkVendor, async (req, res) => {
+    res.clearCookie("jwtVendor");
+    res.redirect('/vendor/login');
 })
 
 // POST login
@@ -193,7 +218,7 @@ router.post("/forgot", async (req, res, next) => {
 
 // GET orders
 router.get("/order", checkVendor, async (req, res) => {
-    var orders = await Order.find({ vendor: req.vendor.id });
+    var orders = await Order.find({ vendor: req.vendor.id, status: { $nin: ['Rejected', 'Cancelled'] } });
     let updated = []
     for (let i = 0; i < orders.length; i++) {
         let user = await User.findById(orders[i].user);
@@ -218,30 +243,6 @@ router.get("/order", checkVendor, async (req, res) => {
         orders: updated
     });
 });
-
-// GET order accept/reject
-router.get("/order/:id/:action", checkVendor, async (req, res) => {
-    try {
-        const id = req.params.id;
-        const action = req.params.action;
-        if (action == 'accept') {
-            await Order.findByIdAndUpdate( id, { status: 'Accepted' });
-        } else if (action == 'reject') {
-            await Order.findByIdAndUpdate( id, { status: 'Rejected' });
-        } else {
-            req.flash('danger', 'Invalid action!');
-        }
-        res.redirect('/vendor/order');
-    } catch (error) {
-        console.log(error.message);
-        if (error.name === 'CastError' || error.name === 'TypeError') {
-            req.flash('danger', `Order not found!`);
-            res.redirect('/account');
-        } else {
-            res.send(error);
-        }
-    }
-})
 
 // GET order detail
 router.get("/order/detail/:id", checkVendor, async (req, res) => {
@@ -280,6 +281,53 @@ router.get("/order/detail/:id", checkVendor, async (req, res) => {
             res.send(error)
         }
     }
+});
+
+// GET order accept/reject
+router.get("/order/:id/:action", checkVendor, async (req, res) => {
+    try {
+        const id = req.params.id;
+        const action = req.params.action;
+        if (action == 'accept') {
+            await Order.findByIdAndUpdate(id, { status: 'Accepted', acceptdate: Date.now() });
+        } else if (action == 'reject') {
+            await Order.findByIdAndUpdate(id, { status: 'Rejected', rejectdate: Date.now() });
+        } else {
+            req.flash('danger', 'Invalid action!');
+        }
+        res.redirect('/vendor/order');
+    } catch (error) {
+        console.log(error.message);
+        if (error.name === 'CastError' || error.name === 'TypeError') {
+            req.flash('danger', `Order not found!`);
+            res.redirect('/account');
+        } else {
+            res.send(error);
+        }
+    }
+})
+
+// GET rejected orders
+router.get("/reject_order", checkVendor, async (req, res) => {
+    var orders = await Order.find({ vendor: req.vendor.id, status: { $in: ['Rejected', 'Cancelled'] } });
+    let updated = []
+    for (let i = 0; i < orders.length; i++) {
+        let user = await User.findById(orders[i].user);
+        let username = `${user.firstname} ${user.lastname}`
+        let date = orders[i].rejectdate ? formatDate(new Date(orders[i].rejectdate)) : formatDate(new Date(orders[i].canceldate))
+        let e = {
+            username,
+            id: orders[i].id,
+            status: orders[i].status,
+            date
+        }
+        updated.push(e)
+    }
+    res.status(201).render("vendor/reject_order", {
+        title: 'Reject Orders',
+        vendor: req.vendor,
+        orders: updated
+    });
 });
 
 module.exports = router;

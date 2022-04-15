@@ -68,7 +68,6 @@ router.post('/', checkUser, checkStore, async (req, res) => {
             paymentmode: req.body.pay
         })
         await order.save();
-        console.log('Order created');
         // manage promo
         // empty cart
         res.redirect(`/order/detail/${order.id}`);
@@ -100,29 +99,77 @@ router.post('/razor', checkUser, checkStore, async (req, res) => {
 })
 
 // POST is complete
-router.post('/is-order-complete', (req, res) => {
+router.post('/is-order-complete', checkUser, checkStore, async (req, res) => {
     let body = req.body.razorpay_order_id + "|" + req.body.razorpay_payment_id;
     var crypto = require("crypto");
     var expectedSignature = crypto.createHmac('sha256', process.env.RAZOR_PAY_KEY_SECRET)
         .update(body.toString())
         .digest('hex');
-    console.log("sig received ", req.body.razorpay_signature);
-    console.log("sig generated ", expectedSignature);
-    // var response = { "signatureIsValid": "false" }
     if (expectedSignature === req.body.razorpay_signature) {
-        // response = { "signatureIsValid": "true" }
+        razorpay.payments.fetch(req.body.razorpay_payment_id).then(async (paymentDocument) => {
+            // console.log(paymentDocument);
+            if (paymentDocument.status == 'captured') {
+                try {
+                    if (req.user) {
+                        var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
+                    } else {
+                        req.flash('danger', 'Please login first!');
+                        return res.redirect('/signup');
+                    }
+                    // create order
+                    const user = req.user;
+                    const size = Object.keys(user.address).length;
+                    if (size < 7 || Object.values(user.address).includes(undefined)) {
+                        req.flash('danger', 'Address is required!');
+                        return res.redirect('/checkout');
+                    }
+                    const address = `${user.address.house},${user.address.apartment},${user.address.landmark},${user.address.city},${user.address.state},${user.address.country}-${user.address.postal}`;
+                    var products = [];
+                    for (let i = 0; i < cart.products.length; i++) {
+                        const product = await Product.findById(cart.products[i].productId);
+                        var pro = {
+                            productId: product.id,
+                            quantity: cart.products[i].quantity,
+                            name: product.productname,
+                            weight: product.productweight,
+                            price: product.totalprice,
+                        }
+                        // reduce stock
+                        product.qtyweight = product.qtyweight - cart.products[i].quantity;
+                        product.save();
+                        products.push(pro);
+                    }
+                    const discount = cart.discount ? cart.discount : 0;
+                    const payableamount = cart.total + parseFloat(req.deliverycharge) - discount;
+                    // check promo
+                    const order = new Order({
+                        vendor: req.store,
+                        user: user.id,
+                        useraddress: address,
+                        deliverycharge: req.deliverycharge,
+                        totalamount: cart.total,
+                        discountamount: discount,
+                        payableamount,
+                        products,
+                        paymentmode: 'razor',
+                        paymentId: paymentDocument.id
+                    })
+                    await order.save();
+                    // manage promo
+                    // empty cart
+                    res.redirect(`/order/detail/${order.id}`);
+                } catch (error) {
+                    console.log(error);
+                    res.redirect('/404');
+                }
+            } else {
+                res.redirect('/account')
+            }
+        })
+    } else {
+        console.log(paymentDocument.status);
+        res.status(400).send('Bad request');
     }
-
-    razorpay.payments.fetch(req.body.razorpay_payment_id).then((paymentDocument) => {
-        // console.log(paymentDocument);
-        if (paymentDocument.status == 'captured') {
-            // create order
-            // console.log('wow');
-            res.redirect('/')
-        } else {
-            res.redirect('/account')
-        }
-    })
 })
 
 // stripe
@@ -151,53 +198,115 @@ router.post('/stripe', checkUser, checkStore, async (req, res) => {
     }
 })
 
-// webhooks
-router.post('/webhook', async (req, res) => {
-    let data, eventType;
-    // Check if webhook signing is configured.
-    if (process.env.STRIPE_WEBHOOK_SECRET) {
-        // Retrieve the event by verifying the signature using the raw body and secret.
-        let event;
-        let signature = req.headers['stripe-signature'];
-        try {
-            event = stripe.webhooks.constructEvent(
-                req.rawBody,
-                signature,
-                process.env.STRIPE_WEBHOOK_SECRET
-            );
-        } catch (err) {
-            console.log(`⚠️  Webhook signature verification failed.`);
-            console.log(err.message);
-            return res.sendStatus(400);
+// place order after stripe
+router.post('/stripe/create', checkUser, checkStore, async (req, res) => {
+    try {
+        if (req.user) {
+            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
+            // var cartLength = cart.products.length;
+        } else {
+            req.flash('danger', 'Please login first!');
+            return res.redirect('/signup');
         }
-        data = event.data;
-        eventType = event.type;
-    } else {
-        // Webhook signing is recommended, but if the secret is not configured in `config.js`,
-        // we can retrieve the event data directly from the request body.
-        data = req.body.data;
-        eventType = req.body.type;
+        const paymentIntent = await stripe.paymentIntents.retrieve(req.body.intentId);
+        if (paymentIntent.status != 'succeeded') {
+            return res.send({ error: `Payment status: '${paymentIntent.status}'` })
+        }
+        // create order
+        const user = req.user;
+        const size = Object.keys(user.address).length;
+        if (size < 7 || Object.values(user.address).includes(undefined)) {
+            req.flash('danger', 'Address is required!');
+            return res.redirect('/checkout');
+        }
+        const address = `${user.address.house},${user.address.apartment},${user.address.landmark},${user.address.city},${user.address.state},${user.address.country}-${user.address.postal}`;
+        var products = [];
+        for (let i = 0; i < cart.products.length; i++) {
+            const product = await Product.findById(cart.products[i].productId);
+            var pro = {
+                productId: product.id,
+                quantity: cart.products[i].quantity,
+                name: product.productname,
+                weight: product.productweight,
+                price: product.totalprice,
+            }
+            // reduce stock
+            product.qtyweight = product.qtyweight - cart.products[i].quantity;
+            product.save();
+            products.push(pro);
+        }
+        const discount = cart.discount ? cart.discount : 0;
+        const payableamount = cart.total + parseFloat(req.deliverycharge) - discount;
+        // check promo
+        const order = new Order({
+            vendor: req.store,
+            user: user.id,
+            useraddress: address,
+            deliverycharge: req.deliverycharge,
+            totalamount: cart.total,
+            discountamount: discount,
+            payableamount,
+            products,
+            paymentmode: 'stripe',
+            paymentId: paymentIntent.id
+        })
+        await order.save();
+        // manage promo
+        // empty cart
+        res.send({ url: `/order/detail/${order.id}` })
+    } catch (error) {
+        console.log(error);
+        res.send({ url: `/404` })
     }
+})
 
-    if (eventType === 'payment_intent.created') {
-        console.log('💰 Payment created!');
-    }
-    if (eventType === 'payment_intent.succeeded') {
-        // Funds have been captured
-        // Fulfill any orders, e-mail receipts, etc
-        // To cancel the payment after capture you will need to issue a Refund (https://stripe.com/docs/api/refunds)
-        console.log('💰 Payment captured!');
-    } else if (eventType === 'payment_intent.payment_failed') {
-        console.log('❌ Payment failed.');
-    }
-    res.sendStatus(200);
-});
+// webhooks
+// router.post('/webhook', async (req, res) => {
+//     let data, eventType;
+//     // Check if webhook signing is configured.
+//     if (process.env.STRIPE_WEBHOOK_SECRET) {
+//         // Retrieve the event by verifying the signature using the raw body and secret.
+//         let event;
+//         let signature = req.headers['stripe-signature'];
+//         try {
+//             event = stripe.webhooks.constructEvent(
+//                 req.rawBody,
+//                 signature,
+//                 process.env.STRIPE_WEBHOOK_SECRET
+//             );
+//         } catch (err) {
+//             console.log(`⚠️  Webhook signature verification failed.`);
+//             console.log(err.message);
+//             return res.sendStatus(400);
+//         }
+//         data = event.data;
+//         eventType = event.type;
+//     } else {
+//         // Webhook signing is recommended, but if the secret is not configured in `config.js`,
+//         // we can retrieve the event data directly from the request body.
+//         data = req.body.data;
+//         eventType = req.body.type;
+//     }
+
+//     if (eventType === 'payment_intent.created') {
+//         console.log('💰 Payment created!');
+//     }
+//     if (eventType === 'payment_intent.succeeded') {
+//         // Funds have been captured
+//         // Fulfill any orders, e-mail receipts, etc
+//         // To cancel the payment after capture you will need to issue a Refund (https://stripe.com/docs/api/refunds)
+//         console.log('💰 Payment captured!');
+//     } else if (eventType === 'payment_intent.payment_failed') {
+//         console.log('❌ Payment failed.');
+//     }
+//     res.sendStatus(200);
+// });
 
 // GET cancel order
 router.get('/cancel/:id', checkUser, async (req, res) => {
     try {
         const id = req.params.id;
-        await Order.findByIdAndUpdate(id, { status: 'Cancelled' });
+        await Order.findByIdAndUpdate(id, { status: 'Cancelled', canceldate: Date.now() });
         res.redirect('/account');
     } catch (error) {
         console.log(error.message);
@@ -221,7 +330,7 @@ router.get('/detail/:id', checkUser, checkStore, async (req, res) => {
             var cartLength = req.session.cart.products.length;
         }
         const id = req.params.id;
-        const order = await Order.findOne({ id: id, user: req.user.id });
+        const order = await Order.findOne({ _id: id, user: req.user.id });
         let updated = [];
         for (let i = 0; i < order.products.length; i++) {
             let product = await Product.findById(order.products[i].productId);

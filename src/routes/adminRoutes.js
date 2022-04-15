@@ -4,6 +4,7 @@ const fs = require('fs-extra');
 const { check, validationResult } = require('express-validator');
 const bcrypt = require("bcryptjs");
 const formatDate = require('../helpers/formateDate');
+const isToday = require('../helpers/isToday');
 
 const checkAdmin = require('../middleware/authAdminMiddleware');
 
@@ -15,13 +16,48 @@ const Subcategory = require('../models/subcategory');
 const Unit = require('../models/unitModel');
 const Order = require('../models/orderModel');
 const Vendor = require('../models/vendorModel');
-
-// const formatDate = require('../helpers/formateDate');
+const Driver = require('../models/driverModel');
 
 // GET dashboard
 router.get("/", checkAdmin, async (req, res) => {
+    const orders = await Order.find();
+    newOrders = 0;
+    for (let i = 0; i < orders.length; i++) {
+        if (isToday(orders[i].orderdate)) {
+            newOrders++;
+        }
+    }
+    const users = await User.find({ isAdmin: { $ne: true } });
+    newUsers = 0;
+    for (let i = 0; i < users.length; i++) {
+        if (isToday(users[i].date)) {
+            newUsers++;
+        }
+    }
+    const drivers = await Driver.find();
+    newDrivers = 0;
+    for (let i = 0; i < drivers.length; i++) {
+        if (isToday(drivers[i].date)) {
+            newDrivers++;
+        }
+    }
+    const vendors = await Vendor.find();
+    newVendors = 0;
+    for (let i = 0; i < vendors.length; i++) {
+        if (isToday(vendors[i].date)) {
+            newVendors++;
+        }
+    }
     res.render('admin/admin_dashboard', {
-        title: 'Dashboard'
+        title: 'Dashboard',
+        orders: orders.length,
+        newOrders,
+        users: users.length,
+        newUsers,
+        drivers: drivers.length,
+        newDrivers,
+        vendors: vendors.length,
+        newVendors
     })
 })
 
@@ -30,6 +66,12 @@ router.get('/login', (req, res) => {
     res.render('admin/login', {
         title: 'Admin Login'
     })
+})
+
+// GET logout
+router.get("/logout", checkAdmin, async (req, res) => {
+    res.clearCookie("jwtAdmin");
+    res.redirect('/admin/login');
 })
 
 // POST login

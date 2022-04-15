@@ -5,46 +5,54 @@
                 <div class="row colorbox-group-widget">
                     <div class="col-md-3 col-sm-6 info-color-box">
                         <div class="white-box">
-                            <div class="media bg-primary">
-                                <div class="media-body">
-                                    <h3 class="info-count">154 <span class="pull-right"><i class="icon-basket-loaded"></i></span></h3>
-                                    <p class="info-text font-12">Orders</p>
-                                    <p class="info-ot font-15">New<span class="label label-rounded">198</span></p>
+                            <a href="/admin/order">
+                                <div class="media bg-primary">
+                                    <div class="media-body">
+                                        <h3 class="info-count"><%= orders %><span class="pull-right"><i class="icon-basket-loaded"></i></span></h3>
+                                        <p class="info-text font-12">Orders</p>
+                                        <p class="info-ot font-15">New<span class="label label-rounded"><%= newOrders %></span></p>
+                                    </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6 info-color-box">
                         <div class="white-box">
-                            <div class="media bg-success">
-                                <div class="media-body">
-                                    <h3 class="info-count">68 <span class="pull-right"><i class="icon-user"></i></span></h3>
-                                    <p class="info-text font-12">Users</p>
-                                    <p class="info-ot font-15">New<span class="label label-rounded">154</span></p>
+                            <a href="/admin/user">
+                                <div class="media bg-success">
+                                    <div class="media-body">
+                                        <h3 class="info-count"><%= users %> <span class="pull-right"><i class="icon-user"></i></span></h3>
+                                        <p class="info-text font-12">Users</p>
+                                        <p class="info-ot font-15">New<span class="label label-rounded"><%= newUsers %></span></p>
+                                    </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6 info-color-box">
                         <div class="white-box">
-                            <div class="media bg-danger">
-                                <div class="media-body">
-                                    <h3 class="info-count">9475 <span class="pull-right"><i class="icon-user"></i></span></h3>
-                                    <p class="info-text font-12">Drivers</p>
-                                    <p class="info-ot font-15">New<span class="label label-rounded">236</span></p>
+                            <a href="/admin/driver">
+                                <div class="media bg-danger">
+                                    <div class="media-body">
+                                        <h3 class="info-count"><%= drivers %><span class="pull-right"><i class="icon-user"></i></span></h3>
+                                        <p class="info-text font-12">Drivers</p>
+                                        <p class="info-ot font-15">New<span class="label label-rounded"><%= newDrivers %></span></p>
+                                    </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6 info-color-box">
                         <div class="white-box">
-                            <div class="media bg-warning">
-                                <div class="media-body">
-                                    <h3 class="info-count">124,356 <span class="pull-right"><i class="icon-user"></i></span></h3>
-                                    <p class="info-text font-12">Vendors</p>
-                                    <p class="info-ot font-15">New<span class="label label-rounded">782</span></p>
+                            <a href="/admin/vendor">
+                                <div class="media bg-warning">
+                                    <div class="media-body">
+                                        <h3 class="info-count"><%= vendors %><span class="pull-right"><i class="icon-user"></i></span></h3>
+                                        <p class="info-text font-12">Vendors</p>
+                                        <p class="info-ot font-15">New<span class="label label-rounded"><%= newVendors %></span></p>
+                                    </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                     </div>
                     <!-- <div class="col-md-3 col-sm-6 info-color-box">

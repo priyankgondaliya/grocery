@@ -63,6 +63,10 @@ const vendorSchema = new mongoose.Schema({
             type: Number,
             require: true
         }
+    },
+    date: {
+        type: Date,
+        default: Date.now()
     }
 })
 

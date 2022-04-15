@@ -51,6 +51,10 @@ const productSchema = new mongoose.Schema({
     vendor: {
         type: mongoose.Schema.ObjectId,
         ref: 'Vendor',
+    },
+    date: {
+        type: Date,
+        default: Date.now()
     }
 })
 

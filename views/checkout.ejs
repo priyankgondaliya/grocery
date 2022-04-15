@@ -382,7 +382,7 @@
 									</label>
 								</div>
 
-								<div class="flex-w flex-m bocl15 p-rl-20 p-t-16 p-b-10">
+								<div class="flex-w flex-m bocl15 p-rl-20 p-t-16 p-b-16">
 									<input class="m-r-15" id="radio3" type="radio" name="pay" value="stripe">
 									<label class="txt-m-103 cl6" for="radio3">
 										Pay with Stripe
@@ -403,144 +403,7 @@
 			</div>
 		</div>
 	</div>
-	<!-- swal -->
-	<!-- <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
-	<script>
-		const form = document.getElementById('form');
-		function validate(){
-			let returnVal = true;
-
-			const fname = document.getElementById('fname').value.trim();
-			const lname = document.getElementById('lname').value.trim();
-			const email = document.getElementById('email').value.trim();
-			const phone = document.getElementById('phone').value.trim();
-			const house = document.getElementById('house').value.trim();
-			const apartment = document.getElementById('apartment').value.trim();
-			const landmark = document.getElementById('landmark').value.trim();
-			const city = document.getElementById('city').value.trim();
-			const state = document.getElementById('state').value.trim();
-			const country = document.getElementById('country').value.trim();
-			const postal = document.getElementById('postal').value.trim();
-			
-			if (fname == '') {
-				setError('fnameErr','Please enter First Name.')
-				returnVal = false;
-			} else {
-				removeError('fnameErr')
-			}
-			if (lname == '') {
-				setError('lnameErr','Please enter Last Name.')
-				returnVal = false;
-			} else {
-				removeError('lnameErr')
-			}
-			if (email == '') {
-				setError('emailErr','Please enter email.')
-				returnVal = false;
-			} else if (!validateEmail(email)) {
-				setError('emailErr','Please enter valid email.')
-				returnVal = false;
-			} else {
-				removeError('emailErr')
-			}
-			if (phone == '') {
-				setError('phoneErr','Please enter Phone number.')
-				returnVal = false;
-			} else {
-				removeError('phoneErr')
-			}
-			if (house == '') {
-				setError('houseErr','Please enter House number.')
-				returnVal = false;
-			} else {
-				removeError('houseErr')
-			}
-			if (apartment == '') {
-				setError('apartmentErr','Please enter Apartment.')
-				returnVal = false;
-			} else {
-				removeError('apartmentErr')
-			}
-			if (landmark == '') {
-				setError('landmarkErr','Please enter Landmark.')
-				returnVal = false;
-			} else {
-				removeError('landmarkErr')
-			}
-			if (city == '') {
-				setError('cityErr','Please enter City.')
-				returnVal = false;
-			} else {
-				removeError('cityErr')
-			}
-			if (state == '') {
-				setError('stateErr','Please enter State.')
-				returnVal = false;
-			} else {
-				removeError('stateErr')
-			}
-			if (country == '') {
-				setError('countryErr','Please enter Country.')
-				returnVal = false;
-			} else {
-				removeError('countryErr')
-			}
-			if (postal == '') {
-				setError('postalErr','Please enter Postal code.')
-				returnVal = false;
-			} else {
-				removeError('postalErr')
-			}
-			// if (returnVal) {
-			// 	form.submit();
-			// }
-			return returnVal
-		}
-
-		function setError(id, error) {
-			// set error msg
-			const element = document.getElementById(id);
-			element.innerHTML = '* ' + error;
-		}
-		function removeError(id) {
-			// remove error msg
-			const element = document.getElementById(id);
-			element.innerHTML = '';
-		}
-		function validateEmail(email){
-			return email.match(
-				/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-			);
-		}
-
-		function handleOrder() {
-			var validateReturn = validate();
-			var orderForm = document.getElementById('orderForm');
-			var paymentMode = document.querySelector('input[name="pay"]:checked').value;
-			if (validateReturn) {
-				if (paymentMode == 'razorpay') {
-					// orderForm.setAttribute("action","/#");
-					razor()
-					return false
-				} else if (paymentMode == 'stripe') {
-					stripeFunc()
-					return false
-				} else {
-					orderForm.setAttribute("action","/order");
-					orderForm.submit();
-				}
-			}
-		}
-	</script>
-	<!-- <script src="/js/setGrandTotal.js"></script> -->
-	<!-- <script>
-		// const delivery = document.getElementById("delivery");
-		// const total = document.getElementById("grandTotal");
-		// let a = delivery.innerText.split(" ")[1];
-		// let b = total.innerText.split(" ")[1];
-		// var totalValue = parseFloat(a) + parseFloat(b);
-		// document.getElementById("setTotal").innerHTML = `&#8377; ${totalValue}`;
-	</script> -->
+	<input type="hidden" id="isAddressValid" value="<%= isAddressValid %>">
 
 	<!-- Footer -->
 	<footer class="bg12">
@@ -728,6 +591,140 @@
 
 <!--===============================================================================================-->	
 	<script src="/vendor/jquery/jquery-3.2.1.min.js"></script>
+	<script>
+		const form = document.getElementById('form');
+		function validate(){
+			let returnVal = true;
+
+			const fname = document.getElementById('fname').value.trim();
+			const lname = document.getElementById('lname').value.trim();
+			const email = document.getElementById('email').value.trim();
+			const phone = document.getElementById('phone').value.trim();
+			const house = document.getElementById('house').value.trim();
+			const apartment = document.getElementById('apartment').value.trim();
+			const landmark = document.getElementById('landmark').value.trim();
+			const city = document.getElementById('city').value.trim();
+			const state = document.getElementById('state').value.trim();
+			const country = document.getElementById('country').value.trim();
+			const postal = document.getElementById('postal').value.trim();
+			
+			if (fname == '') {
+				setError('fnameErr','Please enter First Name.')
+				returnVal = false;
+			} else {
+				removeError('fnameErr')
+			}
+			if (lname == '') {
+				setError('lnameErr','Please enter Last Name.')
+				returnVal = false;
+			} else {
+				removeError('lnameErr')
+			}
+			if (email == '') {
+				setError('emailErr','Please enter email.')
+				returnVal = false;
+			} else if (!validateEmail(email)) {
+				setError('emailErr','Please enter valid email.')
+				returnVal = false;
+			} else {
+				removeError('emailErr')
+			}
+			if (phone == '') {
+				setError('phoneErr','Please enter Phone number.')
+				returnVal = false;
+			} else {
+				removeError('phoneErr')
+			}
+			if (house == '') {
+				setError('houseErr','Please enter House number.')
+				returnVal = false;
+			} else {
+				removeError('houseErr')
+			}
+			if (apartment == '') {
+				setError('apartmentErr','Please enter Apartment.')
+				returnVal = false;
+			} else {
+				removeError('apartmentErr')
+			}
+			if (landmark == '') {
+				setError('landmarkErr','Please enter Landmark.')
+				returnVal = false;
+			} else {
+				removeError('landmarkErr')
+			}
+			if (city == '') {
+				setError('cityErr','Please enter City.')
+				returnVal = false;
+			} else {
+				removeError('cityErr')
+			}
+			if (state == '') {
+				setError('stateErr','Please enter State.')
+				returnVal = false;
+			} else {
+				removeError('stateErr')
+			}
+			if (country == '') {
+				setError('countryErr','Please enter Country.')
+				returnVal = false;
+			} else {
+				removeError('countryErr')
+			}
+			if (postal == '') {
+				setError('postalErr','Please enter Postal code.')
+				returnVal = false;
+			} else {
+				removeError('postalErr')
+			}
+			// if (returnVal) {
+			// 	form.submit();
+			// }
+			return returnVal
+		}
+
+		function setError(id, error) {
+			// set error msg
+			const element = document.getElementById(id);
+			element.innerHTML = '* ' + error;
+		}
+		function removeError(id) {
+			// remove error msg
+			const element = document.getElementById(id);
+			element.innerHTML = '';
+		}
+		function validateEmail(email){
+			return email.match(
+				/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+			);
+		}
+
+		function handleOrder() {
+			// var validateReturn = validate();
+			var isAddressValid = document.getElementById('isAddressValid').value;
+			var orderForm = document.getElementById('orderForm');
+			var paymentMode = document.querySelector('input[name="pay"]:checked').value;
+			if (isAddressValid == 'true') {
+				if (paymentMode == 'razorpay') {
+					// orderForm.setAttribute("action","/#");
+					razor()
+					return false
+				} else if (paymentMode == 'stripe') {
+					stripeFunc()
+					return false
+				} else {
+					orderForm.setAttribute("action","/order");
+					orderForm.submit();
+				}
+			} else if (isAddressValid == 'false') {
+				swal({
+					icon: 'error',
+					title: 'Opps...',
+					text: 'Address is required!'
+				})
+			}
+		}
+	</script>
 	<!-- promo -->
 	<script>
 		function checkCode() {
@@ -811,7 +808,6 @@
 		}
 	</script>
 	<!-- razorpay/stripe -->
-	<!-- <script src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 	<script src="https://js.stripe.com/v3/"></script>
@@ -879,7 +875,6 @@
 					// Send the token to your server.
 					axios.post('/order/stripe').then((res) => {
 						if (res.data) {
-							console.log(res.data);
 							stripe.confirmCardPayment(res.data.client_secret,
 							{
 							payment_method: { card },
@@ -888,12 +883,26 @@
 							).then(function(response) {
 								if (response.error) {
 									// Handle error here
-									console.log('An error occured!');
-									console.log(response.error.code);
-									console.log(response.error.message);
+									swal({
+										icon: 'error',
+										title: 'Opps...',
+										text: response.error.message
+									})
 								} else if (response.paymentIntent && response.paymentIntent.status === 'succeeded') {
-									// Handle successful payment 
-									console.log('amazing....')
+									// Handle successful payment
+									axios.post('/order/stripe/create',{
+										intentId: response.paymentIntent.id
+									}).then((res) => {
+										if (res.data.error) {
+											swal({
+												icon: 'error',
+												title: 'Opps...',
+												text: res.data.error
+											})
+										} else {
+											window.location.href = res.data.url;
+										}
+									});
 								}
 							});
 						} else {

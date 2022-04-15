@@ -80,8 +80,6 @@ router.get("/add/:product", checkUser, checkStore, async (req, res) => {
                 if (itemIndex > -1) {
                     //product exists in the cart, update the quantity
                     let productItem = cart.products[itemIndex];
-                    console.log(totalqty);
-                    console.log(productItem.quantity);
                     if (totalqty > productItem.quantity) {
                         productItem.quantity = productItem.quantity + 1;
                     }
