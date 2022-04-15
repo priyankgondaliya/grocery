@@ -23,12 +23,15 @@ router.get("/", checkUser, checkStore, async (req, res) => {
         req.flash('success', "Cart is empty can not checkout.")
         return res.redirect('/cart');
     }
-    // let validQuantity = true;
     for (let i = 0; i < cart.products.length; i++) {
         var prod = await Product.findById(cart.products[i].productId);
         prod.quantity = cart.products[i].quantity;
         if (prod.qtyweight < cart.products[i].quantity) {
-            req.flash('danger', `Only ${prod.qtyweight} ${prod.productname} available.`);
+            if (prod.qtyweight == 0) {
+                req.flash('danger', `${prod.productname} is out of stock.`);
+            } else {
+                req.flash('danger', `Only ${prod.qtyweight} ${prod.productname} available.`);
+            }
             return res.redirect('/cart');
         }
         myCart.push(prod);

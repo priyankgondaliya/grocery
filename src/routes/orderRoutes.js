@@ -1,16 +1,5 @@
-const bodyParser = require('body-parser');
-const { application } = require('express');
 const express = require('express');
 const router = express.Router();
-const Razorpay = require('razorpay')
-
-const razorpay = new Razorpay({
-    key_id: process.env.RAZOR_PAY_KEY_ID,
-    key_secret: process.env.RAZOR_PAY_KEY_SECRET,
-})
-
-const Stripe = require('stripe');
-const stripe = Stripe(process.env.STRIPE_KEY_SECRET);
 
 const checkUser = require('../middleware/authMiddleware');
 const checkStore = require('../middleware/selectedStore');
@@ -19,6 +8,16 @@ const Cart = require('../models/cartModel');
 const Order = require('../models/orderModel');
 const Product = require('../models/productModel');
 const Unit = require('../models/unitModel');
+const Promo = require('../models/promoModel');
+
+const Razorpay = require('razorpay')
+const razorpay = new Razorpay({
+    key_id: process.env.RAZOR_PAY_KEY_ID,
+    key_secret: process.env.RAZOR_PAY_KEY_SECRET,
+})
+
+const Stripe = require('stripe');
+const stripe = Stripe(process.env.STRIPE_KEY_SECRET);
 
 // place order
 router.post('/', checkUser, checkStore, async (req, res) => {
@@ -69,7 +68,14 @@ router.post('/', checkUser, checkStore, async (req, res) => {
         })
         await order.save();
         // manage promo
+        if (cart.promo) {
+            await Promo.findByIdAndUpdate(cart.promo, { '$inc': { 'times': -1 } });
+        }
         // empty cart
+        // cart.products = [];
+        // cart.total = 0;
+        // cart.discount = 0;
+        // cart.save();
         res.redirect(`/order/detail/${order.id}`);
         // res.redirect('/');
     } catch (error) {
@@ -156,7 +162,14 @@ router.post('/is-order-complete', checkUser, checkStore, async (req, res) => {
                     })
                     await order.save();
                     // manage promo
+                    if (cart.promo) {
+                        await Promo.findByIdAndUpdate(cart.promo, { '$inc': { 'times': -1 } });
+                    }
                     // empty cart
+                    // cart.products = [];
+                    // cart.total = 0;
+                    // cart.discount = 0;
+                    // cart.save();
                     res.redirect(`/order/detail/${order.id}`);
                 } catch (error) {
                     console.log(error);
@@ -252,7 +265,14 @@ router.post('/stripe/create', checkUser, checkStore, async (req, res) => {
         })
         await order.save();
         // manage promo
+        if (cart.promo) {
+            await Promo.findByIdAndUpdate(cart.promo, { '$inc': { 'times': -1 } });
+        }
         // empty cart
+        // cart.products = [];
+        // cart.total = 0;
+        // cart.discount = 0;
+        // cart.save();
         res.send({ url: `/order/detail/${order.id}` })
     } catch (error) {
         console.log(error);
