@@ -9,6 +9,7 @@ const multer = require('multer');
 const fs = require('fs-extra');
 
 const Driver = require('../models/driverModel');
+const AdminCommission = require('../models/adminCommisionModel');
 
 const storage = multer.memoryStorage();
 const fileFilter = (req, file, cb) => {
@@ -261,5 +262,27 @@ router.get("/transaction", checkAdmin, (req, res) => {
         title: 'Driver Transaction'
     });
 });
+
+// GET admin commission
+router.get('/charge', checkAdmin, async (req, res) => {
+    const commission = await AdminCommission.findOne();
+    res.status(201).render("admin/driver_charge", {
+        title: 'Driver Charge',
+        commission
+    });
+})
+
+// POST admin commission
+router.post('/charge', checkAdmin, async (req, res) => {
+    try {
+        await AdminCommission.findOneAndUpdate({ driverCharge: req.body.driverCharge });
+        req.flash('success', 'Updated successfully.');
+        res.redirect('/admin/driver/charge');
+    } catch (error) {
+        console.log(error);
+        req.flash('error', error.message);
+        res.redirect('/admin/driver/charge');
+    }
+})
 
 module.exports = router;

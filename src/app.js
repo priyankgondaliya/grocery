@@ -89,6 +89,7 @@ app.use('/admin/driver', require('./routes/adminDriverRoutes'));
 app.use('/admin/banner', require('./routes/adminBanner'));
 app.use('/admin', require('./routes/adminRoutes'));
 app.use('/admin', require('./routes/adminPagesRoutes'));
+app.use('/admin', require('./routes/adminCommission'));
 app.use('/admin/*', (req, res) => res.render('admin/404'));
 
 app.use('/vendor/product', require('./routes/vendorProducts'));

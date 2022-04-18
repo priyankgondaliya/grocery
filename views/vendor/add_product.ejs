@@ -65,24 +65,33 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label>Product Weight</label>
-                                                <input type="text" class="form-control" name="productWeight" placeholder="Product Weight" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                                                <input type="text" id="productW" class="form-control" name="productWeight" placeholder="Product Weight" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                                                <div class="txt-s-101 cl6 p-b-10" style="color: red;">
+                                                    <span class="cl12" id="productWErr"></span>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label>Quantity Weight</label>
-                                                <input type="text" class="form-control" name="qtyWeight" placeholder="Quantity Weight" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                                                <input type="text" id="qtyWeight" class="form-control" name="qtyWeight" placeholder="Quantity Weight" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+                                                <div class="txt-s-101 cl6 p-b-10" style="color: red;">
+                                                    <span class="cl12" id="qtyWeightErr"></span>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label class="control-label">Unit</label>
-                                                <select class="selectpicker form-control" name="unit" data-style="form-control">
+                                                <select class="selectpicker form-control" id="unit" name="unit" data-style="form-control">
                                                     <option>Select Unit</option>
                                                     <% for( let i = 0; i < units.length; i++ ) { %>
                                                         <option value="<%= units[i]._id %>"><%= units[i].name %></option>
                                                     <% } %>
                                                 </select>
+                                                <div class="txt-s-101 cl6 p-b-10" style="color: red;">
+                                                    <span class="cl12" id="unitErr"></span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -205,6 +214,9 @@
         const catValue = document.getElementById('selectCat').value.trim();
         const subcatValue = document.getElementById('selectSubCat').value.trim();
         const productValue = document.getElementById('productName').value.trim();
+        const weightValue = document.getElementById('productW').value.trim();
+        const qtyweightValue = document.getElementById('qtyWeight').value.trim();
+        const unitValue = document.getElementById('unit').value.trim();
         const typeValue = document.getElementById('type').value.trim();
         const saleValue = document.getElementById('sale').value.trim();
         const filevalue = document.getElementById('input-file-now').value;
@@ -229,6 +241,27 @@
             returnVal = false;
         } else {
             removeError('productNameErr')
+        }
+
+        if (weightValue == '') {
+            setError('productWErr','Please enter Product weight.')
+            returnVal = false;
+        } else {
+            removeError('productWErr')
+        }
+
+        if (qtyweightValue == '') {
+            setError('qtyWeightErr','Please enter Product quantity.')
+            returnVal = false;
+        } else {
+            removeError('qtyWeightErr')
+        }
+
+        if (unitValue == 'Select Unit') {
+            setError('unitErr','Please select Unit.')
+            returnVal = false;
+        } else {
+            removeError('unitErr')
         }
 
         if (typeValue == 'Select Type') {
