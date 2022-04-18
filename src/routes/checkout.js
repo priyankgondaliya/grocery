@@ -39,7 +39,7 @@ router.get("/", checkUser, checkStore, async (req, res) => {
     myCart.discount = cart.discount ? cart.discount : 0;
     myCart.total = cart.total;
     const promo = cart.promo ? await Promo.findById(cart.promo) : null;
-    const total = cart.total + parseFloat(req.deliverycharge) - myCart.discount;
+    const total = (cart.total + parseFloat(req.deliverycharge) - myCart.discount).toFixed(2);
     let isAddressValid = true;
     if (Object.keys(req.user.address).length < 7 || Object.values(req.user.address).includes(undefined)) {
         isAddressValid = false;

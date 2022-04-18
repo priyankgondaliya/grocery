@@ -68,9 +68,8 @@ router.post('/', checkUser, checkStore, async (req, res) => {
         })
         await order.save();
         // manage promo
-        if (cart.promo) {
-            await Promo.findByIdAndUpdate(cart.promo, { '$inc': { 'times': -1 } });
-        }
+        console.log(cart.promo);
+        if (cart.promo) { await Promo.findByIdAndUpdate(cart.promo, { '$inc': { 'times': -1 } }); }
         // empty cart
         // cart.products = [];
         // cart.total = 0;
@@ -162,9 +161,7 @@ router.post('/is-order-complete', checkUser, checkStore, async (req, res) => {
                     })
                     await order.save();
                     // manage promo
-                    if (cart.promo) {
-                        await Promo.findByIdAndUpdate(cart.promo, { '$inc': { 'times': -1 } });
-                    }
+                    if (cart.promo) { await Promo.findByIdAndUpdate(cart.promo, { '$inc': { 'times': -1 } }); }
                     // empty cart
                     // cart.products = [];
                     // cart.total = 0;
@@ -265,9 +262,7 @@ router.post('/stripe/create', checkUser, checkStore, async (req, res) => {
         })
         await order.save();
         // manage promo
-        if (cart.promo) {
-            await Promo.findByIdAndUpdate(cart.promo, { '$inc': { 'times': -1 } });
-        }
+        if (cart.promo) { await Promo.findByIdAndUpdate(cart.promo, { '$inc': { 'times': -1 } }); }
         // empty cart
         // cart.products = [];
         // cart.total = 0;
