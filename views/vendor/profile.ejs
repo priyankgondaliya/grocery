@@ -9,9 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" type="image/png" sizes="16x16" href="/plugins/images/favicon.png">
-    <title>
-        <%= title %>
-    </title>
+    <title> <%= title %> </title>
     <!-- ===== Bootstrap CSS ===== -->
     <link href="/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- ===== Plugin CSS ===== -->
@@ -65,12 +63,11 @@
         <!-- ===== Top-Navigation ===== -->
         <nav class="navbar navbar-default navbar-static-top m-b-0">
             <div class="navbar-header">
-                <a class="navbar-toggle font-20 hidden-sm hidden-md hidden-lg " href="javascript:void(0)"
-                    data-toggle="collapse" data-target=".navbar-collapse">
+                <a class="navbar-toggle font-20 hidden-sm hidden-md hidden-lg " href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse">
                     <i class="fa fa-bars"></i>
                 </a>
                 <div class="top-left-part">
-                    <a class="logo" href="/admin">
+                    <a class="logo" href="/vendor">
                         <b>
                             <img src="/plugins/images/logo.png" alt="home" />
                         </b>
@@ -81,8 +78,7 @@
                 </div>
                 <ul class="nav navbar-top-links navbar-left hidden-xs">
                     <li>
-                        <a href="javascript:void(0)" class="sidebartoggler font-20 waves-effect waves-light"><i
-                                class="icon-arrow-left-circle"></i></a>
+                        <a href="javascript:void(0)" class="sidebartoggler font-20 waves-effect waves-light"><i class="icon-arrow-left-circle"></i></a>
                     </li>
                     <li>
                         <form role="search" class="app-search hidden-xs">
@@ -95,15 +91,13 @@
         </nav>
         <!-- ===== Top-Navigation-End ===== -->
         <!-- ===== Left-Sidebar ===== -->
-        <aside class="sidebar">
+        <aside class="sidebar" role="navigation">
             <div class="scroll-sidebar">
                 <div class="user-profile">
                     <div class="dropdown user-pro-body">
                         <div class="profile-image">
-                            <img src="/images/icons/symbol-31.png" alt="user-img" class="img-circle">
-                            <a href="javascript:void(0);" class="dropdown-toggle u-dropdown text-blue" type="button"
-                                id="dropdownMenuButton" data-toggle="dropdown" role="button" aria-haspopup="true"
-                                aria-expanded="false">
+                            <img src="<%= vendor.image %>" alt="user-img" class="img-circle">
+                            <a href="javascript:void(0);" class="dropdown-toggle u-dropdown text-blue" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                 <span class="badge badge-danger">
                                     <i class="fa fa-angle-down"></i>
                                 </span>
@@ -114,100 +108,50 @@
                                 <li role="separator" class="divider"></li>
                                 <li><a href="javascript:void(0);"><i class="fa fa-cog"></i> Account Settings</a></li>
                                 <li role="separator" class="divider"></li> -->
-                                <li><a href="#"><i class="fa fa-power-off"></i> Logout</a></li>
+                                <li><a href="/vendor/profile"><i class="fa fa-user"></i> Profile</a></li>
+                                <li><a href="/vendor/logout"><i class="fa fa-power-off"></i> Logout</a></li>
                             </ul>
                         </div>
-                        <!-- <p class="profile-text m-t-15 font-16"><a href="javascript:void(0);"> Hanna Gover</a></p> -->
+                        <p class="profile-text m-t-15 font-16"><a href="javascript:void(0);"><%= vendor.storename %></a></p>
                     </div>
                 </div>
                 <nav class="sidebar-nav">
                     <ul id="side-menu">
                         <li>
-                            <a class="active waves-effect" href="/admin" aria-expanded="false"><i
-                                    class="icon-screen-desktop fa-fw"></i> <span class="hide-menu"> Dashboard
-                                </span></a>
+                            <a class="waves-effect" href="/vendor" aria-expanded="false"><i class="icon-screen-desktop fa-fw"></i> <span class="hide-menu"> Dashboard </span></a>
                         </li>
                         <li>
                             <a class="waves-effect" aria-expanded="false"><span class="hide-menu"> Pages </span></a>
                         </li>
-                        <li>
-                            <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i
-                                    class="icon-grid fa-fw"></i> <span class="hide-menu"> Manage <span
-                                        class="label label-rounded label-primary pull-right"><i
-                                            class="fa fa-angle-down"></i></span></span></a>
+						<li>
+                            <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="icon-grid fa-fw"></i> <span class="hide-menu"> Products <span class="label label-rounded label-primary pull-right"><i class="fa fa-angle-down"></i></span></span></a>
                             <ul aria-expanded="false" class="collapse">
-                                <li><a href="/admin/category">Categories</a></li>
-                                <li><a href="/admin/subcategory">Sub Categories</a></li>
-                                <li><a href="/admin/banner">Banners</a></li>
-                                <li><a href="/admin/unit">Unit</a></li>
-                                <li><a href="/admin/product">Products</a></li>
-                                <li><a href="/admin/offer">Offers</a></li>
-                                <li><a href="/admin/promo">Promocode</a></li>
-                                <li><a href="/admin/commission">Commission</a></li>
+                                <li><a href="/vendor/product">List of Products</a></li>
+                                <li><a href="/vendor/product/add">Add Product</a></li>
+                            </ul>
+                        </li>
+						<li>
+                            <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i class="icon-grid fa-fw"></i> <span class="hide-menu"> Offer Management <span class="label label-rounded label-primary pull-right"><i class="fa fa-angle-down"></i></span></span></a>
+                            <ul aria-expanded="false" class="collapse">
+                                <li><a href="/vendor/offer">List offer</a></li>
+                                <li><a href="/vendor/offer/add">Add New</a></li>
                             </ul>
                         </li>
                         <li>
-                            <a href="/admin/order" aria-expanded="false"><i class="icon-basket fa-fw"></i> <span
-                                    class="hide-menu"> Orders </span></a>
+                            <a href="/vendor/order" aria-expanded="false"><i class="icon-basket fa-fw"></i> <span class="hide-menu"> Order Management </span></a>
                         </li>
                         <li>
-                            <a class="waves-effect" href="javascript:void(0);" aria-expanded="false"><i
-                                    class="icon-grid fa-fw"></i> <span class="hide-menu"> Content pages <span
-                                        class="label label-rounded label-primary pull-right"><i
-                                            class="fa fa-angle-down"></i></span></span></a>
-                            <ul aria-expanded="false" class="collapse">
-                                <li><a href="/admin/privacy_policy">Privacy Policy</a></li>
-                                <li><a href="/admin/faqs">FAQs</a></li>
-                                <li><a href="/admin/terms_con">Terms & Conditions</a></li>
-                                <li><a href="/admin/about_us">About Us</a></li>
-                                <li><a href="/admin/contact">Contact Us</a></li>
-                            </ul>
+                            <a href="/vendor/reject_order" aria-expanded="false"><i class="icon-close fa-fw"></i> <span class="hide-menu"> Reject Orders </span></a>
                         </li>
                         <li>
-                            <a href="/admin/newsletter" aria-expanded="false"><i class="icon-list fa-fw"></i> <span
-                                    class="hide-menu"> Newsletter List </span></a>
+                            <a href="#" aria-expanded="false"><i class="icon-people fa-fw"></i> <span class="hide-menu"> Commission Details </span></a>
                         </li>
                         <li>
-                            <a class="waves-effect" aria-expanded="false"><span class="hide-menu"> User Pages
-                                </span></a>
+                            <a href="#" aria-expanded="false"><i class="icon-wallet fa-fw"></i> <span class="hide-menu"> Withdraw Amount </span></a>
                         </li>
                         <li>
-                            <a href="/admin/user" aria-expanded="false"><i class="icon-people fa-fw"></i> <span
-                                    class="hide-menu"> User Management </span></a>
+                            <a href="#" aria-expanded="false"><i class="icon-credit-card fa-fw"></i> <span class="hide-menu"> Transactions </span></a>
                         </li>
-                        <li>
-                            <a href="#" aria-expanded="false"><i class="icon-credit-card fa-fw"></i> <span
-                                    class="hide-menu"> Transactions </span></a>
-                        </li>
-                        <li>
-                            <a class="waves-effect" aria-expanded="false"><span class="hide-menu"> Driver Pages
-                                </span></a>
-                        </li>
-                        <li>
-                            <a href="/admin/driver" aria-expanded="false"><i class="icon-people fa-fw"></i> <span
-                                    class="hide-menu"> Driver Management </span></a>
-                        </li>
-                        <li>
-                            <a href="/admin/driver/transaction" aria-expanded="false"><i
-                                    class="icon-credit-card fa-fw"></i> <span class="hide-menu"> Driver Transactions
-                                </span></a>
-                        </li>
-                        <li>
-                            <a href="/admin/driver/charge" aria-expanded="false"><i class="icon-wallet fa-fw"></i> <span class="hide-menu"> Driver Charge </span></a>
-                        </li>
-                        <li>
-                            <a class="waves-effect" aria-expanded="false"><span class="hide-menu"> Vendor Pages
-                                </span></a>
-                        </li>
-                        <li>
-                            <a href="/admin/vendor" aria-expanded="false"><i class="icon-people fa-fw"></i> <span
-                                    class="hide-menu"> Vendor Management </span></a>
-                        </li>
-                        <li>
-                            <a href="/admin/vendor/contact" aria-expanded="false"><i class="icon-credit-card fa-fw"></i>
-                                <span class="hide-menu"> Vendor Contact Report </span></a>
-                        </li>
-
                     </ul>
                 </nav>
             </div>
@@ -216,17 +160,19 @@
         <!-- ===== Page-Content ===== -->
         <div class="page-wrapper">
 
-
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="panel panel-info">
                             <div class="panel-wrapper collapse in" aria-expanded="true">
-                                <form onsubmit="validate()" onkeydown="return event.key != 'Enter';" method="POST" action="/admin/vendor/edit/<%= vendor.id %>"
+                                <form onsubmit="validate()" onkeydown="return event.key != 'Enter';" method="POST" action="/vendor/profile/"
                                     id="VendorForm" enctype="multipart/form-data">
                                     <div class="panel-body">
                                         <div class="form-body">
-                                            <h2 class="page-title m-b-20"> Edit Vendor </h2>
+                                            <h2 class="page-title m-b-20"> Update Profile </h2>
+                                            <div class="w-75 p-3" style="margin: auto;">
+                                                <%- messages('messages', locals) %>
+                                            </div>
                                             <hr>
                                             <div class="row">
                                                 <div class="col-md-6">
@@ -301,7 +247,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-md-4">
+                                            <div class="col-md-12">
                                                 <div class="form-group">
                                                     <h3 class="box-title">Upload Image</h3>
                                                     <input type="file" id="input-file-now1" name="image" class="dropify"
@@ -311,30 +257,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <h3 class="box-title">ID Proof</h3>
-                                                    <input type="file" id="input-file-now2" name="idImage"
-                                                        class="dropify" data-default-file="<%= vendor.idimage %>" />
-                                                    <div class="txt-s-101 cl6 p-b-10" style="color: red;">
-                                                        <span class="cl12" id="catErrFile2"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <h3 class="box-title">Address Proof</h3>
-                                                    <input type="file" id="input-file-now3" name="addImage"
-                                                        class="dropify"
-                                                        data-default-file="<%= vendor.addressimage %>" />
-                                                    <div class="txt-s-101 cl6 p-b-10" style="color: red;">
-                                                        <span class="cl12" id="catErrFile3"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-
                                             <button type="submit" class="btn btn-primary">Submit</button>
-                                            <a href="/admin/vendor" class="btn btn-danger"
+                                            <a href="/vendor" class="btn btn-danger"
                                                 style="color: white;">Cancel</a>
                                         </div>
                                     </div>
@@ -362,11 +286,7 @@
                 const deliveryRValue = document.getElementById('deliveryrange').value.trim();
                 const addressValue = document.getElementById('address').value.trim();
                 const filevalue1 = document.getElementById('input-file-now1').value;
-                const filevalue2 = document.getElementById('input-file-now2').value;
-                const filevalue3 = document.getElementById('input-file-now3').value;
                 const ext1 = filevalue1.substring(filevalue1.lastIndexOf('.') + 1);
-                const ext2 = filevalue2.substring(filevalue2.lastIndexOf('.') + 1);
-                const ext3 = filevalue3.substring(filevalue3.lastIndexOf('.') + 1);
 
                 if (storeValue == '') {
                     setError('ErrstoreName', 'Please enter Store Name.')
@@ -418,22 +338,6 @@
                     setError('catErrFile1', 'Wrong file type!')
                     returnVal = false;
                 }
-                if (filevalue2 == '') {
-                    removeError('catErrFile2')
-                } else if (ext2 == 'png' || ext2 == 'jpeg' || ext2 == 'jpg') {
-                    removeError('catErrFile2')
-                } else {
-                    setError('catErrFile2', 'Wrong file type!')
-                    returnVal = false;
-                }
-                if (filevalue3 == '') {
-                    removeError('catErrFile3')
-                } else if (ext3 == 'png' || ext3 == 'jpeg' || ext3 == 'jpg') {
-                    removeError('catErrFile3')
-                } else {
-                    setError('catErrFile3', 'Wrong file type!')
-                    returnVal = false;
-                }
 
                 if (returnVal) {
                     form.submit();
@@ -451,77 +355,77 @@
                 element.innerHTML = '';
             }
         </script>
-        <footer class="footer t-a-c">
-            © 2017 Cubic Admin
-        </footer>
-    </div>
-    <!-- ===== Page-Content-End ===== -->
-    </div>
-    <!-- ===== Main-Wrapper-End ===== -->
-    <!-- ==============================
+<footer class="footer t-a-c">
+    © 2017 Cubic Admin
+</footer>
+</div>
+<!-- ===== Page-Content-End ===== -->
+</div>
+<!-- ===== Main-Wrapper-End ===== -->
+<!-- ==============================
 Required JS Files
 =============================== -->
-    <!-- ===== jQuery ===== -->
-    <script src="/plugins/components/jquery/dist/jquery.min.js"></script>
-    <!-- ===== Bootstrap JavaScript ===== -->
-    <script src="/bootstrap/dist/js/bootstrap.min.js"></script>
-    <!-- ===== Slimscroll JavaScript ===== -->
-    <script src="/js/jquery.slimscroll.js"></script>
-    <!-- ===== Wave Effects JavaScript ===== -->
-    <script src="/js/waves.js"></script>
-    <!-- ===== Menu Plugin JavaScript ===== -->
-    <script src="/js/sidebarmenu.js"></script>
-    <!-- ===== Custom JavaScript ===== -->
-    <script src="/js/custom.js"></script>
-    <!-- ===== ckeditor JavaScript ===== -->
-    <script src="//cdn.ckeditor.com/4.7.1/standard/ckeditor.js"></script>
-    <script src="/js/ckeditor.js"></script>
-    <!-- ===== Plugin JS ===== -->
-    <script src="/plugins/components/chartist-js/dist/chartist.min.js"></script>
-    <script src="/plugins/components/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.min.js"></script>
-    <script src='/plugins/components/moment/moment.js'></script>
-    <script src='/plugins/components/fullcalendar/fullcalendar.js'></script>
-    <script src="/js/db2.js"></script>
-    <!-- jQuery file upload -->
-    <script src="/plugins/components/dropify/dist/js/dropify.min.js"></script>
-    <script>
-        $(function () {
-            // Basic
-            $('.dropify').dropify();
-            // Translated
-            $('.dropify-fr').dropify({
-                messages: {
-                    default: 'Glissez-déposez un fichier ici ou cliquez',
-                    replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
-                    remove: 'Supprimer',
-                    error: 'Désolé, le fichier trop volumineux'
-                }
-            });
-            // Used events
-            var drEvent = $('#input-file-events').dropify();
-            drEvent.on('dropify.beforeClear', function (event, element) {
-                return confirm("Do you really want to delete \"" + element.file.name + "\" ?");
-            });
-            drEvent.on('dropify.afterClear', function (event, element) {
-                alert('File deleted');
-            });
-            drEvent.on('dropify.errors', function (event, element) {
-                console.log('Has Errors');
-            });
-            var drDestroy = $('#input-file-to-destroy').dropify();
-            drDestroy = drDestroy.data('dropify')
-            $('#toggleDropify').on('click', function (e) {
-                e.preventDefault();
-                if (drDestroy.isDropified()) {
-                    drDestroy.destroy();
-                } else {
-                    drDestroy.init();
-                }
-            })
-        });
-    </script>
-    <!-- ===== Style Switcher JS ===== -->
-    <script src="/plugins/components/styleswitcher/jQuery.style.switcher.js"></script>
+<!-- ===== jQuery ===== -->
+<script src="/plugins/components/jquery/dist/jquery.min.js"></script>
+<!-- ===== Bootstrap JavaScript ===== -->
+<script src="/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- ===== Slimscroll JavaScript ===== -->
+<script src="/js/jquery.slimscroll.js"></script>
+<!-- ===== Wave Effects JavaScript ===== -->
+<script src="/js/waves.js"></script>
+<!-- ===== Menu Plugin JavaScript ===== -->
+<script src="/js/sidebarmenu.js"></script>
+<!-- ===== Custom JavaScript ===== -->
+<script src="/js/custom.js"></script>
+<!-- ===== ckeditor JavaScript ===== -->
+<script src="//cdn.ckeditor.com/4.7.1/standard/ckeditor.js"></script>
+<script src="/js/ckeditor.js"></script>
+<!-- ===== Plugin JS ===== -->
+<script src="/plugins/components/chartist-js/dist/chartist.min.js"></script>
+<script src="/plugins/components/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.min.js"></script>
+<script src='/plugins/components/moment/moment.js'></script>
+<script src='/plugins/components/fullcalendar/fullcalendar.js'></script>
+<script src="/js/db2.js"></script>
+<!-- jQuery file upload -->
+<script src="/plugins/components/dropify/dist/js/dropify.min.js"></script>
+<script>
+$(function() {
+    // Basic
+    $('.dropify').dropify();
+    // Translated
+    $('.dropify-fr').dropify({
+        messages: {
+            default: 'Glissez-déposez un fichier ici ou cliquez',
+            replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
+        }
+    });
+    // Used events
+    var drEvent = $('#input-file-events').dropify();
+    drEvent.on('dropify.beforeClear', function(event, element) {
+        return confirm("Do you really want to delete \"" + element.file.name + "\" ?");
+    });
+    drEvent.on('dropify.afterClear', function(event, element) {
+        alert('File deleted');
+    });
+    drEvent.on('dropify.errors', function(event, element) {
+        console.log('Has Errors');
+    });
+    var drDestroy = $('#input-file-to-destroy').dropify();
+    drDestroy = drDestroy.data('dropify')
+    $('#toggleDropify').on('click', function(e) {
+        e.preventDefault();
+        if (drDestroy.isDropified()) {
+            drDestroy.destroy();
+        } else {
+            drDestroy.init();
+        }
+    })
+});
+</script>
+<!-- ===== Style Switcher JS ===== -->
+<script src="/plugins/components/styleswitcher/jQuery.style.switcher.js"></script>
 </body>
 
 </html>

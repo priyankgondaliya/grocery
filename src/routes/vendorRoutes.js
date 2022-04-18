@@ -61,6 +61,62 @@ router.get("/", checkVendor, async (req, res) => {
     });
 });
 
+// GET profile
+router.get('/profile', checkVendor, (req, res) => {
+    res.render('vendor/profile', {
+        title: 'Vendor Profile',
+        vendor: req.vendor,
+    })
+})
+
+// POST profile
+router.post("/profile", checkVendor, upload.single('image'), async (req, res) => {
+    try {
+        const vendor = await Vendor.findById(req.vendor.id);
+        if (vendor == null) {
+            req.flash('danger', `An error occured!`);
+            return res.redirect('/vendor/profile');
+        }
+        vendor.storename = req.body.storename;
+        vendor.ownername = req.body.ownername;
+        vendor.contact = req.body.contact;
+        vendor.address = req.body.address;
+        vendor.deliverycharge = req.body.deliverycharge;
+        vendor.deliveryrange = req.body.deliveryrange;
+        if (req.body.lat && req.body.lng) {
+            vendor.coords = {
+                lat: req.body.lat,
+                lng: req.body.lng
+            }
+        }
+
+        if (typeof req.file !== 'undefined') {
+            oldImage = "public" + vendor.image;
+            fs.remove(oldImage, function (err) {
+                if (err) { console.log(err); }
+            })
+            const filename = new Date().toISOString().replace(/:/g, '-') + req.file.originalname;
+            vendor.image = `/uploads/vendor/${vendor.id}/` + filename;
+            fs.access(`./public/uploads/vendor/${vendor.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/vendor/${vendor.id}`); });
+            await sharp(req.file.buffer)
+                .toFile(`./public/uploads/vendor/${vendor.id}/` + filename);
+        }
+
+        await vendor.save();
+        req.flash('success', 'Profile edited successfully.')
+        res.redirect('/vendor/profile');
+    } catch (error) {
+        if (error.name === 'CastError') {
+            req.flash('danger', `An error occured!`);
+            res.redirect('/vendor/profile');
+        } else {
+            console.log(error);
+            res.send(error)
+        }
+    }
+});
+
+
 // GET login
 router.get('/login', (req, res) => {
     res.render('vendor/login', {
