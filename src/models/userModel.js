@@ -57,6 +57,16 @@ const userSchema = new mongoose.Schema({
         },
         postal: {
             type: Number,
+        },
+        coords: {
+            lat: {
+                type: Number,
+                require: true
+            },
+            lng: {
+                type: Number,
+                require: true
+            }
         }
     },
     wishlist: [{

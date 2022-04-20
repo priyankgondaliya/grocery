@@ -53,7 +53,7 @@ router.post('/', checkUser, checkStore, async (req, res) => {
             products.push(pro);
         }
         const discount = cart.discount ? cart.discount : 0;
-        const payableamount = cart.total + parseFloat(req.deliverycharge) - discount;
+        const payableamount = (cart.total + parseFloat(req.deliverycharge) - discount).toFixed(2);
         // check promo
         const order = new Order({
             vendor: req.store,
@@ -93,7 +93,7 @@ router.post('/razor', checkUser, checkStore, async (req, res) => {
     }
     const cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
     const discount = cart.discount ? cart.discount : 0;
-    const total = cart.total + parseFloat(req.deliverycharge) - discount;
+    const total = (cart.total + parseFloat(req.deliverycharge) - discount).toFixed(2);
     let options = {
         amount: total * 100,
         currency: "INR",
@@ -145,7 +145,7 @@ router.post('/is-order-complete', checkUser, checkStore, async (req, res) => {
                         products.push(pro);
                     }
                     const discount = cart.discount ? cart.discount : 0;
-                    const payableamount = cart.total + parseFloat(req.deliverycharge) - discount;
+                    const payableamount = (cart.total + parseFloat(req.deliverycharge) - discount).toFixed(2);
                     // check promo
                     const order = new Order({
                         vendor: req.store,
@@ -193,7 +193,7 @@ router.post('/stripe', checkUser, checkStore, async (req, res) => {
         }
         const cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
         const discount = cart.discount ? cart.discount : 0;
-        const total = cart.total + parseFloat(req.deliverycharge) - discount;
+        const total = (cart.total + parseFloat(req.deliverycharge) - discount).toFixed(2);
         const paymentIntent = await stripe.paymentIntents.create({
             amount: total * 100,
             currency: 'inr',
@@ -246,7 +246,7 @@ router.post('/stripe/create', checkUser, checkStore, async (req, res) => {
             products.push(pro);
         }
         const discount = cart.discount ? cart.discount : 0;
-        const payableamount = cart.total + parseFloat(req.deliverycharge) - discount;
+        const payableamount = (cart.total + parseFloat(req.deliverycharge) - discount).toFixed(2);
         // check promo
         const order = new Order({
             vendor: req.store,

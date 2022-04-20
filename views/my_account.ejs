@@ -21,6 +21,28 @@
 		</div>
 	</section>
 
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&key=AIzaSyBP19Ko2NR29ggZ2MRH9ayjd46vsexz_e0"></script>
+    <script>
+        var searchInput = 'caLandmark';
+
+        $(document).ready(function () {
+            var autocomplete;
+            autocomplete = new google.maps.places.Autocomplete((document.getElementById(searchInput)), {
+                types: ['geocode'],
+                componentRestrictions: {
+                    country: "in"
+                }
+            });
+            
+            google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                var near_place = autocomplete.getPlace();
+                document.getElementById('loc_lat').value = near_place.geometry.location.lat();
+                document.getElementById('loc_long').value = near_place.geometry.location.lng();
+            });
+        });
+    </script>
+
 	<!-- content page -->
 	<div class="bg0 p-t-95 p-b-70">
 		<div class="container">
@@ -200,6 +222,8 @@
 												<div class="txt-s-101 cl6 p-b-10">
 													<span class="cl12" id="caErrLandmark"></span>
 												</div>
+												<input type="hidden" name="lat" id="loc_lat" />
+												<input type="hidden" name="lng" id="loc_long" />
 											</div>
 										</div>
 

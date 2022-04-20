@@ -131,6 +131,28 @@
 				<%- messages('messages', locals) %>
 			</div>
 
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+			<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&key=AIzaSyBP19Ko2NR29ggZ2MRH9ayjd46vsexz_e0"></script>
+			<script>
+				var searchInput = 'landmark';
+		
+				$(document).ready(function () {
+					var autocomplete;
+					autocomplete = new google.maps.places.Autocomplete((document.getElementById(searchInput)), {
+						types: ['geocode'],
+						componentRestrictions: {
+							country: "in"
+						}
+					});
+					
+					google.maps.event.addListener(autocomplete, 'place_changed', function () {
+						var near_place = autocomplete.getPlace();
+						document.getElementById('loc_lat').value = near_place.geometry.location.lat();
+						document.getElementById('loc_long').value = near_place.geometry.location.lng();
+					});
+				});
+			</script>
+
 			<div class="row">
 				<div class="col-md-7 col-lg-8 p-b-50">
 					<div>
@@ -226,10 +248,12 @@
 											Landmark <span class="cl12">*</span>
 										</div>
 	
-										<input id="landmark" class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.address.country %>" name="landmark">
+										<input id="landmark" class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.address.landmark %>" name="landmark">
 										<div class="txt-s-101 cl6 p-b-10">
 											<span class="cl12" id="landmarkErr"></span>
 										</div>
+										<input type="hidden" name="lat" id="loc_lat" value="<%= user.address.coords.lat %>" />
+										<input type="hidden" name="lng" id="loc_long" value="<%= user.address.coords.lng %>" />
 									</div>
 								</div>
 								<div class="col-sm-6 p-b-23">

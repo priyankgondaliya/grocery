@@ -373,7 +373,8 @@ router.post("/address", [
                 title: 'My account',
                 alert,
                 cartLength,
-                user
+                user,
+                orders: []
             })
         }
         user.address = {
@@ -383,15 +384,15 @@ router.post("/address", [
             city: req.body.city,
             state: req.body.state,
             country: req.body.country,
-            postal: req.body.postal
+            postal: req.body.postal,
+            coords: {
+                lat: req.body.lat,
+                lng: req.body.lng
+            }
         }
         await user.save();
-        return res.render('my_account', {
-            title: 'My account',
-            alert: [{ msg: 'Address updated successfully.' }],
-            cartLength,
-            user
-        })
+        req.flash('success', `Address updated successfully.`);
+        res.redirect('/account');
     } catch (error) {
         res.status(400).send(error);
         console.log(error);

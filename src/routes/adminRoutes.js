@@ -268,7 +268,7 @@ router.get("/offer/delete/:id", checkAdmin, async (req, res) => {
 
 // GET order
 router.get("/order", checkAdmin, async (req, res) => {
-    var orders = await Order.find();
+    var orders = await Order.find().sort({_id: -1});
     let updated = []
     for (let i = 0; i < orders.length; i++) {
         let user = await User.findById(orders[i].user);

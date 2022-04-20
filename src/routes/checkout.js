@@ -149,7 +149,11 @@ router.post("/", [
             city: req.body.city,
             state: req.body.state,
             country: req.body.country,
-            postal: req.body.postal
+            postal: req.body.postal,
+            coords: {
+                lat: req.body.lat,
+                lng: req.body.lng
+            }
         }
         await user.save();
         req.flash('success', "Address changed successfully.")
