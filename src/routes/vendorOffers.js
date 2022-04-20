@@ -34,7 +34,7 @@ const Offer = require('../models/offerModel');
 
 // GET offers
 router.get("/", checkVendor, async (req, res) => {
-    const offers = await Offer.find();
+    const offers = await Offer.find({ vendor: req.vendor.id });
     res.status(201).render("vendor/vendor_offers", {
         title: 'Offer List',
         vendor: req.vendor,
@@ -95,7 +95,8 @@ router.post("/add", checkVendor, upload.single('image'), [
             totalprice: req.body.totalPrice,
             image: '/uploads/offer/' + filename,
             title: req.body.title,
-            description: req.body.description
+            description: req.body.description,
+            vendor: req.vendor.id
         })
         fs.access('./public/uploads/offer', (err) => { if (err) fs.mkdirSync('./public/uploads/offer'); });
         await sharp(req.file.buffer)

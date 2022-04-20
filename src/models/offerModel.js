@@ -51,6 +51,10 @@ const offerSchema = new mongoose.Schema({
     description: {
         type: String
     },
+    vendor: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Vendor',
+    },
 })
 
 module.exports = new mongoose.model("Offer", offerSchema);
