@@ -349,8 +349,12 @@
             var lat = latInput.value;
             var lng = lngInput.value;
 
-            console.log(lat+','+lng);
             if (lat == "" || lng == "") {
+                swal({
+					icon: 'error',
+					title: 'Opps...',
+					text: 'Please select valid address!'
+				})
                 return false
             }
             form.submit();

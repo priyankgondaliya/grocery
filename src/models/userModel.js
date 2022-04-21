@@ -32,28 +32,12 @@ const userSchema = new mongoose.Schema({
     phone: {
         type: String,
     },
-    // admin: {
-    //     type:Boolean,
-    //     default:0
-    // },
     address: {
         house: {
             type: String,
         },
-        apartment: {
-            type: String,
-        },
         landmark: {
             type: String
-        },
-        city: {
-            type: String,
-        },
-        state: {
-            type: String,
-        },
-        country: {
-            type: String,
         },
         postal: {
             type: Number,

@@ -32,11 +32,11 @@ router.post('/', checkUser, checkStore, async (req, res) => {
         // create order
         const user = req.user;
         const size = Object.keys(user.address).length;
-        if (size < 7 || Object.values(user.address).includes(undefined)) {
+        if (size < 4 || Object.values(user.address).includes(undefined)) {
             req.flash('danger', 'Address is required!');
             return res.redirect('/checkout');
         }
-        const address = `${user.address.house},${user.address.apartment},${user.address.landmark},${user.address.city},${user.address.state},${user.address.country}-${user.address.postal}`;
+        const address = `${user.address.house},${user.address.landmark}-${user.address.postal}`;
         var products = [];
         for (let i = 0; i < cart.products.length; i++) {
             const product = await Product.findById(cart.products[i].productId);
@@ -68,7 +68,6 @@ router.post('/', checkUser, checkStore, async (req, res) => {
         })
         await order.save();
         // manage promo
-        console.log(cart.promo);
         if (cart.promo) { await Promo.findByIdAndUpdate(cart.promo, { '$inc': { 'times': -1 } }); }
         // empty cart
         // cart.products = [];
@@ -88,7 +87,7 @@ router.post('/', checkUser, checkStore, async (req, res) => {
 router.post('/razor', checkUser, checkStore, async (req, res) => {
     const user = req.user;
     const size = Object.keys(user.address).length;
-    if (size < 7 || Object.values(user.address).includes(undefined)) {
+    if (size < 4 || Object.values(user.address).includes(undefined)) {
         return res.send({ status: 'fail', msg: 'Address is required!' });
     }
     const cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
@@ -124,11 +123,11 @@ router.post('/is-order-complete', checkUser, checkStore, async (req, res) => {
                     // create order
                     const user = req.user;
                     const size = Object.keys(user.address).length;
-                    if (size < 7 || Object.values(user.address).includes(undefined)) {
+                    if (size < 4 || Object.values(user.address).includes(undefined)) {
                         req.flash('danger', 'Address is required!');
                         return res.redirect('/checkout');
                     }
-                    const address = `${user.address.house},${user.address.apartment},${user.address.landmark},${user.address.city},${user.address.state},${user.address.country}-${user.address.postal}`;
+                    const address = `${user.address.house},${user.address.landmark}-${user.address.postal}`;
                     var products = [];
                     for (let i = 0; i < cart.products.length; i++) {
                         const product = await Product.findById(cart.products[i].productId);
@@ -188,7 +187,7 @@ router.post('/stripe', checkUser, checkStore, async (req, res) => {
     try {
         const user = req.user;
         const size = Object.keys(user.address).length;
-        if (size < 7 || Object.values(user.address).includes(undefined)) {
+        if (size < 4 || Object.values(user.address).includes(undefined)) {
             return res.send({ status: 'fail', msg: 'Address is required!' });
         }
         const cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
@@ -225,11 +224,11 @@ router.post('/stripe/create', checkUser, checkStore, async (req, res) => {
         // create order
         const user = req.user;
         const size = Object.keys(user.address).length;
-        if (size < 7 || Object.values(user.address).includes(undefined)) {
+        if (size < 3 || Object.values(user.address).includes(undefined)) {
             req.flash('danger', 'Address is required!');
             return res.redirect('/checkout');
         }
-        const address = `${user.address.house},${user.address.apartment},${user.address.landmark},${user.address.city},${user.address.state},${user.address.country}-${user.address.postal}`;
+        const address = `${user.address.house},${user.address.landmark}-${user.address.postal}`;
         var products = [];
         for (let i = 0; i < cart.products.length; i++) {
             const product = await Product.findById(cart.products[i].productId);

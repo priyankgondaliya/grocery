@@ -214,14 +214,14 @@
 									</div>
 								</div>
 	
-								<div class="col-12 p-b-23">
+								<div class="col-12 p-b-16">
 									Address
 								</div>
 	
-								<div class="col-sm-6 p-b-23">
+								<div class="col-sm-12 p-b-23">
 									<div>
 										<div class="txt-s-101 cl6 p-b-10">
-											House No <span class="cl12">*</span>
+											House No/Apartment <span class="cl12">*</span>
 										</div>
 	
 										<input id="house" class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.address.house %>" name="house">
@@ -230,19 +230,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="col-sm-6 p-b-23">
-									<div>
-										<div class="txt-s-101 cl6 p-b-10">
-											Apartment Name <span class="cl12">*</span>
-										</div>
-	
-										<input id="apartment" class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.address.apartment %>" name="apartment">
-										<div class="txt-s-101 cl6 p-b-10">
-											<span class="cl12" id="apartmentErr"></span>
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-6 p-b-23">
+								<div class="col-sm-12 p-b-23">
 									<div>
 										<div class="txt-s-101 cl6 p-b-10">
 											Landmark <span class="cl12">*</span>
@@ -254,42 +242,6 @@
 										</div>
 										<input type="hidden" name="lat" id="loc_lat" value="<%= user.address.coords.lat %>" />
 										<input type="hidden" name="lng" id="loc_long" value="<%= user.address.coords.lng %>" />
-									</div>
-								</div>
-								<div class="col-sm-6 p-b-23">
-									<div>
-										<div class="txt-s-101 cl6 p-b-10">
-											City<span class="cl12">*</span>
-										</div>
-	
-										<input id="city" class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.address.city %>" name="city">
-										<div class="txt-s-101 cl6 p-b-10">
-											<span class="cl12" id="cityErr"></span>
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-6 p-b-23">
-									<div>
-										<div class="txt-s-101 cl6 p-b-10">
-											State <span class="cl12">*</span>
-										</div>
-	
-										<input id="state" class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.address.state %>" name="state">
-										<div class="txt-s-101 cl6 p-b-10">
-											<span class="cl12" id="stateErr"></span>
-										</div>
-									</div>
-								</div>
-								<div class="col-sm-6 p-b-23">
-									<div>
-										<div class="txt-s-101 cl6 p-b-10">
-											County <span class="cl12">*</span>
-										</div>
-	
-										<input id="country" class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.address.country %>" name="country">
-										<div class="txt-s-101 cl6 p-b-10">
-											<span class="cl12" id="countryErr"></span>
-										</div>
 									</div>
 								</div>
 								<div class="col-sm-6 p-b-23">
@@ -620,16 +572,16 @@
 		function validate(){
 			let returnVal = true;
 
+			var latInput = document.getElementById('loc_lat');
+			var lngInput = document.getElementById('loc_long');
+			var lat = latInput.value;
+            var lng = lngInput.value;
 			const fname = document.getElementById('fname').value.trim();
 			const lname = document.getElementById('lname').value.trim();
 			const email = document.getElementById('email').value.trim();
 			const phone = document.getElementById('phone').value.trim();
 			const house = document.getElementById('house').value.trim();
-			const apartment = document.getElementById('apartment').value.trim();
 			const landmark = document.getElementById('landmark').value.trim();
-			const city = document.getElementById('city').value.trim();
-			const state = document.getElementById('state').value.trim();
-			const country = document.getElementById('country').value.trim();
 			const postal = document.getElementById('postal').value.trim();
 			
 			if (fname == '') {
@@ -665,42 +617,26 @@
 			} else {
 				removeError('houseErr')
 			}
-			if (apartment == '') {
-				setError('apartmentErr','Please enter Apartment.')
-				returnVal = false;
-			} else {
-				removeError('apartmentErr')
-			}
 			if (landmark == '') {
 				setError('landmarkErr','Please enter Landmark.')
 				returnVal = false;
 			} else {
 				removeError('landmarkErr')
 			}
-			if (city == '') {
-				setError('cityErr','Please enter City.')
-				returnVal = false;
-			} else {
-				removeError('cityErr')
-			}
-			if (state == '') {
-				setError('stateErr','Please enter State.')
-				returnVal = false;
-			} else {
-				removeError('stateErr')
-			}
-			if (country == '') {
-				setError('countryErr','Please enter Country.')
-				returnVal = false;
-			} else {
-				removeError('countryErr')
-			}
 			if (postal == '') {
 				setError('postalErr','Please enter Postal code.')
 				returnVal = false;
 			} else {
 				removeError('postalErr')
-			}
+			}		
+            if (lat == "" || lng == "") {
+				swal({
+					icon: 'error',
+					title: 'Opps...',
+					text: 'Please select valid address!'
+				})
+				returnVal = false;
+            }
 			// if (returnVal) {
 			// 	form.submit();
 			// }

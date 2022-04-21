@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const auth = require('../middleware/auth');
 const bcrypt = require("bcryptjs");
 const checkUser = require('../middleware/authMiddleware');
 const { sendForgotPassMail } = require('../helpers/sendmail')
@@ -26,7 +25,7 @@ router.post("/register", [
             console.log(alert);
             return res.render('account', {
                 title: 'Account',
-                user: req.user,
+                user: null,
                 cartLength: 0,
                 alert
             })
@@ -38,7 +37,7 @@ router.post("/register", [
             await userExist.save();
             return res.render('account', {
                 title: 'Account',
-                user: req.user,
+                user: null,
                 cartLength: 0,
                 alert: [{ msg: 'Registered.' }]
             })
@@ -46,7 +45,7 @@ router.post("/register", [
         if (userExist) {
             return res.render('account', {
                 title: 'account',
-                user: req.user,
+                user: null,
                 cartLength: 0,
                 alert: [{ msg: 'Email is already registerd, Try logging in.' }]
             })
@@ -58,11 +57,11 @@ router.post("/register", [
             password: req.body.password,
             phone: req.body.phone
         })
-        const token = await user.generateAuthToken();
-        res.cookie("jwt", token, {
-            expires: new Date(Date.now() + 600000),
-            httpOnly: true
-        });
+        // const token = await user.generateAuthToken();
+        // res.cookie("jwt", token, {
+        //     expires: new Date(Date.now() + 600000),
+        //     httpOnly: true
+        // });
         await user.save();
         // create cart for every store
         const stores = await Vendor.find();
@@ -76,7 +75,8 @@ router.post("/register", [
         }
         res.status(201).render("account", {
             title: 'My account',
-            user: req.user,
+            user: null,
+            // user: req.user,
             cartLength: 0,
             alert: [{ msg: 'Registered successfully, Now you can login.' }]
         });
@@ -351,11 +351,7 @@ router.post("/forgot_pass", checkUser, async (req, res, next) => {
 // post address
 router.post("/address", [
     check('house', 'Please enter House number!').notEmpty(),
-    check('apartment', 'Please enter Apartment!').notEmpty(),
     check('landmark', 'Please enter Landmark!').notEmpty(),
-    check('city', 'Please enter City!').notEmpty(),
-    check('state', 'Please enter State!').notEmpty(),
-    check('country', 'Please enter Country!').notEmpty(),
     check('postal', 'Please enter Postal code!').isNumeric()
 ], checkUser, async (req, res, next) => {
     try {
@@ -379,11 +375,7 @@ router.post("/address", [
         }
         user.address = {
             house: req.body.house,
-            apartment: req.body.apartment,
             landmark: req.body.landmark,
-            city: req.body.city,
-            state: req.body.state,
-            country: req.body.country,
             postal: req.body.postal,
             coords: {
                 lat: req.body.lat,

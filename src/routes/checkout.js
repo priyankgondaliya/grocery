@@ -41,7 +41,7 @@ router.get("/", checkUser, checkStore, async (req, res) => {
     const promo = cart.promo ? await Promo.findById(cart.promo) : null;
     const total = (cart.total + parseFloat(req.deliverycharge) - myCart.discount).toFixed(2);
     let isAddressValid = true;
-    if (Object.keys(req.user.address).length < 7 || Object.values(req.user.address).includes(undefined)) {
+    if (Object.keys(req.user.address).length < 4 || Object.values(req.user.address).includes(undefined)) {
         isAddressValid = false;
     }
     res.status(201).render("checkout", {
@@ -107,11 +107,7 @@ router.get('/promo/remove', checkUser, checkStore, async (req, res) => {
 router.post("/", [
     check('phone', 'Please enter Phone number!').notEmpty(),
     check('house', 'Please enter House number!').notEmpty(),
-    check('apartment', 'Please enter Apartment!').notEmpty(),
     check('landmark', 'Please enter Landmark!').notEmpty(),
-    check('city', 'Please enter City!').notEmpty(),
-    check('state', 'Please enter State!').notEmpty(),
-    check('country', 'Please enter Country!').notEmpty(),
     check('postal', 'Please enter Postal code!').isNumeric()
 ], checkUser, checkStore, async (req, res, next) => {
     try {
@@ -144,11 +140,7 @@ router.post("/", [
         user.phone = req.body.phone;
         user.address = {
             house: req.body.house,
-            apartment: req.body.apartment,
             landmark: req.body.landmark,
-            city: req.body.city,
-            state: req.body.state,
-            country: req.body.country,
             postal: req.body.postal,
             coords: {
                 lat: req.body.lat,

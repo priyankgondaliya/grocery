@@ -186,10 +186,10 @@
 							<div class="tab-pane fade" id="addresses" role="tabpanel">
 								<form onsubmit="validateCa()" action="/address" method="POST" id="caform">
 									<div class="row">
-										<div class="col-sm-6 p-b-23">
+										<div class="col-sm-12 p-b-23">
 											<div>
 												<div class="txt-s-101 cl6 p-b-10">
-													House No <span class="cl12">*</span>
+													House No/Apartment <span class="cl12">*</span>
 												</div>
 
 												<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" value="<%= user.address.house %>"  type="text" name="house" id="caHouse">
@@ -199,20 +199,8 @@
 											</div>
 										</div>
 
-										<div class="col-sm-6 p-b-23">
-											<div>
-												<div class="txt-s-101 cl6 p-b-10">
-													Apartment Name <span class="cl12">*</span>
-												</div>
 
-												<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" value="<%= user.address.apartment %>" type="text" name="apartment" id="caApartment">
-												<div class="txt-s-101 cl6 p-b-10">
-													<span class="cl12" id="caErrApartment"></span>
-												</div>
-											</div>
-										</div>
-
-										<div class="col-sm-6 p-b-23">
+										<div class="col-sm-12 p-b-23">
 											<div>
 												<div class="txt-s-101 cl6 p-b-10">
 													Landmark <span class="cl12">*</span>
@@ -224,45 +212,6 @@
 												</div>
 												<input type="hidden" name="lat" id="loc_lat" />
 												<input type="hidden" name="lng" id="loc_long" />
-											</div>
-										</div>
-
-										<div class="col-sm-6 p-b-23">
-											<div>
-												<div class="txt-s-101 cl6 p-b-10">
-													City <span class="cl12">*</span>
-												</div>
-
-												<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.address.city %>" name="city" id="caCity">
-												<div class="txt-s-101 cl6 p-b-10">
-													<span class="cl12" id="caErrCity"></span>
-												</div>
-											</div>
-										</div>
-
-										<div class="col-sm-6 p-b-23">
-											<div>
-												<div class="txt-s-101 cl6 p-b-10">
-													State <span class="cl12">*</span>
-												</div>
-
-												<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.address.state %>" name="state" id="caState">
-												<div class="txt-s-101 cl6 p-b-10">
-													<span class="cl12" id="caErrState"></span>
-												</div>
-											</div>
-										</div>
-
-										<div class="col-sm-6 p-b-23">
-											<div>
-												<div class="txt-s-101 cl6 p-b-10">
-													Country <span class="cl12">*</span>
-												</div>
-
-												<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.address.country %>" name="country" id="caCountry">
-												<div class="txt-s-101 cl6 p-b-10">
-													<span class="cl12" id="caErrCountry"></span>
-												</div>
 											</div>
 										</div>
 
@@ -429,11 +378,7 @@
 	<script>
 		const formCa = document.getElementById('caform');
 		const houseCa = document.getElementById('caHouse');
-		const apartCa = document.getElementById('caApartment');
 		const landCa = document.getElementById('caLandmark');
-		const cityCa = document.getElementById('caCity');
-		const stateCa = document.getElementById('caState');
-		const countryCa = document.getElementById('caCountry');
 		const postalCa = document.getElementById('caPostal');
 
 		// change address form
@@ -444,11 +389,8 @@
 			let returnVal = true;
 
 			const houseValue = houseCa.value.trim();
-			const apartValue = apartCa.value.trim();
+			// const apartValue = apartCa.value.trim();
 			const landValue = landCa.value.trim();
-			const cityValue = cityCa.value.trim();
-			const stateValue = stateCa.value.trim();
-			const countryValue = countryCa.value.trim();
 			const postalValue = postalCa.value.trim();
 			
 			if (houseValue == '') {
@@ -457,35 +399,11 @@
 			} else {
 				removeError('caErrHouse')
 			}
-			if (apartValue == '') {
-				setError('caErrApartment','Please enter Apartment name.')
-				returnVal = false;
-			} else {
-				removeError('caErrApartment')
-			}
 			if (landValue == '') {
 				setError('caErrLandmark','Please enter Landmark.')
 				returnVal = false;
 			} else {
 				removeError('caErrLandmark')
-			}
-			if (cityValue == '') {
-				setError('caErrCity','Please enter City.')
-				returnVal = false;
-			} else {
-				removeError('caErrCity')
-			}
-			if (stateValue == '') {
-				setError('caErrState','Please enter State.')
-				returnVal = false;
-			} else {
-				removeError('caErrState')
-			}
-			if (countryValue == '') {
-				setError('caErrCountry','Please enter Country.')
-				returnVal = false;
-			} else {
-				removeError('caErrCountry')
 			}
 			if (postalValue == '') {
 				setError('caErrPostal','Please enter Postal.')
