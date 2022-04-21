@@ -326,10 +326,7 @@
 			e.preventDefault();
 		})
 
-        function myLocation()
-        {
-            navigator.geolocation.getCurrentPosition(success, error);
-        }
+        function myLocation() { navigator.geolocation.getCurrentPosition(success, error); }
         
         function success(position) 
         {
@@ -340,10 +337,7 @@
             findStore();
         }
         
-        function error() 
-        {
-            alert("You have blocked us to know your location.");
-        }
+        function error() { alert("You have blocked us to know your location."); }
 
         function findStore() {
             var lat = latInput.value;
