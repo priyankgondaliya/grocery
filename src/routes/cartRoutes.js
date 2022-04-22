@@ -246,6 +246,109 @@ router.get('/update/:product', checkUser, checkStore, async (req, res) => {
     }
 });
 
+// add to cart api
+router.get("/api/add/:product", checkUser, checkStore, async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.product);
+        const totalqty = product.qtyweight;
+        // check if user is logged
+        if (req.user) {
+            // change in mongo
+            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
+            if (cart) {
+                //cart exists for user
+                let itemIndex = cart.products.findIndex(p => p.productId == product.id);
+
+                if (itemIndex > -1) {
+                    //product exists in the cart, update the quantity
+                    let productItem = cart.products[itemIndex];
+                    if (totalqty > productItem.quantity) {
+                        productItem.quantity = productItem.quantity + 1;
+                        cart.products[itemIndex] = productItem;
+                        await cart.save();
+                        return res.send({ status: 'success', name: product.productname, msg: 'Product is already in cart, quantity updated.' });
+                    } else {
+                        cart.products[itemIndex] = productItem;
+                        await cart.save();
+                        return res.send({ status: 'info', name: product.productname, msg: `Sorry! Only ${totalqty} available.`});
+                    }
+                } else {
+                    //product does not exists in cart, add new item
+                    cart.products.push({
+                        productId: product._id,
+                        quantity: 1,
+                        // price: product.totalprice
+                    });
+                    await cart.save();
+                    return res.send({ status: 'success', name: product.productname, msg: 'Product added to cart.' });
+                }
+            } else {
+                const cart = new Cart({
+                    userId: req.user.id,
+                    vendorId: req.store,
+                    products: [{
+                        productId: product._id,
+                        quantity: 1,
+                        // price: product.totalprice
+                    }]
+                })
+                await cart.save();
+                return res.send({ status: 'success', name: product.productname, msg: 'Product added to cart.' });
+            }
+        } else {
+            // store in session
+            var storeId = req.store;
+            if (req.session.cart == "undefined") {
+                req.session.cart = {};
+                req.session.cart[storeId] = [];
+                req.session.cart[storeId].push({
+                    productId: product.id,
+                    quantity: 1,
+                });
+                return res.send({ status: 'success', name: product.productname, msg: 'Product added to cart.' });
+            } else {
+                var cart = req.session.cart;
+                if (req.session.cart[storeId] == undefined) {
+                    var old = [];
+                    old.push({
+                        productId: product.id,
+                        quantity: 1,
+                    });
+                    cart[storeId] = old;
+                    req.session.cart = cart;
+                    return res.send({ status: 'success', name: product.productname, msg: 'Product added to cart.' });
+                } else {
+                    const cart = req.session.cart[storeId];
+                    for (var i = 0; i < cart.length; i++) {
+                        if (cart[i].productId == product.id) {
+                            if (totalqty > cart[i].quantity) {
+                                cart[i].quantity++;
+                                return res.send({ status: 'success', name: product.productname, msg: 'Product is already in cart, quantity updated.' });
+                            } else {
+                                return res.send({ status: 'info', name: product.productname, msg: `Sorry! Only ${totalqty} available.`});
+                            }
+                        }
+                    }
+                    // var old = cart;
+                    cart.push({
+                        productId: product.id,
+                        quantity: 1,
+                    });
+                    return res.send({ status: 'success', name: product.productname, msg: 'Product added to cart.' });
+                }
+            }
+        }
+    } catch (error) {
+        if (error.name === 'CastError' || error.name === 'TypeError') {
+            console.log(error);
+            res.redirect('/404');
+        } else {
+            console.log(error);
+            res.send(error)
+        }
+    }
+})
+
 // GET update cart api
 router.get('/api/update/:product', checkUser, checkStore, async (req, res) => {
     // console.log(req.url);
@@ -272,8 +375,10 @@ router.get('/api/update/:product', checkUser, checkStore, async (req, res) => {
                             cart.products[i].quantity--;
                             if (cart.products[i].quantity < 1) {
                                 cart.products.splice(i, 1);
+                                res.send({ status: 'success', totalqty: 0 });
+                            } else {
+                                res.send({ status: 'success', totalqty: cart.products[i].quantity });
                             }
-                            res.send({ status: 'success' });
                             break;
                         case "clear":
                             cart.products.splice(i, 1);
@@ -288,7 +393,6 @@ router.get('/api/update/:product', checkUser, checkStore, async (req, res) => {
                 }
             }
             await cart.save();
-            // res.send({status: 'success'});
         } else {
             var storeId = req.store;
             var cart = req.session.cart[storeId];
@@ -310,8 +414,10 @@ router.get('/api/update/:product', checkUser, checkStore, async (req, res) => {
                             cart[i].quantity--;
                             if (cart[i].quantity < 1) {
                                 cart.splice(i, 1);
+                                res.send({ status: 'success', totalqty: 0 });
+                            } else {
+                                res.send({ status: 'success', totalqty: cart[i].quantity });
                             }
-                            res.send({ status: 'success' });
                             break;
                         case "clear":
                             cart.splice(i, 1);
@@ -325,9 +431,7 @@ router.get('/api/update/:product', checkUser, checkStore, async (req, res) => {
                     break;
                 }
             }
-            // res.send({status: 'success'});
         }
-        // res.send({status: 'success'});
     } catch (error) {
         console.log(error);
         res.send(error)

@@ -152,7 +152,7 @@
 										<span class="block1-content-more txt-m-104 cl9 p-t-21 trans-04">
 											<%= searchProds[i].totalprice %>&#8377;
 										</span>
-										<input type="text" id="id" value="<%= searchProds[i].id %>" class="<%= searchProds[i].id %>" hidden>
+										<input type="text" id="id" value="<%= searchProds[i].id %>" hidden>
 										<div class="block1-wrap-icon flex-c-m flex-w trans-05">
 											<% if (searchProds[i].qtyweight < 1 ) { %>
 												<div class="outofstock">Out of stock</div>
@@ -160,7 +160,7 @@
 												<a href="/products/detail/<%= searchProds[i].id %>" class="block1-icon flex-c-m wrap-pic-max-w">
 													<img src="/images/icons/icon-view.png" alt="ICON">
 												</a>
-												<a href="/cart/add/<%= searchProds[i].id %>" class="block1-icon flex-c-m wrap-pic-max-w">
+												<a href="javascript:void(0)" class="block1-icon flex-c-m wrap-pic-max-w js-addcart-b1">
 													<img src="/images/icons/icon-cart.png" alt="ICON">
 												</a>
 												<% if (user && user.wishlist.includes(searchProds[i].id)) { %>

@@ -1,4 +1,34 @@
-
+	<!-- Subscribe -->
+	<section class="sec-subscribe bg13 p-t-50 p-b-50">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-5 p-tb-15">
+                        <div class="h-full flex-col-m">
+                            <h4 class="txt-m-110 cl3 p-b-4">
+                                Subscribe Newsletter.
+                            </h4>
+    
+                            <p class="txt-s-101 cl6">
+                                Get e-mail updates about our latest shop and special offers.
+                            </p>
+                        </div>
+                    </div>
+    
+                    <div class="col-md-7 p-tb-15">
+                        <form method="POST" action="/newsletter" onsubmit="validateNL()" class="flex-w flex-m h-full" id="nlform">
+                            <input class="size-a-6 txt-s-106 cl6 plh0 p-rl-30 w-full-sm" type="text" name="email" placeholder="Your email address" id="nlEmail">
+                            <button type="submit" class="bg10 size-a-5 txt-s-107 cl0 p-rl-15 trans-04 hov-btn2 mt-4 mt-sm-0">
+                                Subscribe
+                            </button>
+                        </form>
+                        <div class="txt-s-101 cl6 p-b-10">
+                            <span class="cl12" id="nlErrEmail"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
         <!-- Footer -->
         <footer class="bg12">
             <div class="container">
@@ -206,10 +236,72 @@
             </span>
         </div>
     
-        
-    
     <!--===============================================================================================-->	
         <script src="/vendor/jquery/jquery-3.2.1.min.js"></script>
+        <!-- newsletter -->
+        <script>
+            const formNL = document.getElementById('nlform');
+            const emailNL = document.getElementById('nlEmail');
+    
+            formNL.addEventListener('submit', (e) => {
+                e.preventDefault();
+            })
+            function validateNL(){
+                let returnVal = true;
+    
+                const emailValue = emailNL.value.trim();
+    
+                if (emailValue == '') {
+                    setError('nlErrEmail','Please enter email.')
+                    returnVal = false;
+                } else if (!validateEmail(emailValue)) {
+                    setError('nlErrEmail','Please enter valid email.')
+                    returnVal = false;
+                } else {
+                    removeError('nlErrEmail')
+                }
+                
+                if (returnVal) {
+                    // formNL.submit();
+                    fetch('/newsletter', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ email: emailValue}),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        swal({
+                            icon: data.type,
+                            // title: 'Opps...',
+                            text: data.msg
+                        })
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+                }
+            }
+    
+            function setError(id, error) {
+                // set error msg
+                const element = document.getElementById(id);
+                element.innerHTML = '* ' + error;
+            }
+            function removeError(id) {
+                // remove error msg
+                const element = document.getElementById(id);
+                element.innerHTML = '';
+            }
+            
+            function validateEmail(email){
+                return email.match(
+                    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                );
+            }
+        </script>
         <!-- pagination products -->
         <script>
             (function($) {

@@ -774,12 +774,9 @@
 	<script>
 		function razor() {
 			axios.post('/order/razor').then((info) => {
+				console.log(info);
 				if (info.data.status == 'fail') {
-					swal({
-						icon: 'error',
-						title: 'Opps...',
-						text: info.data.msg
-					})
+					window.location = '/cart';
 				} else {
 					var options = {
 						"key": "rzp_test_NMyPMTlTRVnLis",
@@ -835,36 +832,40 @@
 					// Send the token to your server.
 					axios.post('/order/stripe').then((res) => {
 						if (res.data) {
-							stripe.confirmCardPayment(res.data.client_secret,
-							{
-							payment_method: { card },
-							// return_url: 'https://example.com/return_url'
-							}
-							).then(function(response) {
-								if (response.error) {
-									// Handle error here
-									swal({
-										icon: 'error',
-										title: 'Opps...',
-										text: response.error.message
-									})
-								} else if (response.paymentIntent && response.paymentIntent.status === 'succeeded') {
-									// Handle successful payment
-									axios.post('/order/stripe/create',{
-										intentId: response.paymentIntent.id
-									}).then((res) => {
-										if (res.data.error) {
-											swal({
-												icon: 'error',
-												title: 'Opps...',
-												text: res.data.error
-											})
-										} else {
-											window.location.href = res.data.url;
-										}
-									});
+							if (res.data.status == 'fail') {
+								window.location = '/cart';
+							} else {
+								stripe.confirmCardPayment(res.data.client_secret,
+								{
+								payment_method: { card },
+								// return_url: 'https://example.com/return_url'
 								}
-							});
+								).then(function(response) {
+									if (response.error) {
+										// Handle error here
+										swal({
+											icon: 'error',
+											title: 'Opps...',
+											text: response.error.message
+										})
+									} else if (response.paymentIntent && response.paymentIntent.status === 'succeeded') {
+										// Handle successful payment
+										axios.post('/order/stripe/create',{
+											intentId: response.paymentIntent.id
+										}).then((res) => {
+											if (res.data.error) {
+												swal({
+													icon: 'error',
+													title: 'Opps...',
+													text: res.data.error
+												})
+											} else {
+												window.location.href = res.data.url;
+											}
+										});
+									}
+								});
+							}
 						} else {
 							console.log("Opps! An error occured.");
 							console.log(res);

@@ -37,6 +37,10 @@ router.post('/', checkUser, checkStore, async (req, res) => {
             return res.redirect('/checkout');
         }
         const address = `${user.address.house},${user.address.landmark}-${user.address.postal}`;
+        if (cart.products.length == 0) {
+            req.flash('success', "Cart is empty can not checkout.")
+            return res.redirect('/cart');
+        }
         var products = [];
         for (let i = 0; i < cart.products.length; i++) {
             const product = await Product.findById(cart.products[i].productId);
@@ -91,6 +95,10 @@ router.post('/razor', checkUser, checkStore, async (req, res) => {
         return res.send({ status: 'fail', msg: 'Address is required!' });
     }
     const cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
+    if (cart.products.length == 0) {
+        req.flash('success', "Cart is empty can not checkout.")
+        return res.json({status: 'fail'});
+    }
     const discount = cart.discount ? cart.discount : 0;
     const total = (cart.total + parseFloat(req.deliverycharge) - discount).toFixed(2);
     let options = {
@@ -128,6 +136,10 @@ router.post('/is-order-complete', checkUser, checkStore, async (req, res) => {
                         return res.redirect('/checkout');
                     }
                     const address = `${user.address.house},${user.address.landmark}-${user.address.postal}`;
+                    if (cart.products.length == 0) {
+                        req.flash('success', "Cart is empty can not checkout.")
+                        return res.redirect('/cart');
+                    }
                     var products = [];
                     for (let i = 0; i < cart.products.length; i++) {
                         const product = await Product.findById(cart.products[i].productId);
@@ -191,6 +203,10 @@ router.post('/stripe', checkUser, checkStore, async (req, res) => {
             return res.send({ status: 'fail', msg: 'Address is required!' });
         }
         const cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
+        if (cart.products.length == 0) {
+            req.flash('success', "Cart is empty can not checkout.")
+            return res.json({status: 'fail'});
+        }
         const discount = cart.discount ? cart.discount : 0;
         const total = (cart.total + parseFloat(req.deliverycharge) - discount).toFixed(2);
         const paymentIntent = await stripe.paymentIntents.create({
@@ -229,6 +245,10 @@ router.post('/stripe/create', checkUser, checkStore, async (req, res) => {
             return res.redirect('/checkout');
         }
         const address = `${user.address.house},${user.address.landmark}-${user.address.postal}`;
+        if (cart.products.length == 0) {
+            req.flash('success', "Cart is empty can not checkout.")
+            return res.redirect('/cart');
+        }
         var products = [];
         for (let i = 0; i < cart.products.length; i++) {
             const product = await Product.findById(cart.products[i].productId);

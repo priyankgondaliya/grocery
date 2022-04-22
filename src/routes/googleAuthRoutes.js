@@ -6,7 +6,7 @@ const Cart = require('../models/cartModel');
 
 router.get('/', passport.authenticate('google', { scope: ['profile', 'email'] }));
 router.get('/callback', passport.authenticate('google', { failureRedirect: '/failed' }),
-    async function (req, res) {
+    async (req, res) => {
         const user = req.myUser;
         const token = await user.generateAuthToken();
         res.cookie("jwt", token, {
@@ -34,7 +34,7 @@ router.get('/callback', passport.authenticate('google', { failureRedirect: '/fai
                         userId: user.id,
                         vendorId: key,
                         products: []
-                    })
+                    });
                     await cart.save();
                 }
                 if (value.length != 0) {
@@ -60,7 +60,6 @@ router.get('/callback', passport.authenticate('google', { failureRedirect: '/fai
                     }
                     // req.session.cart = undefined;
                     cartSession[key] = [];
-                    console.log(cartSession);
                     await cart.save();
                 }
             }

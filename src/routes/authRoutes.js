@@ -116,7 +116,7 @@ router.post("/login", checkUser, [
             return res.status(201).render("account", {
                 title: 'My account',
                 user: req.user,
-                cartLength,
+                cartLength: 0,
                 alert: [{ msg: 'Please login with google.' }]
             });
         }
@@ -229,7 +229,7 @@ router.post("/changepass", checkUser, [
     check('currentpass', 'Please enter current password!').notEmpty(),
     check('newpass', 'Please enter new password!').notEmpty(),
     check('cfnewpass', 'Please enter confirm new password!').notEmpty(),
-], checkUser, async (req, res, next) => {
+], checkUser, async (req, res) => {
     if (req.user) {
         var cart = await Cart.findOne({ userId: req.user.id });
         var cartLength = cart.products.length;
@@ -307,7 +307,7 @@ router.get("/forgot_pass", checkUser, async (req, res) => {
     });
 })
 
-router.post("/forgot_pass", checkUser, async (req, res, next) => {
+router.post("/forgot_pass", checkUser, async (req, res) => {
     try {
         if (req.user) {
             var cart = await Cart.findOne({ userId: req.user.id });
@@ -353,7 +353,7 @@ router.post("/address", [
     check('house', 'Please enter House number!').notEmpty(),
     check('landmark', 'Please enter Landmark!').notEmpty(),
     check('postal', 'Please enter Postal code!').isNumeric()
-], checkUser, async (req, res, next) => {
+], checkUser, async (req, res) => {
     try {
         if (req.user) {
             var cart = await Cart.findOne({ userId: req.user.id });
