@@ -270,7 +270,7 @@ router.get("/api/add/:product", checkUser, checkStore, async (req, res) => {
                     } else {
                         cart.products[itemIndex] = productItem;
                         await cart.save();
-                        return res.send({ status: 'info', name: product.productname, msg: `Sorry! Only ${totalqty} available.`});
+                        return res.send({ status: 'info', name: product.productname, msg: `Sorry! Only ${totalqty} available.` });
                     }
                 } else {
                     //product does not exists in cart, add new item
@@ -280,7 +280,7 @@ router.get("/api/add/:product", checkUser, checkStore, async (req, res) => {
                         // price: product.totalprice
                     });
                     await cart.save();
-                    return res.send({ status: 'success', name: product.productname, msg: 'Product added to cart.' });
+                    return res.send({ status: 'success', name: product.productname, msg: 'Product added to cart.', cartLength: cart.products.length });
                 }
             } else {
                 const cart = new Cart({
@@ -293,7 +293,7 @@ router.get("/api/add/:product", checkUser, checkStore, async (req, res) => {
                     }]
                 })
                 await cart.save();
-                return res.send({ status: 'success', name: product.productname, msg: 'Product added to cart.' });
+                return res.send({ status: 'success', name: product.productname, msg: 'Product added to cart.', cartLength: cart.products.length });
             }
         } else {
             // store in session
@@ -305,7 +305,7 @@ router.get("/api/add/:product", checkUser, checkStore, async (req, res) => {
                     productId: product.id,
                     quantity: 1,
                 });
-                return res.send({ status: 'success', name: product.productname, msg: 'Product added to cart.' });
+                return res.send({ status: 'success', name: product.productname, msg: 'Product added to cart.', cartLength: req.session.cart[storeId].length });
             } else {
                 var cart = req.session.cart;
                 if (req.session.cart[storeId] == undefined) {
@@ -316,7 +316,7 @@ router.get("/api/add/:product", checkUser, checkStore, async (req, res) => {
                     });
                     cart[storeId] = old;
                     req.session.cart = cart;
-                    return res.send({ status: 'success', name: product.productname, msg: 'Product added to cart.' });
+                    return res.send({ status: 'success', name: product.productname, msg: 'Product added to cart.', cartLength: cart.length });
                 } else {
                     const cart = req.session.cart[storeId];
                     for (var i = 0; i < cart.length; i++) {
@@ -325,7 +325,7 @@ router.get("/api/add/:product", checkUser, checkStore, async (req, res) => {
                                 cart[i].quantity++;
                                 return res.send({ status: 'success', name: product.productname, msg: 'Product is already in cart, quantity updated.' });
                             } else {
-                                return res.send({ status: 'info', name: product.productname, msg: `Sorry! Only ${totalqty} available.`});
+                                return res.send({ status: 'info', name: product.productname, msg: `Sorry! Only ${totalqty} available.` });
                             }
                         }
                     }
@@ -334,7 +334,7 @@ router.get("/api/add/:product", checkUser, checkStore, async (req, res) => {
                         productId: product.id,
                         quantity: 1,
                     });
-                    return res.send({ status: 'success', name: product.productname, msg: 'Product added to cart.' });
+                    return res.send({ status: 'success', name: product.productname, msg: 'Product added to cart.', cartLength: cart.length });
                 }
             }
         }
@@ -375,9 +375,9 @@ router.get('/api/update/:product', checkUser, checkStore, async (req, res) => {
                             cart.products[i].quantity--;
                             if (cart.products[i].quantity < 1) {
                                 cart.products.splice(i, 1);
-                                res.send({ status: 'success', totalqty: 0 });
+                                res.send({ status: 'success', totalqty: 0, cartLength: cart.products.length });
                             } else {
-                                res.send({ status: 'success', totalqty: cart.products[i].quantity });
+                                res.send({ status: 'success', totalqty: cart.products[i].quantity, cartLength: cart.products.length });
                             }
                             break;
                         case "clear":
@@ -414,7 +414,7 @@ router.get('/api/update/:product', checkUser, checkStore, async (req, res) => {
                             cart[i].quantity--;
                             if (cart[i].quantity < 1) {
                                 cart.splice(i, 1);
-                                res.send({ status: 'success', totalqty: 0 });
+                                res.send({ status: 'success', totalqty: 0, cartLength: cart.length });
                             } else {
                                 res.send({ status: 'success', totalqty: cart[i].quantity });
                             }

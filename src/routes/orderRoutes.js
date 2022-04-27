@@ -97,7 +97,7 @@ router.post('/razor', checkUser, checkStore, async (req, res) => {
     const cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
     if (cart.products.length == 0) {
         req.flash('success', "Cart is empty can not checkout.")
-        return res.json({status: 'fail'});
+        return res.json({ status: 'fail' });
     }
     const discount = cart.discount ? cart.discount : 0;
     const total = (cart.total + parseFloat(req.deliverycharge) - discount).toFixed(2);
@@ -205,7 +205,7 @@ router.post('/stripe', checkUser, checkStore, async (req, res) => {
         const cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
         if (cart.products.length == 0) {
             req.flash('success', "Cart is empty can not checkout.")
-            return res.json({status: 'fail'});
+            return res.json({ status: 'fail' });
         }
         const discount = cart.discount ? cart.discount : 0;
         const total = (cart.total + parseFloat(req.deliverycharge) - discount).toFixed(2);
@@ -340,7 +340,13 @@ router.post('/stripe/create', checkUser, checkStore, async (req, res) => {
 router.get('/cancel/:id', checkUser, async (req, res) => {
     try {
         const id = req.params.id;
-        await Order.findByIdAndUpdate(id, { status: 'Cancelled', canceldate: Date.now() });
+        const order = await Order.findByIdAndUpdate(id, { status: 'Cancelled', canceldate: Date.now() });
+        for (let i = 0; i < order.products.length; i++) {
+            // update stock
+            const product = await Product.findById(order.products[i].productId);
+            product.qtyweight = parseInt(product.qtyweight) + parseInt(order.products[i].quantity);
+            product.save();
+        }
         res.redirect('/account');
     } catch (error) {
         console.log(error.message);

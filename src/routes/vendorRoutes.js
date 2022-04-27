@@ -347,7 +347,13 @@ router.get("/order/:id/:action", checkVendor, async (req, res) => {
         if (action == 'accept') {
             await Order.findByIdAndUpdate(id, { status: 'Accepted', acceptdate: Date.now() });
         } else if (action == 'reject') {
-            await Order.findByIdAndUpdate(id, { status: 'Rejected', rejectdate: Date.now() });
+            const order = await Order.findByIdAndUpdate(id, { status: 'Rejected', rejectdate: Date.now() });
+            for (let i = 0; i < order.products.length; i++) {
+                // update stock
+                const product = await Product.findById(order.products[i].productId);
+                product.qtyweight = parseInt(product.qtyweight) + parseInt(order.products[i].quantity);
+                product.save();
+            }
         } else {
             req.flash('danger', 'Invalid action!');
         }

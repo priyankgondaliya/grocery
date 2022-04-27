@@ -272,7 +272,7 @@
                 var id = $(this).parent().parent().find('#id').val();
                 $.get(`/wishlist/api/remove/${id}`, function (data, status) {
                     if (data.status == 'success') {
-                        swal(nameProduct, "is removed from wishlist !", "warning");
+                        swal(nameProduct, "is removed from wishlist !", "info");
                         $('.' + id).parent().find('.js-addedwish-b1').attr('hidden', 'True')
                         $('.' + id).parent().find('.js-addwish-b1').removeAttr('hidden')
                     } else {
@@ -281,12 +281,16 @@
                 });
             });
         });
-        
+
         $('.js-addcart-b1').on('click', function () {
             var id = $(this).parent().parent().find('#id').val();
             $.get(`/cart/api/add/${id}`, function (data, status) {
                 if (status == 'success') {
                     swal(data.name, data.msg, data.status);
+                    if (data.cartLength) {
+                        $('#cartlength1').attr('data-notify', data.cartLength);
+                        $('#cartlength2').attr('data-notify', data.cartLength);
+                    }
                 } else {
                     swal({
                         icon: 'error',
@@ -562,6 +566,10 @@
                         $(thisbtn).parent().parent().parent().remove();
                         if ($(".table-shopping-cart").find("tbody").find("tr").length == 2) {
                             $(".table-shopping-cart").find('#empty').removeAttr('hidden');
+                        }
+                        if (data.cartLength != undefined) {
+                            $('#cartlength1').attr('data-notify', data.cartLength);
+                            $('#cartlength2').attr('data-notify', data.cartLength);
                         }
                     }
                     const array = document.getElementsByClassName("total");

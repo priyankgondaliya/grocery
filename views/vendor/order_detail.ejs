@@ -18,6 +18,7 @@
                                         <th>Image</th>
                                         <th>Product info</th>
                                         <th>Price</th>
+                                        <th>Weight</th>
                                         <th>Quantity</th>
                                         <th style="text-align:center">Total</th>
                                     </tr>
@@ -31,7 +32,10 @@
                                             </td>
                                             <td>&#8377;<%= updated[i].price %></td>
                                             <td>
-                                                <%= updated[i].quantity %> <%= updated[i].unit %>
+                                                <%= updated[i].weight %> <%= updated[i].unit %>
+                                            </td>
+                                            <td>
+                                                <%= updated[i].quantity %>
                                             </td>
                                             <td align="center" class="font-500">&#8377;<%= updated[i].price * updated[i].quantity %></td>
                                         </tr>

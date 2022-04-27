@@ -837,8 +837,8 @@
 							} else {
 								stripe.confirmCardPayment(res.data.client_secret,
 								{
-								payment_method: { card },
-								// return_url: 'https://example.com/return_url'
+									payment_method: { card },
+									// return_url: 'https://example.com/return_url'
 								}
 								).then(function(response) {
 									if (response.error) {
