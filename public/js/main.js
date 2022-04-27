@@ -566,6 +566,8 @@
                         $(thisbtn).parent().parent().parent().remove();
                         if ($(".table-shopping-cart").find("tbody").find("tr").length == 2) {
                             $(".table-shopping-cart").find('#empty').removeAttr('hidden');
+                            $("#checkoutBtn").hide();
+                            $("#clearCart").hide();
                         }
                         if (data.cartLength != undefined) {
                             $('#cartlength1').attr('data-notify', data.cartLength);

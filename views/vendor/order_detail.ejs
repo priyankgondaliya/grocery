@@ -26,18 +26,18 @@
                                 <tbody>
                                     <% for( let i = 0; i < updated.length; i++ ) { %>
                                         <tr>
-                                            <td><img src="<%= updated[i].image %>" alt="iMac" width="80"></td>
+                                            <td><img src="<%= updated[i].image %>" alt="product-img" width="80"></td>
                                             <td>
                                                 <h5 class="font-500"><%= updated[i].name %></h5>
                                             </td>
-                                            <td>&#8377;<%= updated[i].price %></td>
+                                            <td>&#8377; <%= updated[i].price %></td>
                                             <td>
                                                 <%= updated[i].weight %> <%= updated[i].unit %>
                                             </td>
                                             <td>
                                                 <%= updated[i].quantity %>
                                             </td>
-                                            <td align="center" class="font-500">&#8377;<%= updated[i].price * updated[i].quantity %></td>
+                                            <td align="center" class="font-500">&#8377; <%= updated[i].price * updated[i].quantity %></td>
                                         </tr>
                                     <% } %>
                                 </tbody>

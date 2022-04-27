@@ -37,100 +37,72 @@
 							<th class="column-3">Quantity</th>
 							<th class="column-4">Total</th>
 						</tr>
-
-						<% if ( myCart.length > 0 ) { %>
-							<% for( let i = 0; i < myCart.length; i++ ) { %>
-								<tr class="table_row" id="<%= myCart[i].id %>">
-									<td class="column-1">
-										<div class="flex-w flex-m">
-											<div class="wrap-pic-w size-w-50 bo-all-1 bocl12 m-r-30">
-												<img src="<%= myCart[i].image %>" alt="IMG">
-											</div>
-		
-											<span>
-												<a href="/products/detail/<%= myCart[i].id %>" style="color: inherit;"><%= myCart[i].productname %></a>
-											</span>
-										</div>
-									</td>
-									<td class="column-2">
-										&#8377; <span id="price"><%= myCart[i].totalprice %></span>
-									</td>
-									<td class="column-3">
-										<div class="wrap-num-product flex-w flex-m bg12 p-rl-10">
-											<input type="text" id="id" value="<%= myCart[i].id %>" hidden>
-											<!-- <a href="/cart/update/<%= myCart[i].id %>?action=remove">
-												<div class="btn-num-product-down flex-c-m fs-29"></div>
-											</a> -->
-											<div class="btn-num-product-down flex-c-m fs-29"></div>
-		
-											<input class="txt-m-102 cl6 txt-center num-product" id="qty" type="number" name="num-product1" value="<%= myCart[i].quantity %>" readonly>
-
-											<div class="btn-num-product-up flex-c-m fs-16"></div>
-											<!-- <a href="/cart/update/<%= myCart[i].id %>?action=add">
-												<div class="btn-num-product-up flex-c-m fs-16"></div>
-											</a> -->
-										</div>
-										<span id="stockErr" style="color: red;" hidden>Sorry! We have limited stock.</span>
-									</td>
-									<td class="column-4">
-										<div class="flex-w flex-sb-m">
-											<span class="total">
-												&#8377; <%= myCart[i].totalprice * myCart[i].quantity %>
-											</span>
-		
-											<a href="/cart/update/<%= myCart[i].id %>?action=clear">
-												<div class="fs-15 hov-cl10 pointer">
-													<span class="lnr lnr-cross"></span>
-												</div>
-											</a>
-										</div>
-									</td>
-								</tr>
-							<% } %>
-							<tr class="table_row" id="empty" hidden="true">
-								<td class="column-1" colspan="4">
+						
+						<% for( let i = 0; i < myCart.length; i++ ) { %>
+							<tr class="table_row" id="<%= myCart[i].id %>">
+								<td class="column-1">
 									<div class="flex-w flex-m">
-										Cart is empty.
+										<div class="wrap-pic-w size-w-50 bo-all-1 bocl12 m-r-30">
+											<img src="<%= myCart[i].image %>" alt="IMG">
+										</div>
+	
+										<span>
+											<a href="/products/detail/<%= myCart[i].id %>" class="txt-m-103 cl3 txt-center hov-cl10 trans-04"><%= myCart[i].productname %></a>
+										</span>
 									</div>
 								</td>
-							</tr>
-						<% } else { %>
-							<tr class="table_row">
-								<td class="column-1" colspan="4">
-									<div class="flex-w flex-m">
-										Cart is empty.
+								<td class="column-2">
+									&#8377; <span id="price"><%= myCart[i].totalprice %></span>
+								</td>
+								<td class="column-3">
+									<div class="wrap-num-product flex-w flex-m bg12 p-rl-10">
+										<input type="text" id="id" value="<%= myCart[i].id %>" hidden>
+										<div class="btn-num-product-down flex-c-m fs-29"></div>
+										<input class="txt-m-102 cl6 txt-center num-product" id="qty" type="number" name="num-product1" value="<%= myCart[i].quantity %>" readonly>
+										<div class="btn-num-product-up flex-c-m fs-16"></div>
+									</div>
+									<span id="stockErr" style="color: red;" hidden>Sorry! We have limited stock.</span>
+								</td>
+								<td class="column-4">
+									<div class="flex-w flex-sb-m">
+										<span class="total">
+											&#8377; <%= myCart[i].totalprice * myCart[i].quantity %>
+										</span>
+	
+										<a href="/cart/update/<%= myCart[i].id %>?action=clear">
+											<div class="fs-15 hov-cl10 pointer">
+												<span class="lnr lnr-cross"></span>
+											</div>
+										</a>
 									</div>
 								</td>
 							</tr>
 						<% } %>
-
+						<tr class="table_row" id="empty" <%= myCart.length > 0 ? 'hidden' : '' %>>
+							<td class="column-1" colspan="4">
+								<div class="flex-w flex-m">
+									Cart is empty.
+								</div>
+							</td>
+						</tr>
 					</table>
 				</div>
 
-				<div class="flex-w flex-sb-m p-t-20">
-					<a href="/cart/clear" onclick="return confirm('Are you sure?')">
-						<button class="flex-c-m txt-s-105 cl0 bg10 size-a-33 hov-btn2 trans-04 pointer p-rl-10 m-tb-10">
-							Clear CART
-						</button>
-					</a>
+				<div class="flex-w flex-sb-m p-t-30">
+					<div class="flex-w flex-m m-r-50 m-tb-10">
+						<% if (myCart.length > 0) { %>
+							<a href="/cart/clear" id="clearCart" onclick="return confirm('Are you sure?')">
+								<button class="flex-c-m txt-s-105 cl0 bg10 size-a-33 hov-btn2 trans-04 pointer p-rl-10 m-tb-10">
+									Clear CART
+								</button>
+							</a>
+						<% } %>
+					</div>
+	
 					<a href="/products/all" class="flex-c-m txt-s-103 cl0 bg10 size-h-9 hov-btn2 trans-04 pointer p-rl-29 m-tb-10">
 						Continue shopping
 					</a>
 				</div>
-
-				<!-- <div class="flex-w flex-sb-m p-t-20">
-					<div class="flex-w flex-m m-r-50 m-tb-10">
-						<input class="size-a-31 bo-all-1 bocl15 txt-s-123 cl6 plh1 p-rl-20 focus1 m-r-30 m-tb-10" type="text" name="coupon" placeholder="Coupon Code">
-
-						<div class="flex-c-m txt-s-105 cl0 bg10 size-a-32 hov-btn2 trans-04 pointer p-rl-10 m-tb-10">
-							apply coupon
-						</div>
-					</div>
-
-					<div class="flex-c-m txt-s-105 cl0 bg10 size-a-33 hov-btn2 trans-04 pointer p-rl-10 m-tb-10">
-						update CART
-					</div>
-				</div> -->
 
 				<div class="flex-col-l p-t-68">
 					<span class="txt-m-123 cl3 p-b-18">
@@ -156,7 +128,7 @@
 					</div>
 
 					<% if ( myCart.length > 0 ) { %>
-						<a href="/checkout">
+						<a href="/checkout" id="checkoutBtn">
 							<button class="flex-c-m txt-s-105 cl0 bg10 size-a-34 hov-btn2 trans-04 p-rl-10 m-t-43">
 								proceed to checkout
 							</button>

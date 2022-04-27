@@ -29,7 +29,6 @@
 					<tr class="table_head bg12">
 						<th class="column-1 p-l-30">Product Name</th>
 						<th class="column-2">Unit Price</th>
-						<!-- <th class="column-3">Stock Status</th> -->
 						<th class="column-3">Add to cart</th>
 					</tr>
 					<% if (items.length > 0) { %>
@@ -42,24 +41,17 @@
 										</div>
 		
 										<span>
-											<%= items[i].productname %>
+											<a href="/products/detail/<%= items[i].id %>" class="txt-m-103 cl3 txt-center hov-cl10 trans-04"><%= items[i].productname %></a>
 										</span>
 									</div>
 								</td>
 								<td class="column-2">
 									&#8377; <%= items[i].totalprice %>
 								</td>
-								<!-- <td class="column-3">
-									<div class="flex-t">
-										<img class="m-t-4 m-r-8" src="/images/icons/icon-list3.png" alt="IMG">
-										<span class="size-w-53 txt-m-104 cl6">
-											In Stock
-										</span>
-									</div>
-								</td> -->
 								<td class="column-3">
+									<input type="text" id="id" value="<%= items[i].id %>" class="<%= items[i].id %>" hidden>
 									<div class="flex-w flex-sb-m">
-										<a href="/cart/add/<%= items[i].id %>" class="flex-c-m txt-s-103 cl6 size-a-2 how-btn1 bo-all-1 bocl11 hov-btn1 trans-04">
+										<a href="javascript:void(0)" class="flex-c-m txt-s-103 cl6 size-a-2 how-btn1 bo-all-1 bocl11 hov-btn1 trans-04 js-addcart-b1">
 											Add to cart
 											<span class="lnr lnr-chevron-right m-l-7"></span>
 											<span class="lnr lnr-chevron-right"></span>
@@ -87,7 +79,7 @@
 			<div class="flex-w flex-sb-m p-t-30">
 				<div class="flex-w flex-m m-r-50 m-tb-10">
 					<% if (items.length > 0) { %>
-						<a href="/wishlist/remove/all" class="flex-c-m txt-s-103 cl6 size-h-9 how-btn1 bo-all-1 bocl11 hov-btn1 trans-04 pointer p-rl-29 m-tb-10" onclick="return confirm('Are you sure?')">
+						<a href="/wishlist/remove/all" class="flex-c-m txt-s-103 cl0 bg10 size-h-9 hov-btn2 trans-04 pointer p-rl-29 m-tb-10" onclick="return confirm('Are you sure?')">
 							Clear wishlist
 						</a>
 					<% } %>

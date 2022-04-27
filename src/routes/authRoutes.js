@@ -234,7 +234,8 @@ router.post("/changepass", checkUser, [
         var cart = await Cart.findOne({ userId: req.user.id });
         var cartLength = cart.products.length;
     } else {
-        var cartLength = req.session.cart.products.length;
+        const storeId = req.store;
+        var cartLength = req.session.cart ? (req.session.cart[storeId] ? req.session.cart[storeId].length : 0) : 0;
     }
     const validationErrors = validationResult(req)
     if (validationErrors.errors.length > 0) {
@@ -298,7 +299,8 @@ router.get("/forgot_pass", checkUser, async (req, res) => {
         var cart = await Cart.findOne({ userId: req.user.id });
         var cartLength = cart.products.length;
     } else {
-        var cartLength = req.session.cart.products.length;
+        const storeId = req.store;
+        var cartLength = req.session.cart ? (req.session.cart[storeId] ? req.session.cart[storeId].length : 0) : 0;
     }
     res.render("forgot_pass", {
         title: "Forgot password",
@@ -313,7 +315,8 @@ router.post("/forgot_pass", checkUser, async (req, res) => {
             var cart = await Cart.findOne({ userId: req.user.id });
             var cartLength = cart.products.length;
         } else {
-            var cartLength = req.session.cart.products.length;
+            const storeId = req.store;
+            var cartLength = req.session.cart ? (req.session.cart[storeId] ? req.session.cart[storeId].length : 0) : 0;
         }
         // generate pass
         let pass = (Math.random() + 1).toString(36).substring(5);
@@ -359,7 +362,8 @@ router.post("/address", [
             var cart = await Cart.findOne({ userId: req.user.id });
             var cartLength = cart.products.length;
         } else {
-            var cartLength = req.session.cart.products.length;
+            const storeId = req.store;
+            var cartLength = req.session.cart ? (req.session.cart[storeId] ? req.session.cart[storeId].length : 0) : 0;
         }
         const user = req.user;
         const validationErrors = validationResult(req)

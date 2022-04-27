@@ -352,7 +352,7 @@ router.get("/order/:id/:action", checkVendor, async (req, res) => {
                 // update stock
                 const product = await Product.findById(order.products[i].productId);
                 product.qtyweight = parseInt(product.qtyweight) + parseInt(order.products[i].quantity);
-                product.save();
+                await product.save();
             }
         } else {
             req.flash('danger', 'Invalid action!');

@@ -80,10 +80,6 @@
 								<a class="nav-link" data-toggle="tab" href="#addresses" role="tab">Addresses</a>
 							</li>
 
-							<!-- <li class="nav-item p-b-16">
-								<a class="nav-link" data-toggle="tab" href="#account-details" role="tab">Account details</a>
-							</li> -->
-
 							<li class="nav-item p-b-16">
 								<a class="nav-link" data-toggle="tab" href="#change-password" role="tab">Change password</a>
 							</li>
@@ -108,79 +104,76 @@
 								</p>
 							</div>
 
-							<!-- <div class="tab-pane fade" id="orders" role="tabpanel">
-								<div class="bo-all-1 bocl15 flex-w flex-sb-m p-rl-30 p-tb-10 p-rl-15-ssm">
-									<div class="flex-t p-tb-8 m-r-30">
-										<img class="m-t-6 m-r-10" src="images/icons/icon-list.png" alt="IMG">
-										<span class="size-w-53 txt-s-101 cl6">
-											No order has been made yet.
-										</span>
-									</div>
-									<a href="/products/all" class="flex-c-m txt-s-105 cl0 bg10 size-a-42 hov-btn2 trans-04 p-rl-10 m-tb-8">
-										go shop
-									</a>
-								</div>
-							</div> -->
-
 							<div class="tab-pane fade" id="orders" role="tabpanel">
-								<div class="bo-all-1 bocl15 flex-w flex-sb-m p-rl-30 p-tb-10 p-rl-15-ssm">
-									<div class="flex-t p-tb-8 m-r-30">
-										<!-- <img class="m-t-6 m-r-10" src="images/icons/icon-list.png" alt="IMG"> -->
-										<span class="size-w-53 txt-s-101 cl6">
-											<h3 class="page-title">Orders</h3>
-											
-										</span>
+								<% if (orders.length < 1) { %>
+									<div class="bo-all-1 bocl15 flex-w flex-sb-m p-rl-30 p-tb-10 p-rl-15-ssm">
+										<div class="flex-t p-tb-8 m-r-30">
+											<img class="m-t-6 m-r-10" src="images/icons/icon-list.png" alt="IMG">
+											<span class="size-w-53 txt-s-101 cl6">
+												No order has been made yet.
+											</span>
+										</div>
+										<a href="/products/all" class="flex-c-m txt-s-105 cl0 bg10 size-a-42 hov-btn2 trans-04 p-rl-10 m-tb-8">
+											go shop
+										</a>
 									</div>
-
-									<a href="/products/all" class="flex-c-m txt-s-105 cl0 bg10 size-a-42 hov-btn2 trans-04 p-rl-10 m-tb-8">
-										Continue shopping
-									</a>
-								</div>
-								<div class="table-responsive">
-									<table id="myTable" class="table table-striped color-table primary-table">
-										<thead>
-											<tr>
-												<th>Sr No.</th>
-												<th>Order Date</th>
-												<th>Status</th>
-												<th>Total</th>
-												<th>Pay With</th>
-												<th>Detail</th>
-												<th>Cancel Order</th>
-											</tr>
-										</thead>
-										<tbody>
-											<% for( let i = 0; i < orders.length; i++ ) { %>
-												<tr>
-													<td style="vertical-align: middle;"><%= i+1 %></td>
-													<td style="vertical-align: middle;"><%= orders[i].date %></td>
-													<td style="vertical-align: middle;">
-														<% if (orders[i].status == 'Pending' || orders[i].status == 'Processing') { %>
-															<div class="text-warning"><%= orders[i].status %></div>
-														<% } else if (orders[i].status == 'Accepted' || orders[i].status == 'Completed') { %>
-															<div class="text-success"><%= orders[i].status %></div>
-														<% } else if (orders[i].status == 'Rejected' || orders[i].status == 'Cancelled') { %>
-															<div class="text-danger"><%= orders[i].status %></div>
-														<% } %>
-													</td style="vertical-align: middle;">
-													<td style="vertical-align: middle;">&#8377; <%= orders[i].totalamount %></td>
-													<td style="vertical-align: middle;"><%= orders[i].paymentmode %></td>
-													<td style="vertical-align: middle;"><a href="/order/detail/<%= orders[i].id %>"><i class="fa fa-info" style="color: black;"></i></a></td>
-													<td style="vertical-align: middle;">
-														<% if (orders[i].status == 'Cancelled' || orders[i].status == 'Rejected') { %>
-															<div class="text-danger">Order Cancelled</div>
-														<% } else if (orders[i].status == 'Completed') { %>
-															<div class="text-success">Order Completed</div>
-														<% } else { %>
-															<a href="/order/cancel/<%= orders[i].id %>" class="btn btn-danger" onclick="return confirm('Are you sure want to cancel the order?')">Cancel</a>
-														<% } %>
-													</td>
-												</tr>
-											<% } %>
-										</tbody>
-									</table>
-								</div>
+								<% } else { %>
+									<div class="bo-all-1 bocl15 flex-w flex-sb-m p-rl-30 p-tb-10 p-rl-15-ssm">
+										<div class="flex-t p-tb-8 m-r-30">
+											<span class="size-w-53 txt-s-101 cl6">
+												<h3 class="page-title">Orders</h3>
+											</span>
+										</div>
 	
+										<a href="/products/all" class="flex-c-m txt-s-105 cl0 bg10 size-a-42 hov-btn2 trans-04 p-rl-10 m-tb-8">
+											Continue shopping
+										</a>
+									</div>
+									<div class="table-responsive">
+										<table id="myTable" class="table table-striped color-table primary-table">
+											<thead>
+												<tr>
+													<th>Sr No.</th>
+													<th>Order Date</th>
+													<th>Status</th>
+													<th>Total</th>
+													<th>Pay With</th>
+													<th>Detail</th>
+													<th>Cancel Order</th>
+												</tr>
+											</thead>
+											<tbody>
+												<% for( let i = 0; i < orders.length; i++ ) { %>
+													<tr>
+														<td style="vertical-align: middle;"><%= i+1 %></td>
+														<td style="vertical-align: middle;"><%= orders[i].date %></td>
+														<td style="vertical-align: middle;">
+															<% if (orders[i].status == 'Pending' || orders[i].status == 'Processing') { %>
+																<div class="text-warning"><%= orders[i].status %></div>
+															<% } else if (orders[i].status == 'Accepted' || orders[i].status == 'Completed') { %>
+																<div class="text-success"><%= orders[i].status %></div>
+															<% } else if (orders[i].status == 'Rejected' || orders[i].status == 'Cancelled') { %>
+																<div class="text-danger"><%= orders[i].status %></div>
+															<% } %>
+														</td style="vertical-align: middle;">
+														<td style="vertical-align: middle;">&#8377; <%= orders[i].totalamount %></td>
+														<td style="vertical-align: middle;"><%= orders[i].paymentmode %></td>
+														<td style="vertical-align: middle;"><a href="/order/detail/<%= orders[i].id %>"><i class="fa fa-info" style="color: black;"></i></a></td>
+														<td style="vertical-align: middle;">
+															<% if (orders[i].status == 'Cancelled' || orders[i].status == 'Rejected') { %>
+																<div class="text-danger">Order Cancelled</div>
+															<% } else if (orders[i].status == 'Completed') { %>
+																<div class="text-success">Order Completed</div>
+															<% } else { %>
+																<a href="/order/cancel/<%= orders[i].id %>" class="btn btn-danger" onclick="return confirm('Are you sure want to cancel the order?')">Cancel</a>
+															<% } %>
+														</td>
+													</tr>
+												<% } %>
+											</tbody>
+										</table>
+									</div>
+								<% } %>
 							</div>
 							<!-- - -->
 							<div class="tab-pane fade" id="addresses" role="tabpanel">
@@ -235,85 +228,7 @@
 										</button>
 									</div>
 								</form>
-								<!-- </div> -->
 							</div>
-
-							<!-- - -->
-							<!-- <div class="tab-pane fade" id="account-details" role="tabpanel">
-								<form>
-									<div class="row">
-										<div class="col-sm-6 p-b-23">
-											<div>
-												<div class="txt-s-101 cl6 p-b-10">
-													First Name <span class="cl12">*</span>
-												</div>
-
-												<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" name="first-name">
-											</div>
-										</div>
-
-										<div class="col-sm-6 p-b-23">
-											<div>
-												<div class="txt-s-101 cl6 p-b-10">
-													Last Name <span class="cl12">*</span>
-												</div>
-
-												<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" name="last-name">
-											</div>
-										</div>
-
-										<div class="col-12 p-b-23">
-											<div>
-												<div class="txt-s-101 cl6 p-b-10">
-													Email address <span class="cl12">*</span>
-												</div>
-
-												<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" name="email" placeholder="example@abc.xyz">
-											</div>
-										</div>
-
-										<h5 class="txt-m-109 cl3 p-rl-15 p-t-10 p-b-17">
-											Password change
-										</h5>
-
-										<div class="col-12 p-b-23">
-											<div>
-												<div class="txt-s-101 cl6 p-b-10">
-													Current password (leave blank to leave unchanged)
-												</div>
-
-												<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" name="current-pw">
-											</div>
-										</div>
-
-										<div class="col-12 p-b-23">
-											<div>
-												<div class="txt-s-101 cl6 p-b-10">
-													New password (leave blank to leave unchanged)
-												</div>
-
-												<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" name="new-pw">
-											</div>
-										</div>
-
-										<div class="col-12 p-b-23">
-											<div>
-												<div class="txt-s-101 cl6 p-b-10">
-													Confirm new password
-												</div>
-
-												<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" name="cf-new-pw">
-											</div>
-										</div>
-
-										<div class="flex-w p-rl-15 p-t-17">
-											<button class="flex-c-m txt-s-105 cl0 bg10 size-a-43 hov-btn2 trans-04 p-rl-10">
-												Save address
-											</button>
-										</div>
-									</div>
-								</form>
-							</div> -->
 
 							<!-- - -->
 							<div class="tab-pane fade" id="change-password" role="tabpanel">
