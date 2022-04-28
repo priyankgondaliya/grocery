@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require("bcryptjs");
+const jwt = require('jsonwebtoken');
 const { sendForgotPassMail } = require('../helpers/sendmail')
 const { check, validationResult } = require('express-validator');
 const formatDate = require('../helpers/formateDate');
@@ -119,9 +120,53 @@ router.post("/profile", checkVendor, upload.single('image'), async (req, res) =>
 
 // GET login
 router.get('/login', (req, res) => {
-    res.render('vendor/login', {
-        title: 'Vendor Login'
-    })
+    if (req.session.checkVendorSuccess) {
+        req.session.checkVendorSuccess = undefined;
+        return res.render('vendor/login', {
+            title: 'Vendor Login'
+        })
+    }
+    const token = req.cookies['jwtVendor'];
+    if (token) {
+        jwt.verify(token, process.env.SECRET_KEY, function (err, decodedToken) {
+            if (err) {
+                console.log("ERROR: " + err.message);
+                return res.render('vendor/login', {
+                    title: 'Vendor Login'
+                });
+            } else {
+                Vendor.findById(decodedToken._id, function (err, vendor) {
+                    if (err) {
+                        console.log("ERROR: " + err.message);
+                        return res.render('vendor/login', {
+                            title: 'Vendor Login'
+                        });
+                    }
+                    if (!vendor) {
+                        console.log("ERROR: " + 'Vendor not found!');
+                        return res.render('vendor/login', {
+                            title: 'Vendor Login'
+                        });
+                    }
+                    if (vendor.status == 'Rejected') {
+                        return res.render('vendor/login', {
+                            title: 'Vendor Login'
+                        });
+                    }
+                    if (vendor.status != 'Approved') {
+                        return res.render('vendor/login', {
+                            title: 'Vendor Login'
+                        });
+                    }
+                    return res.redirect('/vendor');
+                });
+            }
+        });
+    } else {
+        res.render('vendor/login', {
+            title: 'Vendor Login'
+        })
+    }
 })
 
 // GET logout

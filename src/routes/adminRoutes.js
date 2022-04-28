@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const fs = require('fs-extra');
+const jwt = require('jsonwebtoken');
 const { check, validationResult } = require('express-validator');
 const bcrypt = require("bcryptjs");
 const formatDate = require('../helpers/formateDate');
@@ -63,9 +64,46 @@ router.get("/", checkAdmin, async (req, res) => {
 
 // GET login
 router.get('/login', (req, res) => {
-    res.render('admin/login', {
-        title: 'Admin Login'
-    })
+    if (req.session.checkAdminSuccess) {
+        req.session.checkAdminSuccess = undefined;
+        return res.render('admin/login', {
+            title: 'Admin Login'
+        })
+    }
+    const token = req.cookies['jwtAdmin'];
+    if (token) {
+        jwt.verify(token, process.env.SECRET_KEY, function (err, decodedToken) {
+            if (err) {
+                console.log("ERROR: " + err.message);
+                return res.render('admin/login', {
+                    title: 'Admin Login'
+                })
+            } else {
+                User.findById(decodedToken._id, function (err, user) {
+                    if (err) {
+                        console.log("ERROR: " + err.message);
+                        return res.render('admin/login', {
+                            title: 'Admin Login'
+                        })
+                    }
+                    if (!user) {
+                        return res.render('admin/login', {
+                            title: 'Admin Login'
+                        })
+                    } else if (!user.isAdmin) {
+                        return res.render('admin/login', {
+                            title: 'Admin Login'
+                        })
+                    }
+                    return res.redirect('/admin');
+                });
+            }
+        });
+    } else {
+        res.render('admin/login', {
+            title: 'Admin Login'
+        })
+    }
 })
 
 // GET logout
@@ -268,7 +306,7 @@ router.get("/offer/delete/:id", checkAdmin, async (req, res) => {
 
 // GET order
 router.get("/order", checkAdmin, async (req, res) => {
-    var orders = await Order.find().sort({_id: -1});
+    var orders = await Order.find().sort({ _id: -1 });
     let updated = []
     for (let i = 0; i < orders.length; i++) {
         let user = await User.findById(orders[i].user);

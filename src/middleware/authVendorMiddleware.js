@@ -3,6 +3,7 @@ const Vendor = require('../models/vendorModel');
 
 const checkVendor = function (req, res, next) {
     const token = req.cookies['jwtVendor'];
+    req.session.checkVendorSuccess = true;
     if (token) {
         jwt.verify(token, process.env.SECRET_KEY, function (err, decodedToken) {
             if (err) {
@@ -27,10 +28,11 @@ const checkVendor = function (req, res, next) {
                         return res.redirect('/vendor/login');
                     }
                     if (vendor.status != 'Approved') {
-                        req.flash('danger', 'Waiting for approval!');
+                        req.flash('info', 'Waiting for approval!');
                         return res.redirect('/vendor/login');
                     }
                     req.vendor = vendor;
+                    req.session.checkVendorSuccess = undefined;
                     next();
                 });
             }

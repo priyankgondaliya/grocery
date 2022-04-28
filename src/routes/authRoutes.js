@@ -19,10 +19,8 @@ router.post("/register", [
 ], async (req, res) => {
     try {
         const validationErrors = validationResult(req)
-        // console.log(validationErrors.errors);
         if (validationErrors.errors.length > 0) {
             const alert = validationErrors.array()
-            console.log(alert);
             return res.render('account', {
                 title: 'Account',
                 user: null,
@@ -31,8 +29,7 @@ router.post("/register", [
             })
         }
         const userExist = await User.findOne({ email: req.body.email })
-        if (userExist && userExist.googleid) {
-            // console.log(userExist.googleid);
+        if (userExist && userExist.googleid && userExist.password == undefined) {
             userExist.password = req.body.password;
             await userExist.save();
             return res.render('account', {
@@ -130,7 +127,6 @@ router.post("/login", checkUser, [
             });
         }
         const token = await userExist.generateAuthToken();
-        // console.log("the token part" + token);
         res.cookie("jwt", token, {
             expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
             httpOnly: true,
@@ -147,10 +143,8 @@ router.post("/login", checkUser, [
         }
         // CART: session to db
         const cartSession = req.session.cart;
-        // console.log(req.session.cart);
         if (cartSession != undefined) {
             for (const [key, value] of Object.entries(cartSession)) {
-                // console.log(`${key} ${value}`);
                 var cart = await Cart.findOne({ userId: userExist.id, vendorId: key });
                 if (!cart) {
                     var cart = new Cart({
@@ -216,7 +210,6 @@ router.get("/logoutall", checkUser, async (req, res) => {
         // logout from all device
         req.user.tokens = [];
         res.clearCookie("jwt");
-        console.log("logout successfully");
         await req.user.save();
         res.render("login");
     } catch (error) {
@@ -244,6 +237,7 @@ router.post("/changepass", checkUser, [
             title: 'My account',
             user: req.user,
             cartLength,
+            orders: [],
             alert
         })
     }
@@ -254,6 +248,7 @@ router.post("/changepass", checkUser, [
             title: "My account",
             user: req.user,
             cartLength,
+            orders: [],
             alert: [{ msg: 'You have logged in with google.' }]
         });
     }
@@ -263,6 +258,7 @@ router.post("/changepass", checkUser, [
             title: "My account",
             user: req.user,
             cartLength,
+            orders: [],
             alert: [{ msg: 'Password you entered is wrong.' }]
         });
     }
@@ -271,6 +267,7 @@ router.post("/changepass", checkUser, [
             title: "My account",
             user: req.user,
             cartLength,
+            orders: [],
             alert: [{ msg: 'New password can not be same as current password.' }]
         });
     }
@@ -279,6 +276,7 @@ router.post("/changepass", checkUser, [
             title: "My account",
             user: req.user,
             cartLength,
+            orders: [],
             alert: [{ msg: 'Password and confirm password does not match!' }]
         });
     }
@@ -289,6 +287,7 @@ router.post("/changepass", checkUser, [
         title: "My account",
         user: req.user,
         cartLength,
+        orders: [],
         alert: [{ msg: 'Password changed.' }]
     });
 })
@@ -337,8 +336,6 @@ router.post("/forgot_pass", checkUser, async (req, res) => {
 
         // send mail
         sendForgotPassMail(email, pass)
-        // console.log('email : '+ email);
-        // console.log('pass : '+ pass);
         res.status(201).render("account", {
             title: 'My account',
             user: req.user,
