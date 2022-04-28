@@ -294,7 +294,7 @@ router.get("/forgot", async (req, res) => {
 })
 
 // POST Forgot Pass
-router.post("/forgot", async (req, res, next) => {
+router.post("/forgot", async (req, res) => {
     // generate pass
     let pass = (Math.random() + 1).toString(36).substring(5);
 

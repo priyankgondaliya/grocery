@@ -18,10 +18,10 @@ app.set('view engine', 'ejs');
 // static path
 app.use(express.static(path.join(__dirname, "../public")));
 
-//set global errors var
+// set global errors var
 app.locals.errors = null;
 
-//get all pages to pass to header.ejs
+// get all pages to pass to header.ejs
 const Contact = require('./models/contactDetailModel');
 const checkUser = require("./middleware/authMiddleware");
 const bodyParser = require("body-parser");

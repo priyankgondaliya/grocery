@@ -256,11 +256,11 @@ router.get("/api/add/:product", checkUser, checkStore, async (req, res) => {
             // change in mongo
             var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
             if (cart) {
-                //cart exists for user
+                // cart exists for user
                 let itemIndex = cart.products.findIndex(p => p.productId == product.id);
 
                 if (itemIndex > -1) {
-                    //product exists in the cart, update the quantity
+                    // product exists in the cart, update the quantity
                     let productItem = cart.products[itemIndex];
                     if (totalqty > productItem.quantity) {
                         productItem.quantity = productItem.quantity + 1;
@@ -273,7 +273,7 @@ router.get("/api/add/:product", checkUser, checkStore, async (req, res) => {
                         return res.send({ status: 'info', name: product.productname, msg: `Sorry! Only ${totalqty} available.` });
                     }
                 } else {
-                    //product does not exists in cart, add new item
+                    // product does not exists in cart, add new item
                     cart.products.push({
                         productId: product._id,
                         quantity: 1,

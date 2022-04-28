@@ -84,7 +84,7 @@ router.post("/register", [
 })
 
 // POST login
-router.post("/login", checkUser, [
+router.post("/login", [
     check('email', 'Please enter valid email.').isEmail(),
     check('password', 'Please enter password!').notEmpty(),
 ], async (req, res) => {
@@ -94,7 +94,7 @@ router.post("/login", checkUser, [
             const alert = validationErrors.array()
             return res.render('account', {
                 title: 'account',
-                user: req.user,
+                user: null,
                 cartLength: 0,
                 alert
             })
@@ -104,7 +104,7 @@ router.post("/login", checkUser, [
         if (!userExist) {
             return res.status(201).render("account", {
                 title: 'My account',
-                user: req.user,
+                user: null,
                 cartLength: 0,
                 alert: [{ msg: 'Invalid email or password!' }]
             });
@@ -112,7 +112,7 @@ router.post("/login", checkUser, [
         if (!userExist.password) {
             return res.status(201).render("account", {
                 title: 'My account',
-                user: req.user,
+                user: null,
                 cartLength: 0,
                 alert: [{ msg: 'Please login with google.' }]
             });
@@ -121,7 +121,7 @@ router.post("/login", checkUser, [
         if (!isMatch) {
             return res.status(201).render("account", {
                 title: 'My account',
-                user: req.user,
+                user: null,
                 cartLength: 0,
                 alert: [{ msg: 'Invalid email or password!' }]
             });
