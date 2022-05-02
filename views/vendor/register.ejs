@@ -110,14 +110,14 @@
                         </div>
                         <div class="col-xs-3">
                             <!-- <label class="control-label">Delivery Charge</label> -->
-                            <input class="form-control" id="delivery" type="text" placeholder="Delivery Charge" name="deliverycharge">
+                            <input class="form-control" id="delivery" type="text" placeholder="Delivery Charge" name="deliverycharge" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
                             <div class="txt-s-101 cl6 p-b-10" style="color: red;">
                                 <span class="cl12" id="Errdelivery"></span>
                             </div>
                         </div>
                         <div class="col-xs-3">
                             <!-- <label class="control-label">Delivery Range</label> -->
-                            <input class="form-control" id="deliveryrange" type="text" placeholder="Delivery Range" name="deliveryrange">
+                            <input class="form-control" id="deliveryrange" type="text" placeholder="Delivery Range" name="deliveryrange" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
                             <div class="txt-s-101 cl6 p-b-10" style="color: red;">
                                 <span class="cl12" id="Errdeliveryrange"></span>
                             </div>
