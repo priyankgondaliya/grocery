@@ -279,13 +279,16 @@ router.post("/register", upload.fields([
         console.log('vendor email : '+vendor.email);
         fs.access('./public/uploads/vendor', (err) => { if (err) fs.mkdirSync('./public/uploads/vendor'); });
         fs.access(`./public/uploads/vendor/${vendor.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/vendor/${vendor.id}`); });
+        console.log(`1`);
         await sharp(req.files.image[0].buffer)
             .toFile(`./public/uploads/vendor/${vendor.id}/` + file1name);
+        console.log(`2`);
         await sharp(req.files.idImage[0].buffer)
             .toFile(`./public/uploads/vendor/${vendor.id}/` + file2name);
+        console.log(`3`);
         await sharp(req.files.addImage[0].buffer)
             .toFile(`./public/uploads/vendor/${vendor.id}/` + file3name);
-
+        console.log(`4`);
         await vendor.save();
         req.flash('success', 'Vendor added successfully')
         res.redirect('/vendor/login');
