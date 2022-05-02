@@ -81,7 +81,7 @@ router.post('/add', checkAdmin, upload.single('image'), [
             cat.featured = true
         }
         // fs.access('./public/uploads/category', (err) => { if (err) fs.mkdirSync('./public/uploads/category'); });
-        if (!fs.existsSync('./public/uploads/category')){
+        if (!fs.existsSync('./public/uploads/category')) {
             fs.mkdirSync('./public/uploads/category', { recursive: true });
         }
         await sharp(req.file.buffer)
@@ -161,7 +161,7 @@ router.post('/edit/:id', checkAdmin, upload.single('image'), [
             const filename = new Date().toISOString().replace(/:/g, '-') + req.file.originalname;
             cat.image = '/uploads/category/' + filename;
             // fs.access('./public/uploads/category', (err) => { if (err) fs.mkdirSync('./public/uploads/category'); });
-            if (!fs.existsSync('./public/uploads/category')){
+            if (!fs.existsSync('./public/uploads/category')) {
                 fs.mkdirSync('./public/uploads/category', { recursive: true });
             }
             await sharp(req.file.buffer)

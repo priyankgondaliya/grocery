@@ -99,7 +99,7 @@ router.post("/add", checkVendor, upload.single('image'), [
             vendor: req.vendor.id
         })
         // fs.access('./public/uploads/offer', (err) => { if (err) fs.mkdirSync('./public/uploads/offer'); });
-        if (!fs.existsSync('./public/uploads/offer')){
+        if (!fs.existsSync('./public/uploads/offer')) {
             fs.mkdirSync('./public/uploads/offer', { recursive: true });
         }
         await sharp(req.file.buffer)
@@ -195,8 +195,9 @@ router.post('/edit/:id', checkVendor, upload.single('image'), [
             })
             const filename = new Date().toISOString().replace(/:/g, '-') + req.file.originalname;
             offer.image = '/uploads/offer/' + filename;
+
             // fs.access('./public/uploads/offer', (err) => { if (err) fs.mkdirSync('./public/uploads/offer'); });
-            if (!fs.existsSync('./public/uploads/offer')){
+            if (!fs.existsSync('./public/uploads/offer')) {
                 fs.mkdirSync('./public/uploads/offer', { recursive: true });
             }
             await sharp(req.file.buffer)

@@ -91,7 +91,7 @@ router.post('/add', checkAdmin, upload.single('image'), [
             image: '/uploads/subcategory/' + filename
         })
         // fs.access('./public/uploads/subcategory', (err) => { if (err) fs.mkdirSync('./public/uploads/subcategory'); });
-        if (!fs.existsSync('./public/uploads/subcategory')){
+        if (!fs.existsSync('./public/uploads/subcategory')) {
             fs.mkdirSync('./public/uploads/subcategory', { recursive: true });
         }
         await sharp(req.file.buffer)
@@ -165,7 +165,7 @@ router.post('/edit/:id', checkAdmin, upload.single('image'), [
             const filename = new Date().toISOString().replace(/:/g, '-') + req.file.originalname;
             subcat.image = '/uploads/subcategory/' + filename;
             // fs.access('./public/uploads/subcategory', (err) => { if (err) fs.mkdirSync('./public/uploads/subcategory'); });
-            if (!fs.existsSync('./public/uploads/subcategory')){
+            if (!fs.existsSync('./public/uploads/subcategory')) {
                 fs.mkdirSync('./public/uploads/subcategory', { recursive: true });
             }
             await sharp(req.file.buffer)

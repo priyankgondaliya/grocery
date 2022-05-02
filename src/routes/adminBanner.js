@@ -67,7 +67,7 @@ router.post("/add", checkAdmin, upload.single('image'), async (req, res) => {
             image: '/uploads/banner/' + filename
         })
         // fs.access('./public/uploads/banner', (err) => { if (err) fs.mkdirSync('./public/uploads/banner'); });
-        if (!fs.existsSync('./public/uploads/banner')){
+        if (!fs.existsSync('./public/uploads/banner')) {
             fs.mkdirSync('./public/uploads/banner', { recursive: true });
         }
         await sharp(req.file.buffer)
@@ -132,7 +132,7 @@ router.post("/edit/:id", checkAdmin, upload.single('image'), async (req, res) =>
             const filename = new Date().toISOString().replace(/:/g, '-') + req.file.originalname;
             banner.image = '/uploads/banner/' + filename;
             // fs.access('./public/uploads/banner', (err) => { if (err) fs.mkdirSync('./public/uploads/banner'); });
-            if (!fs.existsSync('./public/uploads/banner')){
+            if (!fs.existsSync('./public/uploads/banner')) {
                 fs.mkdirSync('./public/uploads/banner', { recursive: true });
             }
             await sharp(req.file.buffer)
