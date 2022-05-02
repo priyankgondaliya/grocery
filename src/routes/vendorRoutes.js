@@ -277,18 +277,23 @@ router.post("/register", upload.fields([
         vendor.addressimage = `/uploads/vendor/${vendor.id}/` + file3name;
         console.log('vendor id : '+vendor.id);
         console.log('vendor email : '+vendor.email);
-        fs.access('./public/uploads/vendor', (err) => { if (err) fs.mkdirSync('./public/uploads/vendor'); console.log('1'); });
-        fs.access(`./public/uploads/vendor/${vendor.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/vendor/${vendor.id}`); console.log('2'); });
+        console.log('1');
+        if (!fs.existsSync('./public/uploads/vendor')){
+            fs.mkdirSync('./public/uploads/vendor', { recursive: true });
+        }
+        console.log('2');
+        if (!fs.existsSync(`./public/uploads/vendor/${vendor.id}`)){
+            fs.mkdirSync(`./public/uploads/vendor/${vendor.id}`, { recursive: true });
+        }
+        // fs.access('./public/uploads/vendor', (err) => { if (err) fs.mkdirSync('./public/uploads/vendor'); console.log('1'); });
+        // fs.access(`./public/uploads/vendor/${vendor.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/vendor/${vendor.id}`); console.log('2'); });
         console.log(`3`);
         await sharp(req.files.image[0].buffer)
             .toFile(`./public/uploads/vendor/${vendor.id}/` + file1name);
-        console.log(`4`);
         await sharp(req.files.idImage[0].buffer)
             .toFile(`./public/uploads/vendor/${vendor.id}/` + file2name);
-        console.log(`5`);
         await sharp(req.files.addImage[0].buffer)
             .toFile(`./public/uploads/vendor/${vendor.id}/` + file3name);
-        console.log(`6`);
         await vendor.save();
         req.flash('success', 'Vendor added successfully')
         res.redirect('/vendor/login');
