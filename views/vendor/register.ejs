@@ -197,6 +197,11 @@
             const ext2 = filevalue2.substring(filevalue2.lastIndexOf('.') + 1);
             const ext3 = filevalue3.substring(filevalue3.lastIndexOf('.') + 1);
     
+            var latInput = document.getElementById('loc_lat');
+			var lngInput = document.getElementById('loc_long');
+			var lat = latInput.value;
+            var lng = lngInput.value;
+
             if (storeValue == '') {
                 setError('ErrstoreName','Please enter Store Name.')
                 returnVal = false;
@@ -255,6 +260,9 @@
             if (addressValue == '') {
                 setError('Erraddress','Please enter Address.')
                 returnVal = false;
+            } else if (lat == "" || lng == "") {
+				setError('Erraddress','Please select valid Address.')
+				returnVal = false;
             } else {
                 removeError('Erraddress')
             }

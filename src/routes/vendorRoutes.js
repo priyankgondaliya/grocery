@@ -197,6 +197,14 @@ router.post("/login", [
             req.flash('danger', 'Invalid email or password!');
             return res.redirect('/vendor/login');
         }
+        if (vendorExist.status == 'Rejected') {
+            req.flash('danger', 'Sorry! You are rejected.');
+            return res.redirect('/vendor/login');
+        }
+        if (vendorExist.status != 'Approved') {
+            req.flash('info', 'Waiting for approval!');
+            return res.redirect('/vendor/login');
+        }
         const token = await vendorExist.generateAuthToken();
         res.cookie("jwtVendor", token, {
             expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
