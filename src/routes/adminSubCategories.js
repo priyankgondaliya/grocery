@@ -123,7 +123,7 @@ router.get("/edit/:id", checkAdmin, async (req, res) => {
             return res.redirect('/admin/subcategory');
         }
         res.status(201).render("admin/edit_subcategory", {
-            title: 'Edit Category',
+            title: 'Edit Sub Category',
             cats,
             subcats
         });
