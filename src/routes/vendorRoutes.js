@@ -275,7 +275,7 @@ router.post("/register", upload.fields([
         vendor.image = `/uploads/vendor/${vendor.id}/` + file1name;
         vendor.idimage = `/uploads/vendor/${vendor.id}/` + file2name;
         vendor.addressimage = `/uploads/vendor/${vendor.id}/` + file3name;
-
+        console.log('vendor id : '+vendor.id);
         fs.access('./public/uploads/vendor', (err) => { if (err) fs.mkdirSync('./public/uploads/vendor'); });
         fs.access(`./public/uploads/vendor/${vendor.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/vendor/${vendor.id}`); });
         await sharp(req.files.image[0].buffer)
