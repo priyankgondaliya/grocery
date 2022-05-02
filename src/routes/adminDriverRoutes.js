@@ -94,8 +94,14 @@ router.post("/add", checkAdmin, upload.fields([
         driver.frontimage = `/uploads/driver/${driver.id}/` + file3name;
         driver.backimage = `/uploads/driver/${driver.id}/` + file4name;
 
-        fs.access('./public/uploads/driver', (err) => { if (err) fs.mkdirSync('./public/uploads/driver'); });
-        fs.access(`./public/uploads/driver/${driver.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/driver/${driver.id}`); });
+        // fs.access('./public/uploads/driver', (err) => { if (err) fs.mkdirSync('./public/uploads/driver'); });
+        // fs.access(`./public/uploads/driver/${driver.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/driver/${driver.id}`); });
+        if (!fs.existsSync('./public/uploads/driver')){
+            fs.mkdirSync('./public/uploads/driver', { recursive: true });
+        }
+        if (!fs.existsSync(`./public/uploads/driver/${driver.id}`)){
+            fs.mkdirSync(`./public/uploads/driver/${driver.id}`, { recursive: true });
+        }
         await sharp(req.files.driverImage[0].buffer)
             .toFile(`./public/uploads/driver/${driver.id}/` + file1name);
         await sharp(req.files.vehicleImage[0].buffer)
@@ -179,7 +185,10 @@ router.post('/edit/:id', checkAdmin, upload.fields([
             })
             const filename = new Date().toISOString().replace(/:/g, '-') + req.files.driverImage[0].originalname;
             driver.image = `/uploads/driver/${driver.id}/` + filename;
-            fs.access(`./public/uploads/driver/${driver.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/driver/${driver.id}`); });
+            // fs.access(`./public/uploads/driver/${driver.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/driver/${driver.id}`); });
+            if (!fs.existsSync(`./public/uploads/driver/${driver.id}`)){
+                fs.mkdirSync(`./public/uploads/driver/${driver.id}`, { recursive: true });
+            }
             await sharp(req.files.driverImage[0].buffer)
                 .toFile(`./public/uploads/driver/${driver.id}/` + filename);
         }
@@ -190,7 +199,10 @@ router.post('/edit/:id', checkAdmin, upload.fields([
             })
             const filename = new Date().toISOString().replace(/:/g, '-') + req.files.vehicleImage[0].originalname;
             driver.vehicleimage = `/uploads/driver/${driver.id}/` + filename;
-            fs.access(`./public/uploads/driver/${driver.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/driver/${driver.id}`); });
+            // fs.access(`./public/uploads/driver/${driver.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/driver/${driver.id}`); });
+            if (!fs.existsSync(`./public/uploads/driver/${driver.id}`)){
+                fs.mkdirSync(`./public/uploads/driver/${driver.id}`, { recursive: true });
+            }
             await sharp(req.files.vehicleImage[0].buffer)
                 .toFile(`./public/uploads/driver/${driver.id}/` + filename);
         }
@@ -201,7 +213,10 @@ router.post('/edit/:id', checkAdmin, upload.fields([
             })
             const filename = new Date().toISOString().replace(/:/g, '-') + req.files.frontImage[0].originalname;
             driver.frontimage = `/uploads/driver/${driver.id}/` + filename;
-            fs.access(`./public/uploads/driver/${driver.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/driver/${driver.id}`); });
+            // fs.access(`./public/uploads/driver/${driver.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/driver/${driver.id}`); });
+            if (!fs.existsSync(`./public/uploads/driver/${driver.id}`)){
+                fs.mkdirSync(`./public/uploads/driver/${driver.id}`, { recursive: true });
+            }
             await sharp(req.files.frontImage[0].buffer)
                 .toFile(`./public/uploads/driver/${driver.id}/` + filename);
         }
@@ -212,7 +227,10 @@ router.post('/edit/:id', checkAdmin, upload.fields([
             })
             const filename = new Date().toISOString().replace(/:/g, '-') + req.files.backImage[0].originalname;
             driver.backimage = `/uploads/driver/${driver.id}/` + filename;
-            fs.access(`./public/uploads/driver/${driver.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/driver/${driver.id}`); });
+            // fs.access(`./public/uploads/driver/${driver.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/driver/${driver.id}`); });
+            if (!fs.existsSync(`./public/uploads/driver/${driver.id}`)){
+                fs.mkdirSync(`./public/uploads/driver/${driver.id}`, { recursive: true });
+            }
             await sharp(req.files.backImage[0].buffer)
                 .toFile(`./public/uploads/driver/${driver.id}/` + filename);
         }

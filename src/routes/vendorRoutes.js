@@ -98,7 +98,10 @@ router.post("/profile", checkVendor, upload.single('image'), async (req, res) =>
             })
             const filename = new Date().toISOString().replace(/:/g, '-') + req.file.originalname;
             vendor.image = `/uploads/vendor/${vendor.id}/` + filename;
-            fs.access(`./public/uploads/vendor/${vendor.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/vendor/${vendor.id}`); });
+            // fs.access(`./public/uploads/vendor/${vendor.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/vendor/${vendor.id}`); });
+            if (!fs.existsSync(`./public/uploads/vendor/${vendor.id}`)){
+                fs.mkdirSync(`./public/uploads/vendor/${vendor.id}`, { recursive: true });
+            }
             await sharp(req.file.buffer)
                 .toFile(`./public/uploads/vendor/${vendor.id}/` + filename);
         }
@@ -275,19 +278,14 @@ router.post("/register", upload.fields([
         vendor.image = `/uploads/vendor/${vendor.id}/` + file1name;
         vendor.idimage = `/uploads/vendor/${vendor.id}/` + file2name;
         vendor.addressimage = `/uploads/vendor/${vendor.id}/` + file3name;
-        console.log('vendor id : '+vendor.id);
-        console.log('vendor email : '+vendor.email);
-        console.log('1');
         if (!fs.existsSync('./public/uploads/vendor')){
             fs.mkdirSync('./public/uploads/vendor', { recursive: true });
         }
-        console.log('2');
         if (!fs.existsSync(`./public/uploads/vendor/${vendor.id}`)){
             fs.mkdirSync(`./public/uploads/vendor/${vendor.id}`, { recursive: true });
         }
         // fs.access('./public/uploads/vendor', (err) => { if (err) fs.mkdirSync('./public/uploads/vendor'); console.log('1'); });
         // fs.access(`./public/uploads/vendor/${vendor.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/vendor/${vendor.id}`); console.log('2'); });
-        console.log(`3`);
         await sharp(req.files.image[0].buffer)
             .toFile(`./public/uploads/vendor/${vendor.id}/` + file1name);
         await sharp(req.files.idImage[0].buffer)

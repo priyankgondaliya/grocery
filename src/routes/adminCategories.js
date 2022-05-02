@@ -80,7 +80,10 @@ router.post('/add', checkAdmin, upload.single('image'), [
         if (req.body.featured) {
             cat.featured = true
         }
-        fs.access('./public/uploads/category', (err) => { if (err) fs.mkdirSync('./public/uploads/category'); });
+        // fs.access('./public/uploads/category', (err) => { if (err) fs.mkdirSync('./public/uploads/category'); });
+        if (!fs.existsSync('./public/uploads/category')){
+            fs.mkdirSync('./public/uploads/category', { recursive: true });
+        }
         await sharp(req.file.buffer)
             .resize({ width: 1000, height: 723 })
             .toFile('./public/uploads/category/' + filename);
@@ -157,7 +160,10 @@ router.post('/edit/:id', checkAdmin, upload.single('image'), [
             })
             const filename = new Date().toISOString().replace(/:/g, '-') + req.file.originalname;
             cat.image = '/uploads/category/' + filename;
-            fs.access('./public/uploads/category', (err) => { if (err) fs.mkdirSync('./public/uploads/category'); });
+            // fs.access('./public/uploads/category', (err) => { if (err) fs.mkdirSync('./public/uploads/category'); });
+            if (!fs.existsSync('./public/uploads/category')){
+                fs.mkdirSync('./public/uploads/category', { recursive: true });
+            }
             await sharp(req.file.buffer)
                 .resize({ width: 1000, height: 723 })
                 .toFile('./public/uploads/category/' + filename);

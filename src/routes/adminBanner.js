@@ -66,7 +66,10 @@ router.post("/add", checkAdmin, upload.single('image'), async (req, res) => {
         const banner = new Banner({
             image: '/uploads/banner/' + filename
         })
-        fs.access('./public/uploads/banner', (err) => { if (err) fs.mkdirSync('./public/uploads/banner'); });
+        // fs.access('./public/uploads/banner', (err) => { if (err) fs.mkdirSync('./public/uploads/banner'); });
+        if (!fs.existsSync('./public/uploads/banner')){
+            fs.mkdirSync('./public/uploads/banner', { recursive: true });
+        }
         await sharp(req.file.buffer)
             .resize({ width: 1000, height: 723 })
             .toFile('./public/uploads/banner/' + filename);
@@ -128,7 +131,10 @@ router.post("/edit/:id", checkAdmin, upload.single('image'), async (req, res) =>
             })
             const filename = new Date().toISOString().replace(/:/g, '-') + req.file.originalname;
             banner.image = '/uploads/banner/' + filename;
-            fs.access('./public/uploads/banner', (err) => { if (err) fs.mkdirSync('./public/uploads/banner'); });
+            // fs.access('./public/uploads/banner', (err) => { if (err) fs.mkdirSync('./public/uploads/banner'); });
+            if (!fs.existsSync('./public/uploads/banner')){
+                fs.mkdirSync('./public/uploads/banner', { recursive: true });
+            }
             await sharp(req.file.buffer)
                 // .resize({ width:1000, height:723 })
                 .toFile('./public/uploads/banner/' + filename);

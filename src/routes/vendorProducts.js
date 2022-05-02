@@ -95,7 +95,10 @@ router.post("/add", checkVendor, upload.single('image'), [
             description: req.body.description,
             vendor: req.vendor.id
         })
-        fs.access('./public/uploads/product', (err) => { if (err) fs.mkdirSync('./public/uploads/product'); });
+        // fs.access('./public/uploads/product', (err) => { if (err) fs.mkdirSync('./public/uploads/product'); });
+        if (!fs.existsSync('./public/uploads/product')){
+            fs.mkdirSync('./public/uploads/product', { recursive: true });
+        }
         await sharp(req.file.buffer)
             .resize({ width: 1000, height: 723 })
             .toFile('./public/uploads/product/' + filename);
@@ -186,7 +189,10 @@ router.post('/edit/:id', checkVendor, upload.single('image'), [
             })
             const filename = new Date().toISOString().replace(/:/g, '-') + req.file.originalname;
             product.image = '/uploads/product/' + filename;
-            fs.access('./public/uploads/product', (err) => { if (err) fs.mkdirSync('./public/uploads/product'); });
+            // fs.access('./public/uploads/product', (err) => { if (err) fs.mkdirSync('./public/uploads/product'); });
+            if (!fs.existsSync('./public/uploads/product')){
+                fs.mkdirSync('./public/uploads/product', { recursive: true });
+            }
             await sharp(req.file.buffer)
                 .resize({ width: 1000, height: 723 })
                 .toFile('./public/uploads/product/' + filename);

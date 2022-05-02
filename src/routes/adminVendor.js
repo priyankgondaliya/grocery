@@ -106,8 +106,14 @@ router.post("/add", checkAdmin, upload.fields([
         vendor.idimage = `/uploads/vendor/${vendor.id}/` + file2name;
         vendor.addressimage = `/uploads/vendor/${vendor.id}/` + file3name;
 
-        fs.access('./public/uploads/vendor', (err) => { if (err) fs.mkdirSync('./public/uploads/vendor'); });
-        fs.access(`./public/uploads/vendor/${vendor.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/vendor/${vendor.id}`); });
+        // fs.access('./public/uploads/vendor', (err) => { if (err) fs.mkdirSync('./public/uploads/vendor'); });
+        // fs.access(`./public/uploads/vendor/${vendor.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/vendor/${vendor.id}`); });
+        if (!fs.existsSync('./public/uploads/vendor')){
+            fs.mkdirSync('./public/uploads/vendor', { recursive: true });
+        }
+        if (!fs.existsSync(`./public/uploads/vendor/${vendor.id}`)){
+            fs.mkdirSync(`./public/uploads/vendor/${vendor.id}`, { recursive: true });
+        }
         await sharp(req.files.image[0].buffer)
             .toFile(`./public/uploads/vendor/${vendor.id}/` + file1name);
         await sharp(req.files.idImage[0].buffer)
@@ -195,7 +201,10 @@ router.post("/edit/:id", checkAdmin, upload.fields([
             })
             const filename = new Date().toISOString().replace(/:/g, '-') + req.files.image[0].originalname;
             vendor.image = `/uploads/vendor/${vendor.id}/` + filename;
-            fs.access(`./public/uploads/vendor/${vendor.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/vendor/${vendor.id}`); });
+            // fs.access(`./public/uploads/vendor/${vendor.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/vendor/${vendor.id}`); });
+            if (!fs.existsSync(`./public/uploads/vendor/${vendor.id}`)){
+                fs.mkdirSync(`./public/uploads/vendor/${vendor.id}`, { recursive: true });
+            }
             await sharp(req.files.image[0].buffer)
                 .toFile(`./public/uploads/vendor/${vendor.id}/` + filename);
         }
@@ -206,7 +215,10 @@ router.post("/edit/:id", checkAdmin, upload.fields([
             })
             const filename = new Date().toISOString().replace(/:/g, '-') + req.files.idImage[0].originalname;
             vendor.idimage = `/uploads/vendor/${vendor.id}/` + filename;
-            fs.access(`./public/uploads/vendor/${vendor.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/vendor/${vendor.id}`); });
+            // fs.access(`./public/uploads/vendor/${vendor.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/vendor/${vendor.id}`); });
+            if (!fs.existsSync(`./public/uploads/vendor/${vendor.id}`)){
+                fs.mkdirSync(`./public/uploads/vendor/${vendor.id}`, { recursive: true });
+            }
             await sharp(req.files.idImage[0].buffer)
                 .toFile(`./public/uploads/vendor/${vendor.id}/` + filename);
         }
@@ -217,7 +229,10 @@ router.post("/edit/:id", checkAdmin, upload.fields([
             })
             const filename = new Date().toISOString().replace(/:/g, '-') + req.files.addImage[0].originalname;
             vendor.addressimage = `/uploads/vendor/${vendor.id}/` + filename;
-            fs.access(`./public/uploads/vendor/${vendor.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/vendor/${vendor.id}`); });
+            // fs.access(`./public/uploads/vendor/${vendor.id}`, (err) => { if (err) fs.mkdirSync(`./public/uploads/vendor/${vendor.id}`); });
+            if (!fs.existsSync(`./public/uploads/vendor/${vendor.id}`)){
+                fs.mkdirSync(`./public/uploads/vendor/${vendor.id}`, { recursive: true });
+            }
             await sharp(req.files.addImage[0].buffer)
                 .toFile(`./public/uploads/vendor/${vendor.id}/` + filename);
         }
