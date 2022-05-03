@@ -65,14 +65,18 @@ router.get("/add/:id", checkUser, async (req, res) => {
 });
 
 // GET remove wishlist api
-router.get("/remove/:id", checkUser, async (req, res) => {
+router.get("/remove/:id", checkUser, checkStore, async (req, res) => {
     if (!req.user) {
         return res.redirect('/signup');
     }
     try {
         const user = await User.findById(req.user.id);
         if (req.params.id == 'all') {
-            user.wishlist = [];
+            const prods = await Product.find({ vendor: req.store });
+            for (let i = 0; i < prods.length; i++) {
+                user.wishlist = user.wishlist.filter((value) => value != prods[i].id);
+            }
+            // user.wishlist = [];
         } else {
             user.wishlist = user.wishlist.filter((value) => value != req.params.id);
         }
