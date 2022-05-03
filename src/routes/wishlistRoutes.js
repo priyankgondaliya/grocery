@@ -17,13 +17,11 @@ router.get("/", checkUser, checkStore, async (req, res) => {
     req.session.redirectToUrl = req.originalUrl;
     var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
     var cartLength = cart.products.length;
-    const wishlist = req.user.wishlist;
+    var wishlist = req.user.wishlist;
     let items = [];
     for (let i = 0; i < wishlist.length; i++) {
         let p = await Product.findOne({ _id: wishlist[i], vendor: req.store });
-        if (p == null) {
-            wishlist.splice(i, 1);
-        } else {
+        if (p) {
             items.push(p);
         }
     }
