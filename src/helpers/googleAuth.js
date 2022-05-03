@@ -46,19 +46,19 @@ passport.use(new GoogleStrategy({
 			})
 			await user.save();
 			// create cart
-			const cartExist = await Cart.findOne({ userId: user.id })
-			if (!cartExist) {
-				// create cart for every store
-				const stores = await Vendor.find();
-				for (let i = 0; i < stores.length; i++) {
-					const cart = new Cart({
-						userId: user.id,
-						vendorId: stores[i].id,
-						products: []
-					})
-					cart.save();
-				}
-			}
+			// const cartExist = await Cart.findOne({ userId: user.id })
+			// if (!cartExist) {
+			// 	// create cart for every store
+			// 	const stores = await Vendor.find();
+			// 	for (let i = 0; i < stores.length; i++) {
+			// 		const cart = new Cart({
+			// 			userId: user.id,
+			// 			vendorId: stores[i].id,
+			// 			products: []
+			// 		})
+			// 		cart.save();
+			// 	}
+			// }
 			req.myUser = user;
 		}
 		// token?

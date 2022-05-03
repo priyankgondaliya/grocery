@@ -153,6 +153,7 @@ router.post("/login", [
 
 // GET products
 router.get("/product", checkAdmin, async (req, res) => {
+    req.session.redirectToUrl = req.originalUrl;
     const products = await Product.find();
     res.status(201).render("admin/products", {
         title: 'Product List',
@@ -382,6 +383,3 @@ router.get("/order/detail/:id", checkAdmin, async (req, res) => {
 });
 
 module.exports = router;
-
-// TODO:
-// write report from source control tab vs
