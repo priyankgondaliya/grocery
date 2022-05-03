@@ -672,7 +672,7 @@
 									</span>
 								</div>
 							`);
-							$('#setTotal').text('₹ '+ data.total);
+							$('#setTotal').text('₹ '+ data.total.toFixed(2));
 						}
 					},
 					error: function() {
