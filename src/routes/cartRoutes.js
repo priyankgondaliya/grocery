@@ -298,7 +298,7 @@ router.get("/api/add/:product", checkUser, checkStore, async (req, res) => {
         } else {
             // store in session
             var storeId = req.store;
-            if (req.session.cart == "undefined") {
+            if (req.session.cart == undefined) {
                 req.session.cart = {};
                 req.session.cart[storeId] = [];
                 req.session.cart[storeId].push({

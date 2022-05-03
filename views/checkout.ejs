@@ -148,7 +148,7 @@
 											Phone No <span class="cl12">*</span>
 										</div>
 	
-										<input id="phone" class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.phone %>" name="phone">
+										<input id="phone" class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-20 focus1" type="text" value="<%= user.phone %>" name="phone" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
 										<div class="txt-s-101 cl6 p-b-10">
 											<span class="cl12" id="phoneErr"></span>
 										</div>
@@ -548,6 +548,9 @@
 			}
 			if (phone == '') {
 				setError('phoneErr','Please enter Phone number.')
+				returnVal = false;
+			} else if (phone.length < 10 || phone.length > 10) {
+				setError('phoneErr','Please Enter 10 Digit Contact number.')
 				returnVal = false;
 			} else {
 				removeError('phoneErr')

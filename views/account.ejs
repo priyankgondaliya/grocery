@@ -31,8 +31,8 @@
 					<span aria-hidden="true">×</span>
 				</button>
 			</div>
-			<% }) %>
-		</div>
+		<% }) %>
+	</div>
 	<% } %>
 	<div class="w-75 p-3" style="margin: auto;">
 		<%- messages('messages', locals) %>
@@ -149,13 +149,13 @@
 
 							<div class="p-b-24">
 								<div class="txt-s-101 cl6 p-b-10">
-									Phone Number
+									Phone Number <span class="cl12">*</span>
 								</div>
 
-								<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-15 focus1" type="text" name="phone"  id="regNum">
-								<!-- <div class="txt-s-101 cl6 p-b-10">
+								<input class="txt-s-120 cl3 size-a-21 bo-all-1 bocl15 p-rl-15 focus1" type="text" name="phone"  id="regNum" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+								<div class="txt-s-101 cl6 p-b-10">
 									<span class="cl12" id="regErrNum"></span>
-								</div> -->
+								</div>
 							</div>
 
 							<div class="flex-w flex-m p-t-15">
@@ -215,6 +215,7 @@
 		const lnameReg = document.getElementById('regLname');
 		const emailReg = document.getElementById('regEmail');
 		const passwordReg = document.getElementById('regPass');
+		const phoneReg = document.getElementById('regNum');
 
 		// reg form
 		formReg.addEventListener('submit', (e) => {
@@ -227,7 +228,8 @@
 			const lnameValue = lnameReg.value.trim();
 			const emailValue = emailReg.value.trim();
 			const passwordValue = passwordReg.value.trim();
-
+			const phoneValue = phoneReg.value.trim();
+			
 			if (fnameValue == '') {
 				setError('regErrFname', 'Please enter first name.')
 				returnVal = false;
@@ -249,7 +251,6 @@
 				setError('regErrEmail','Please enter valid email.')
 				returnVal = false;
 			} else {
-				console.log(emailValue);
 				removeError('regErrEmail')
 			}
 			
@@ -261,6 +262,16 @@
 				returnVal = false;
 			} else {
 				removeError('regErrPass')
+			}
+
+			if (phoneValue == '') {
+				setError('regErrNum','Please enter phone number.')
+				returnVal = false;
+			} else if (phoneValue.length < 10 || phoneValue.length > 10) {
+				setError('regErrNum','Please Enter 10 Digit Contact number.')
+				returnVal = false;
+			} else {
+				removeError('regErrNum')
 			}
 			
 			if (returnVal) {

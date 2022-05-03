@@ -202,7 +202,7 @@
                                                         <label class="control-label">Contact No</label>
                                                         <input type="text" id="contact" class="form-control"
                                                             name="contact" value="<%= vendor.contact %>"
-                                                            placeholder="Contact No">
+                                                            placeholder="Contact No" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
                                                         <div class="txt-s-101 cl6 p-b-10" style="color: red;">
                                                             <span class="cl12" id="Errcontact"></span>
                                                         </div>
@@ -305,7 +305,10 @@
                 if (contactValue == '') {
                     setError('Errcontact', 'Please enter Contact number.')
                     returnVal = false;
-                } else {
+                } else if (contactValue.length < 10 || contactValue.length > 10) {
+                    setError('Errcontact','Please Enter 10 Digit Contact number.')
+                    returnVal = false;
+                }  else {
                     removeError('Errcontact')
                 }
 

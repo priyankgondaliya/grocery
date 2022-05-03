@@ -24,7 +24,7 @@ router.get("/", checkAdmin, async (req, res) => {
 // get user transaction
 router.get("/transaction", checkAdmin, async (req, res) => {
     try {
-        const orders = await Order.find({ paymentmode: {$in: ['razor', 'stripe']} });
+        const orders = await Order.find({ paymentmode: { $in: ['razor', 'stripe'] } });
         let updated = [];
         for (let i = 0; i < orders.length; i++) {
             const user = await User.findById(orders[i].user);
@@ -46,5 +46,41 @@ router.get("/transaction", checkAdmin, async (req, res) => {
         console.log(error);
     }
 });
+
+// block user
+router.get('/block/:id', checkAdmin, async (req, res) => {
+    try {
+        const id = req.params.id;
+        await User.findByIdAndUpdate(id, { blocked: true });
+        req.flash('success', 'User blocked Successfully.');
+        res.redirect('/admin/user');
+    } catch (error) {
+        if (error.name === 'CastError') {
+            req.flash('danger', `User not found!`);
+        } else {
+            console.log(error);
+            req.flash('danger', error.message);
+        }
+        res.redirect('/admin/user');
+    }
+})
+
+// unblock user
+router.get('/unblock/:id', checkAdmin, async (req, res) => {
+    try {
+        const id = req.params.id;
+        await User.findByIdAndUpdate(id, { blocked: false });
+        req.flash('success', 'User unblocked Successfully.');
+        res.redirect('/admin/user');
+    } catch (error) {
+        if (error.name === 'CastError') {
+            req.flash('danger', `User not found!`);
+        } else {
+            console.log(error);
+            req.flash('danger', error.message);
+        }
+        res.redirect('/admin/user');
+    }
+})
 
 module.exports = router;

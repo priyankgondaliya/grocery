@@ -38,7 +38,7 @@ const upload = multer({
 
 // GET dashboard
 router.get("/", checkVendor, async (req, res) => {
-    const orders = await Order.find({ vendor: req.vendor.id });
+    const orders = await Order.find({ vendor: req.vendor.id, status: { $nin: ['Rejected', 'Cancelled'] } });
     newOrders = 0;
     for (let i = 0; i < orders.length; i++) {
         if (isToday(orders[i].orderdate)) {
@@ -423,7 +423,7 @@ router.get("/order/:id/:action", checkVendor, async (req, res) => {
         console.log(error.message);
         if (error.name === 'CastError' || error.name === 'TypeError') {
             req.flash('danger', `Order not found!`);
-            res.redirect('/account');
+            res.redirect('/vendor/order');
         } else {
             res.send(error);
         }

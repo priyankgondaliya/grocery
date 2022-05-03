@@ -35,6 +35,15 @@ const checkUser = function (req, res, next) {
                             alert: [{ msg: 'Please login first.' }]
                         });
                     }
+                    // if blocked
+                    if (user.blocked == true) {
+                        return res.status(201).render("account", {
+                            title: 'My account',
+                            user: null,
+                            cartLength: 0,
+                            alert: [{ msg: 'Sorry! You are blocked, Please contact Admin.' }]
+                        });
+                    }
                     req.user = user;
                     next();
                 });

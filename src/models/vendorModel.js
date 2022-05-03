@@ -67,6 +67,10 @@ const vendorSchema = new mongoose.Schema({
     date: {
         type: Date,
         default: Date.now()
+    },
+    blocked: {
+        type: Boolean,
+        default: false
     }
 })
 

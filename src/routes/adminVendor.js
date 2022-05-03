@@ -254,6 +254,7 @@ router.post("/edit/:id", checkAdmin, upload.fields([
 // GET vendor products
 router.get("/products/:id", checkAdmin, async (req, res) => {
     try {
+        req.session.redirectToUrl = req.originalUrl;
         const id = req.params.id;
         const products = await Product.find({ vendor: id });
         const vendor = await Vendor.findById(id);
@@ -267,6 +268,42 @@ router.get("/products/:id", checkAdmin, async (req, res) => {
         res.send(error);
     }
 });
+
+// block vendor
+router.get('/block/:id', checkAdmin, async (req, res) => {
+    try {
+        const id = req.params.id;
+        await Vendor.findByIdAndUpdate(id, { blocked: true });
+        req.flash('success', 'Vendor blocked Successfully.');
+        res.redirect('/admin/vendor');
+    } catch (error) {
+        if (error.name === 'CastError') {
+            req.flash('danger', `Vendor not found!`);
+        } else {
+            console.log(error);
+            req.flash('danger', error.message);
+        }
+        res.redirect('/admin/vendor');
+    }
+})
+
+// unblock vendor
+router.get('/unblock/:id', checkAdmin, async (req, res) => {
+    try {
+        const id = req.params.id;
+        await Vendor.findByIdAndUpdate(id, { blocked: false });
+        req.flash('success', 'Vendor unblocked Successfully.');
+        res.redirect('/admin/vendor');
+    } catch (error) {
+        if (error.name === 'CastError') {
+            req.flash('danger', `Vendor not found!`);
+        } else {
+            console.log(error);
+            req.flash('danger', error.message);
+        }
+        res.redirect('/admin/vendor');
+    }
+})
 
 // GET vendor approve/reject
 router.get("/:id/:action", checkAdmin, async (req, res) => {

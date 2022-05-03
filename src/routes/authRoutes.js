@@ -54,29 +54,76 @@ router.post("/register", [
             password: req.body.password,
             phone: req.body.phone
         })
-        // const token = await user.generateAuthToken();
-        // res.cookie("jwt", token, {
-        //     expires: new Date(Date.now() + 600000),
-        //     httpOnly: true
-        // });
-        await user.save();
-        // create cart for every store
-        const stores = await Vendor.find();
-        for (let i = 0; i < stores.length; i++) {
-            const cart = new Cart({
-                userId: user.id,
-                vendorId: stores[i].id,
-                products: []
-            })
-            cart.save();
-        }
-        res.status(201).render("account", {
-            title: 'My account',
-            user: null,
-            // user: req.user,
-            cartLength: 0,
-            alert: [{ msg: 'Registered successfully, Now you can login.' }]
+        const token = await user.generateAuthToken();
+        res.cookie("jwt", token, {
+            expires: new Date(Date.now() + 600000),
+            httpOnly: true
         });
+        await user.save();
+        const storeId = req.cookies['selectStore'];
+        if (storeId) {
+            if (req.session.cart == undefined) {
+                req.session.cart = {};
+                req.session.cart[storeId] = [];
+            } else if (!req.session.cart[storeId]) {
+                req.session.cart[storeId] = [];
+            }
+        }
+        // CART: session to db
+        const cartSession = req.session.cart;
+        if (cartSession != undefined) {
+            for (const [key, value] of Object.entries(cartSession)) {
+                var cart = await Cart.findOne({ userId: user.id, vendorId: key });
+                if (!cart) {
+                    var cart = new Cart({
+                        userId: user.id,
+                        vendorId: key,
+                        products: []
+                    })
+                    await cart.save();
+                }
+                if (value.length != 0) {
+                    for (let i = 0; i < value.length; i++) {
+                        let itemIndex = cart.products.findIndex(p => p.productId == value[i].productId);
+
+                        if (itemIndex > -1) {
+                            //product exists in the cart, update the quantity
+                            let productItem = cart.products[itemIndex];
+                            productItem.quantity = value[i].quantity;
+                            // productItem.quantity = productItem.quantity + value[i].quantity;
+                            cart.products[itemIndex] = productItem;
+                        } else {
+                            //product does not exists in cart, add new item
+                            cart.products.push({
+                                productId: value[i].productId,
+                                quantity: value[i].quantity,
+                                // price: value[i].totalprice
+                            });
+                        }
+                    }
+                    cartSession[key] = [];
+                    await cart.save();
+                }
+            }
+        }
+        res.redirect('/account');
+        // create cart for every store
+        // const stores = await Vendor.find();
+        // for (let i = 0; i < stores.length; i++) {
+        //     const cart = new Cart({
+        //         userId: user.id,
+        //         vendorId: stores[i].id,
+        //         products: []
+        //     })
+        //     cart.save();
+        // }
+        // res.status(201).render("account", {
+        //     title: 'My account',
+        //     user: null,
+        //     // user: req.user,
+        //     cartLength: 0,
+        //     alert: [{ msg: 'Registered successfully, Now you can login.' }]
+        // });
     } catch (error) {
         console.log(error);
         res.status(400).send(error);

@@ -84,7 +84,7 @@
                         <!-- <h2>Late night at office?</h2> -->
                         <!-- <p>Order food from favourite restaurants near you.</p> -->
                     </div>
-                    <form id="form" method="post" action="/store/nearstore" onsubmit="findStore()">
+                    <form id="form" method="post" action="/store/nearstore" onsubmit="findStore()" onkeydown="return event.key != 'Enter';">
                         <input type="text" placeholder="Enter your delivery location" id="search_input">
                         <button>Find Store</button>
                         <input type="hidden" id="loc_lat" name="lat" />

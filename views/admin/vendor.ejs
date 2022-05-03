@@ -28,6 +28,7 @@
                                             <th>Address Proof</th>
                                             <th>#</th>
                                             <th>Action</th>
+                                            <th>Block</th>
                                             <th>List of Products</th>
                                         </tr>
                                     </thead>
@@ -58,6 +59,13 @@
                                                             <span style="padding: 5px 10px; background: #ADD8E6; color: #0283cc; border-radius: 5px; font-size: 14px;">Approved</span>
                                                         </div> -->
                                                         <%= vendors[i].status %>
+                                                    <% } %>
+                                                </td>
+                                                <td>
+                                                    <% if (vendors[i].blocked) { %>
+                                                        <a href="/admin/vendor/unblock/<%= vendors[i].id %>" onclick="return confirm('Are you sure want to unblock this vendor?');"><button class="btn btn-outline btn-rounded btn-success">Unblock</button></a>
+                                                    <% } else { %>
+                                                        <a href="/admin/vendor/block/<%= vendors[i].id %>" onclick="return confirm('Are you sure want to block this vendor?');"><button class="btn btn-outline btn-rounded btn-danger">Block</button></a>
                                                     <% } %>
                                                 </td>
                                                 <td>

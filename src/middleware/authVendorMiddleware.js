@@ -31,6 +31,11 @@ const checkVendor = function (req, res, next) {
                         req.flash('info', 'Waiting for approval!');
                         return res.redirect('/vendor/login');
                     }
+                    // if blocked
+                    if (vendor.blocked == true) {
+                        req.flash('danger', 'Sorry! You are blocked, Please contact Admin.');
+                        return res.redirect('/vendor/login');
+                    }
                     req.vendor = vendor;
                     req.session.checkVendorSuccess = undefined;
                     next();

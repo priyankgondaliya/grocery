@@ -21,45 +21,49 @@ const Driver = require('../models/driverModel');
 
 // GET dashboard
 router.get("/", checkAdmin, async (req, res) => {
-    const orders = await Order.find();
-    newOrders = 0;
-    for (let i = 0; i < orders.length; i++) {
-        if (isToday(orders[i].orderdate)) {
-            newOrders++;
+    try {
+        const orders = await Order.find();
+        newOrders = 0;
+        for (let i = 0; i < orders.length; i++) {
+            if (isToday(orders[i].orderdate)) {
+                newOrders++;
+            }
         }
-    }
-    const users = await User.find({ isAdmin: { $ne: true } });
-    newUsers = 0;
-    for (let i = 0; i < users.length; i++) {
-        if (isToday(users[i].date)) {
-            newUsers++;
+        const users = await User.find({ isAdmin: { $ne: true } });
+        newUsers = 0;
+        for (let i = 0; i < users.length; i++) {
+            if (isToday(users[i].date)) {
+                newUsers++;
+            }
         }
-    }
-    const drivers = await Driver.find();
-    newDrivers = 0;
-    for (let i = 0; i < drivers.length; i++) {
-        if (isToday(drivers[i].date)) {
-            newDrivers++;
+        const drivers = await Driver.find();
+        newDrivers = 0;
+        for (let i = 0; i < drivers.length; i++) {
+            if (isToday(drivers[i].date)) {
+                newDrivers++;
+            }
         }
-    }
-    const vendors = await Vendor.find();
-    newVendors = 0;
-    for (let i = 0; i < vendors.length; i++) {
-        if (isToday(vendors[i].date)) {
-            newVendors++;
+        const vendors = await Vendor.find();
+        newVendors = 0;
+        for (let i = 0; i < vendors.length; i++) {
+            if (isToday(vendors[i].date)) {
+                newVendors++;
+            }
         }
+        res.render('admin/admin_dashboard', {
+            title: 'Dashboard',
+            orders: orders.length,
+            newOrders,
+            users: users.length,
+            newUsers,
+            drivers: drivers.length,
+            newDrivers,
+            vendors: vendors.length,
+            newVendors
+        })
+    } catch (error) {
+        console.log(error);
     }
-    res.render('admin/admin_dashboard', {
-        title: 'Dashboard',
-        orders: orders.length,
-        newOrders,
-        users: users.length,
-        newUsers,
-        drivers: drivers.length,
-        newDrivers,
-        vendors: vendors.length,
-        newVendors
-    })
 })
 
 // GET login
@@ -227,11 +231,15 @@ router.get("/product/delete/:id", checkAdmin, async (req, res) => {
             if (err) { console.log(err); }
         })
         req.flash('success', `Product Deleted successfully`);
-        res.redirect('/admin/product')
+        const redirect = req.session.redirectToUrl;
+        req.session.redirectToUrl = undefined;
+        res.redirect(redirect || '/admin');
     } catch (error) {
         if (error.name === 'CastError' || error.name === 'TypeError') {
             req.flash('danger', `Product not found!`);
-            res.redirect('/admin/product');
+            const redirect = req.session.redirectToUrl;
+            req.session.redirectToUrl = undefined;
+            res.redirect(redirect || '/admin');
         } else {
             console.log(error);
             res.send(error)
@@ -374,3 +382,6 @@ router.get("/order/detail/:id", checkAdmin, async (req, res) => {
 });
 
 module.exports = router;
+
+// TODO:
+// write report from source control tab vs

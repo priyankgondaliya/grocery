@@ -203,8 +203,8 @@
 												<div class="txt-s-101 cl6 p-b-10">
 													<span class="cl12" id="caErrLandmark"></span>
 												</div>
-												<input type="hidden" name="lat" id="loc_lat" />
-												<input type="hidden" name="lng" id="loc_long" />
+												<input type="hidden" name="lat" id="loc_lat" value="<%= user.address.coords.lat %>" />
+												<input type="hidden" name="lng" id="loc_long" value="<%= user.address.coords.lng %>" />
 											</div>
 										</div>
 
@@ -307,6 +307,10 @@
 			// const apartValue = apartCa.value.trim();
 			const landValue = landCa.value.trim();
 			const postalValue = postalCa.value.trim();
+			var latInput = document.getElementById('loc_lat');
+			var lngInput = document.getElementById('loc_long');
+			var lat = latInput.value;
+            var lng = lngInput.value;
 			
 			if (houseValue == '') {
 				setError('caErrHouse','Please enter House number.')
@@ -326,6 +330,14 @@
 			} else {
 				removeError('caErrPostal')
 			}
+			if (lat == "" || lng == "") {
+				swal({
+					icon: 'error',
+					title: 'Opps...',
+					text: 'Please select valid address!'
+				})
+				returnVal = false;
+            }
 			// return returnVal;
 			if (returnVal) {
 				formCa.submit();

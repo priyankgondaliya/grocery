@@ -121,7 +121,7 @@
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label>Discount</label>
+                                                <label>Discount (%)</label>
                                                 <input type="text" id="disc" class="form-control" name="discount" placeholder="Discount" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" onkeyup="SetTotalPrice()">
                                                 <div class="txt-s-101 cl6 p-b-10" style="color: red;">
                                                     <span class="cl12" id="discErr"></span>
@@ -277,6 +277,9 @@
 
         if (discValue == '') {
             setError('discErr','Please enter Discount.')
+            returnVal = false;
+        } else if (parseFloat(discValue) >= 100) {
+            setError('discErr','Discount should be less than 100.')
             returnVal = false;
         } else {
             removeError('discErr')

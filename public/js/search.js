@@ -1,6 +1,13 @@
 const searchBar = document.getElementById('searchBar');
 const cards = document.getElementsByClassName('card');
 
+window.onload = function() {
+    let cards = document.getElementsByClassName('card');
+    if (cards.length > 0) {
+        document.getElementById('searchBox').style.display = '';
+    }
+};
+
 searchBar.addEventListener('keyup', (e) => {
     const searchString = e.target.value.toLowerCase().trim();
 
