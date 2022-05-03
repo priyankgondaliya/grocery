@@ -58,7 +58,7 @@ router.post('/', checkUser, checkStore, async (req, res) => {
         }
         const discount = cart.discount ? cart.discount : 0;
         const payableamount = (cart.total + parseFloat(req.deliverycharge) - discount).toFixed(2);
-        // check promo
+        // TODO: check promo
         const order = new Order({
             vendor: req.store,
             user: user.id,
@@ -75,7 +75,6 @@ router.post('/', checkUser, checkStore, async (req, res) => {
         if (cart.promo) { await Promo.findByIdAndUpdate(cart.promo, { '$inc': { 'times': -1 } }); }
         // empty cart
         cart.products = [];
-        cart.discount = 0;
         cart.save();
         res.redirect(`/order/detail/${order.id}`);
     } catch (error) {
@@ -155,7 +154,7 @@ router.post('/is-order-complete', checkUser, checkStore, async (req, res) => {
                     }
                     const discount = cart.discount ? cart.discount : 0;
                     const payableamount = (cart.total + parseFloat(req.deliverycharge) - discount).toFixed(2);
-                    // check promo
+                    // TODO: check promo
                     const order = new Order({
                         vendor: req.store,
                         user: user.id,
@@ -173,7 +172,6 @@ router.post('/is-order-complete', checkUser, checkStore, async (req, res) => {
                     if (cart.promo) { await Promo.findByIdAndUpdate(cart.promo, { '$inc': { 'times': -1 } }); }
                     // empty cart
                     cart.products = [];
-                    cart.discount = 0;
                     cart.save();
                     res.redirect(`/order/detail/${order.id}`);
                 } catch (error) {
@@ -263,7 +261,7 @@ router.post('/stripe/create', checkUser, checkStore, async (req, res) => {
         }
         const discount = cart.discount ? cart.discount : 0;
         const payableamount = (cart.total + parseFloat(req.deliverycharge) - discount).toFixed(2);
-        // check promo
+        // TODO: check promo
         const order = new Order({
             vendor: req.store,
             user: user.id,
@@ -281,7 +279,6 @@ router.post('/stripe/create', checkUser, checkStore, async (req, res) => {
         if (cart.promo) { await Promo.findByIdAndUpdate(cart.promo, { '$inc': { 'times': -1 } }); }
         // empty cart
         cart.products = [];
-        cart.discount = 0;
         cart.save();
         res.send({ url: `/order/detail/${order.id}` })
     } catch (error) {
