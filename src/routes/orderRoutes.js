@@ -74,10 +74,10 @@ router.post('/', checkUser, checkStore, async (req, res) => {
         // manage promo
         if (cart.promo) { await Promo.findByIdAndUpdate(cart.promo, { '$inc': { 'times': -1 } }); }
         // empty cart
-        // cart.products = [];
-        // cart.total = 0;
-        // cart.discount = 0;
-        // cart.save();
+        cart.products = [];
+        cart.total = 0;
+        cart.discount = 0;
+        cart.save();
         res.redirect(`/order/detail/${order.id}`);
         // res.redirect('/');
     } catch (error) {
@@ -174,10 +174,10 @@ router.post('/is-order-complete', checkUser, checkStore, async (req, res) => {
                     // manage promo
                     if (cart.promo) { await Promo.findByIdAndUpdate(cart.promo, { '$inc': { 'times': -1 } }); }
                     // empty cart
-                    // cart.products = [];
-                    // cart.total = 0;
-                    // cart.discount = 0;
-                    // cart.save();
+                    cart.products = [];
+                    cart.total = 0;
+                    cart.discount = 0;
+                    cart.save();
                     res.redirect(`/order/detail/${order.id}`);
                 } catch (error) {
                     console.log(error);
@@ -283,10 +283,10 @@ router.post('/stripe/create', checkUser, checkStore, async (req, res) => {
         // manage promo
         if (cart.promo) { await Promo.findByIdAndUpdate(cart.promo, { '$inc': { 'times': -1 } }); }
         // empty cart
-        // cart.products = [];
-        // cart.total = 0;
-        // cart.discount = 0;
-        // cart.save();
+        cart.products = [];
+        cart.total = 0;
+        cart.discount = 0;
+        cart.save();
         res.send({ url: `/order/detail/${order.id}` })
     } catch (error) {
         console.log(error);
