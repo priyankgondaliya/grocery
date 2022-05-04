@@ -28,6 +28,8 @@ const upload = multer({
 
 // GET categoty model
 const Category = require('../models/category');
+const Subategory = require('../models/subcategory');
+const Product = require('../models/productModel');
 
 // GET category
 router.get("/", checkAdmin, async (req, res) => {
@@ -191,6 +193,8 @@ router.get("/delete/:id", checkAdmin, async (req, res) => {
     try {
         const id = req.params.id;
         const cat = await Category.findByIdAndRemove(id);
+        await Subategory.deleteMany({ category: cat.id });
+        await Product.deleteMany({ category: cat.id });
         image = "public" + cat.image;
         fs.remove(image, function (err) {
             if (err) { console.log(err); }
