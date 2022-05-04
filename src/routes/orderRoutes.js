@@ -24,12 +24,10 @@ router.post('/', checkUser, checkStore, async (req, res) => {
     try {
         if (req.user) {
             var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
-            // var cartLength = cart.products.length;
         } else {
             req.flash('danger', 'Please login first!');
             return res.redirect('/signup');
         }
-        // create order
         const user = req.user;
         const size = Object.keys(user.address).length;
         if (size < 4 || Object.values(user.address).includes(undefined)) {
@@ -116,7 +114,6 @@ router.post('/is-order-complete', checkUser, checkStore, async (req, res) => {
         .digest('hex');
     if (expectedSignature === req.body.razorpay_signature) {
         razorpay.payments.fetch(req.body.razorpay_payment_id).then(async (paymentDocument) => {
-            // console.log(paymentDocument);
             if (paymentDocument.status == 'captured') {
                 try {
                     if (req.user) {
@@ -210,7 +207,6 @@ router.post('/stripe', checkUser, checkStore, async (req, res) => {
             payment_method: 'pm_card_visa',
             payment_method_types: ['card'],
         });
-        // console.log(paymentIntent);
         res.json({ client_secret: paymentIntent.client_secret })
     } catch (error) {
         console.log(error.message);
@@ -223,7 +219,6 @@ router.post('/stripe/create', checkUser, checkStore, async (req, res) => {
     try {
         if (req.user) {
             var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
-            // var cartLength = cart.products.length;
         } else {
             req.flash('danger', 'Please login first!');
             return res.redirect('/signup');
@@ -232,7 +227,6 @@ router.post('/stripe/create', checkUser, checkStore, async (req, res) => {
         if (paymentIntent.status != 'succeeded') {
             return res.send({ error: `Payment status: '${paymentIntent.status}'` })
         }
-        // create order
         const user = req.user;
         const size = Object.keys(user.address).length;
         if (size < 3 || Object.values(user.address).includes(undefined)) {
@@ -304,7 +298,6 @@ router.get('/cancel/:id', checkUser, async (req, res) => {
         if (error.name === 'CastError' || error.name === 'TypeError') {
             req.flash('danger', `Order not found!`);
             res.redirect('/account');
-            // res.redirect('/404');
         } else {
             res.send(error)
         }

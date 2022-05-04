@@ -56,10 +56,9 @@ router.get("/", checkUser, checkStore, async (req, res) => {
 // autocomplete search api
 router.get('/autocomplete', checkStore, async (req, res) => {
     const search = req.query.term;
-    const searchString = search.replace('/','').replace('\\','').trim();
+    const searchString = search.replace('/', '').replace('\\', '').trim();
     const regex = new RegExp(searchString.replace(/\s+/g, "\\s+"), "gi");
     const searchProds = await Product.find({ 'productname': { $regex: regex }, vendor: req.store });
-    // res.json([{id: 1, name:'Product'},{id: 2, name:'Product2'}]);
     res.json(searchProds);
 });
 

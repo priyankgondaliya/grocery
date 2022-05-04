@@ -31,7 +31,6 @@ const CartSchema = new mongoose.Schema({
 	}
 });
 
-// count total 
 CartSchema.pre("save", async function (next) {
 	if (this.isModified("products")) {
 		let totalamount = 0;
@@ -42,7 +41,7 @@ CartSchema.pre("save", async function (next) {
 		this.total = totalamount;
 		this.discount = 0;
 		this.promo = undefined;
-    }
+	}
 	next();
 })
 
