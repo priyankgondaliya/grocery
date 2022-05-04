@@ -51,19 +51,19 @@
 								<!-- - -->
 								<% for( let i = 0; i < searchCats.length; i++ ) { %>
 									<div class="col-sm-6 col-lg-4 p-b-30">
-										<div class="block1">
-											<div class="block1-bg wrap-pic-w bo-all-1 bocl12 hov3 trans-04">
-												<div>
-													<img src="<%= searchCats[i].image %>" alt="IMG" width="200px" style="margin: 20px;">
-												</div>
-	
-												<div class="block1-content flex-col-c-m p-b-20">
-													<a href="/products/<%= searchCats[i].category %>/<%= searchCats[i].id %>" class="txt-m-103 cl3 txt-center hov-cl10 trans-04 js-name-b1">
+										<a href="/products/<%= searchCats[i].category %>/<%= searchCats[i].id %>" class="txt-m-103 cl3 txt-center hov-cl10 trans-04 js-name-b1">
+											<div class="block1">
+												<div class="block1-bg wrap-pic-w bo-all-1 bocl12 hov3 trans-04">
+													<div>
+														<img src="<%= searchCats[i].image %>" alt="IMG" width="230px" style="margin: 20px;">
+													</div>
+		
+													<div class="block1-content flex-col-c-m p-b-20">
 														<%= searchCats[i].name %>
-													</a>
+													</div>
 												</div>
 											</div>
-										</div>
+										</a>
 									</div>
 								<% } %>
 							</div>
