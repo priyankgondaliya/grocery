@@ -7,7 +7,6 @@ const checkVendor = require('../middleware/authVendorMiddleware');
 const sharp = require('sharp');
 const multer = require('multer');
 const fs = require('fs-extra');
-
 const storage = multer.memoryStorage();
 const fileFilter = (req, file, cb) => {
     // reject a file
@@ -29,7 +28,6 @@ const upload = multer({
 const Category = require('../models/category');
 const Subcategory = require('../models/subcategory');
 const Unit = require('../models/unitModel');
-// const Product = require('../models/productModel');
 const Offer = require('../models/offerModel');
 
 // GET offers

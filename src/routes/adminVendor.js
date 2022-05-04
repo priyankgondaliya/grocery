@@ -7,10 +7,6 @@ const checkAdmin = require('../middleware/authAdminMiddleware');
 const sharp = require('sharp');
 const multer = require('multer');
 const fs = require('fs-extra');
-
-const Vendor = require('../models/vendorModel');
-const Product = require('../models/productModel');
-
 const storage = multer.memoryStorage();
 const fileFilter = (req, file, cb) => {
     // reject a file
@@ -27,6 +23,9 @@ const upload = multer({
     },
     fileFilter: fileFilter
 });
+
+const Vendor = require('../models/vendorModel');
+const Product = require('../models/productModel');
 
 // GET vendors
 router.get("/", checkAdmin, async (req, res) => {

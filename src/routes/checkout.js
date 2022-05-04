@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
+
 const checkUser = require('../middleware/authMiddleware');
 const checkStore = require('../middleware/selectedStore');
 
 const Cart = require('../models/cartModel');
 const Product = require('../models/productModel');
-// const User = require('../models/userModel');
 const Promo = require('../models/promoModel');
 
 // GET checkout

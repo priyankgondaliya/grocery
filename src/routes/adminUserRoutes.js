@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 const formatDate = require('../helpers/formateDate');
 
+const checkAdmin = require('../middleware/authAdminMiddleware');
+
 const User = require('../models/userModel');
 const Order = require('../models/orderModel');
-
-const checkAdmin = require('../middleware/authAdminMiddleware');
 
 // get all users
 router.get("/", checkAdmin, async (req, res) => {

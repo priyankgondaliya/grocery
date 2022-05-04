@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const AdminCommission = require('../models/adminCommisionModel');
 const checkAdmin = require('../middleware/authAdminMiddleware');
+
+const AdminCommission = require('../models/adminCommisionModel');
 
 // GET admin commission
 router.get('/commission', checkAdmin, async (req, res) => {

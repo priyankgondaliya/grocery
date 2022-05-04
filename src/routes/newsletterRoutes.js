@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const Newsletter = require('../models/newsletterModel');
 // const { check, validationResult } = require('express-validator');
+
+const Newsletter = require('../models/newsletterModel');
 
 // // POST newsletter
 // router.post("/", [
@@ -29,7 +30,7 @@ const Newsletter = require('../models/newsletterModel');
 //     }
 // })
 
-// POST newsletter
+// POST newsletter api
 router.post("/", async (req, res) => {
     try {
         const { email } = req.body;

@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const Newsletter = require('../models/newsletterModel');
 const formatDate = require('../helpers/formateDate');
 
 const checkAdmin = require('../middleware/authAdminMiddleware');
+
+const Newsletter = require('../models/newsletterModel');
 
 // Get newsletter
 router.get("/", checkAdmin, async (req, res) => {

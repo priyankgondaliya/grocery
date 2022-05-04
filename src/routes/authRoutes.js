@@ -1,13 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require("bcryptjs");
-const checkUser = require('../middleware/authMiddleware');
-const { sendForgotPassMail } = require('../helpers/sendmail')
 const { check, validationResult } = require('express-validator');
+const { sendForgotPassMail } = require('../helpers/sendmail')
+
+const checkUser = require('../middleware/authMiddleware');
 
 const User = require('../models/userModel');
 const Cart = require('../models/cartModel');
-const Vendor = require('../models/vendorModel');
+// const Vendor = require('../models/vendorModel');
 
 // POST register
 router.post("/register", [

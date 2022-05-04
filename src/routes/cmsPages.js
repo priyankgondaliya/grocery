@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const Page = require('../models/pageModel');
 const { check, validationResult } = require('express-validator');
 
-// const Contact = require('../models/contactDetailModel');
-const Message = require('../models/messageModel');
 const checkUser = require('../middleware/authMiddleware');
-const Cart = require('../models/cartModel');
 const checkStore = require('../middleware/selectedStore');
+
+const Message = require('../models/messageModel');
+const Cart = require('../models/cartModel');
+const Page = require('../models/pageModel');
 
 // about us
 router.get("/about_us", checkUser, checkStore, async (req, res) => {

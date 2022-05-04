@@ -8,7 +8,6 @@ const checkAdmin = require('../middleware/authAdminMiddleware');
 const fs = require('fs-extra');
 const sharp = require('sharp');
 const multer = require('multer');
-
 const storage = multer.memoryStorage();
 const fileFilter = (req, file, cb) => {
     // reject a file

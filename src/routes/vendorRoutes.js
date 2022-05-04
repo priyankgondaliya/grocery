@@ -2,23 +2,16 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken');
-const { sendForgotPassMail } = require('../helpers/sendmail')
 const { check, validationResult } = require('express-validator');
+const { sendForgotPassMail } = require('../helpers/sendmail')
 const formatDate = require('../helpers/formateDate');
 const isToday = require('../helpers/isToday')
+
+const checkVendor = require('../middleware/authVendorMiddleware');
 
 const sharp = require('sharp');
 const multer = require('multer');
 const fs = require('fs-extra');
-
-const checkVendor = require('../middleware/authVendorMiddleware');
-
-const Vendor = require('../models/vendorModel');
-const User = require('../models/userModel');
-const Order = require('../models/orderModel');
-const Product = require('../models/productModel');
-const Unit = require('../models/unitModel');
-
 const storage = multer.memoryStorage();
 const fileFilter = (req, file, cb) => {
     // reject a file
@@ -35,6 +28,12 @@ const upload = multer({
     },
     fileFilter: fileFilter
 });
+
+const Vendor = require('../models/vendorModel');
+const User = require('../models/userModel');
+const Order = require('../models/orderModel');
+const Product = require('../models/productModel');
+const Unit = require('../models/unitModel');
 
 // GET dashboard
 router.get("/", checkVendor, async (req, res) => {

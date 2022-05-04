@@ -2,11 +2,11 @@ const express = require('express');
 const router = express.Router();
 
 const checkUser = require('../middleware/authMiddleware');
+const checkStore = require('../middleware/selectedStore');
 
 const User = require('../models/userModel');
 const Product = require('../models/productModel');
 const Cart = require('../models/cartModel');
-const checkStore = require('../middleware/selectedStore');
 
 // GET wishlist
 router.get("/", checkUser, checkStore, async (req, res) => {
@@ -64,7 +64,7 @@ router.get("/add/:id", checkUser, async (req, res) => {
     }
 });
 
-// GET remove wishlist api
+// GET remove wishlist
 router.get("/remove/:id", checkUser, checkStore, async (req, res) => {
     if (!req.user) {
         return res.redirect('/signup');

@@ -45,12 +45,14 @@ router.get("/", checkAdmin, async (req, res) => {
         banners: updated
     });
 });
+
 // GET add banner
 router.get("/add", checkAdmin, (req, res) => {
     res.status(201).render("admin/add_banners", {
         title: 'Add Banner'
     });
 });
+
 // add new banner
 router.post("/add", checkAdmin, upload.single('image'), async (req, res) => {
     try {
@@ -81,6 +83,7 @@ router.post("/add", checkAdmin, upload.single('image'), async (req, res) => {
         res.status(400).send(error);
     }
 })
+
 // GET edit Banner
 router.get("/edit/:id", checkAdmin, async (req, res) => {
     try {
@@ -104,7 +107,6 @@ router.get("/edit/:id", checkAdmin, async (req, res) => {
         }
     }
 });
-
 
 // POST edit banner
 router.post("/edit/:id", checkAdmin, upload.single('image'), async (req, res) => {
@@ -152,6 +154,7 @@ router.post("/edit/:id", checkAdmin, upload.single('image'), async (req, res) =>
         }
     }
 });
+
 // GET delete banner
 router.get("/delete/:id", checkAdmin, async (req, res) => {
     try {

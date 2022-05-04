@@ -7,10 +7,6 @@ const checkAdmin = require('../middleware/authAdminMiddleware');
 const sharp = require('sharp');
 const multer = require('multer');
 const fs = require('fs-extra');
-
-const Driver = require('../models/driverModel');
-const AdminCommission = require('../models/adminCommisionModel');
-
 const storage = multer.memoryStorage();
 const fileFilter = (req, file, cb) => {
     // reject a file
@@ -27,6 +23,9 @@ const upload = multer({
     },
     fileFilter: fileFilter
 });
+
+const Driver = require('../models/driverModel');
+const AdminCommission = require('../models/adminCommisionModel');
 
 // Get driver details
 router.get("/", checkAdmin, async (req, res) => {

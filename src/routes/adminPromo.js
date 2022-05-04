@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 const formatDate = require('../helpers/formateDate');
 
-const Promo = require('../models/promoModel');
-
 const checkAdmin = require('../middleware/authAdminMiddleware');
+
+const Promo = require('../models/promoModel');
 
 // GET promo
 router.get("/", checkAdmin, async (req, res) => {

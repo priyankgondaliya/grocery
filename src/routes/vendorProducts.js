@@ -7,7 +7,6 @@ const checkVendor = require('../middleware/authVendorMiddleware');
 const sharp = require('sharp');
 const multer = require('multer');
 const fs = require('fs-extra');
-
 const storage = multer.memoryStorage();
 const fileFilter = (req, file, cb) => {
     // reject a file

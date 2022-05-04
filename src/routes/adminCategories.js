@@ -2,13 +2,13 @@ const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
 
+const formatDate = require('../helpers/formateDate');
+
 const checkAdmin = require('../middleware/authAdminMiddleware');
 
 const sharp = require('sharp');
 const multer = require('multer');
 const fs = require('fs-extra');
-const formatDate = require('../helpers/formateDate');
-
 const storage = multer.memoryStorage();
 const fileFilter = (req, file, cb) => {
     // reject a file
@@ -26,7 +26,7 @@ const upload = multer({
     fileFilter: fileFilter
 });
 
-// GET categoty model
+// GET model
 const Category = require('../models/category');
 const Subategory = require('../models/subcategory');
 const Product = require('../models/productModel');
