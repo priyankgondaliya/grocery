@@ -36,7 +36,7 @@ CartSchema.pre("save", async function (next) {
 		let totalamount = 0;
 		for (let i = 0; i < this.products.length; i++) {
 			const product = await Product.findById(this.products[i].productId);
-			totalamount = totalamount + (product.totalprice * this.products[i].quantity);
+			if (product) { totalamount = totalamount + (product.totalprice * this.products[i].quantity); }
 		}
 		this.total = totalamount;
 		this.discount = 0;

@@ -115,7 +115,7 @@ router.post("/add", checkVendor, upload.single('image'), [
 router.get("/edit/:id", checkVendor, async (req, res) => {
     try {
         const id = req.params.id;
-        const product = await Product.findById(id);
+        const product = await Product.findOne({ _id: id, vendor: req.vendor.id });
         if (product == null) {
             req.flash('danger', `Product not found!`);
             return res.redirect('/vendor/product');
@@ -164,7 +164,7 @@ router.post('/edit/:id', checkVendor, upload.single('image'), [
             })
         }
         const id = req.params.id;
-        const product = await Product.findById(id);
+        const product = await Product.findOne({ _id: id, vendor: req.vendor.id });
         if (product == null) {
             req.flash('danger', `Product not found!`);
             return res.redirect('/vendor/product');

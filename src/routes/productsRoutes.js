@@ -24,6 +24,10 @@ router.get('/detail/:id', checkUser, checkStore, async function (req, res) {
         }
         const id = req.params.id;
         const product = await Product.findOne({ _id: id, vendor: req.store });
+        if (!product) {
+            console.log(`Product not found with id: ${id}`);
+            return res.redirect('/404');
+        }
         const category = await Category.findById(product.category);
         const subcategory = await Subcategory.findById(product.subcategory);
         const unit = await Unit.findById(product.unit);

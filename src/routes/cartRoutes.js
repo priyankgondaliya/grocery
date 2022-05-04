@@ -12,16 +12,18 @@ router.get("/", checkUser, checkStore, async (req, res) => {
     if (req.user) {
         var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
         var myCart = [];
+        var remove = [];
         for (let i = 0; i < cart.products.length; i++) {
             var prod = await Product.findById(cart.products[i].productId);
             if (prod == null) {
-                cart.products.splice(i, 1);
+                remove.push(cart.products[i].productId)
             } else {
                 prod.quantity = cart.products[i].quantity;
                 myCart.push(prod);
             }
         }
-        cart.save();
+        cart.products = cart.products.filter(el => !remove.includes(el.productId));
+        await cart.save();
         var cartLength = cart.products.length;
     } else {
         var myCart = [];
@@ -35,17 +37,18 @@ router.get("/", checkUser, checkStore, async (req, res) => {
                 req.session.cart[storeId] = [];
             } else {
                 var cart = req.session.cart[storeId]; // add prods
-                // console.log(cart);
                 var myCart = [];
+                var remove = [];
                 for (let i = 0; i < cart.length; i++) {
                     var prod = await Product.findById(cart[i].productId);
                     if (prod == null) {
-                        cart.splice(i, 1);
+                        remove.push(cart[i].productId)
                     } else {
                         prod.quantity = cart[i].quantity;
                         myCart.push(prod);
                     }
                 }
+                req.session.cart[storeId] = cart.filter(el => !remove.includes(el.productId));
                 var cartLength = cart.length;
             }
         }
