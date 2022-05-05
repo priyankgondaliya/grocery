@@ -17,7 +17,7 @@ router.get('/', (req, res) => {
     });
 });
 
-// GET stores api
+// GET stores
 router.post('/nearstore', async (req, res) => {
     const lat = parseFloat(req.body.lat);
     const lng = parseFloat(req.body.lng);
@@ -28,9 +28,7 @@ router.post('/nearstore', async (req, res) => {
         let point1 = new GeoPoint(lat, lng);
         let point2 = new GeoPoint(vendors[i].coords.lat, vendors[i].coords.lng);
         let distance = point1.distanceTo(point2, true)
-        if (distance < vendors[i].deliveryrange) {
-            nearStores.push(vendors[i])
-        }
+        if (distance < vendors[i].deliveryrange) { nearStores.push(vendors[i]); }
     }
     // console.log(nearStores.length);
     if (nearStores.length == 0) {
@@ -48,17 +46,15 @@ router.post('/nearstore', async (req, res) => {
     }
 });
 
+// select store
 router.get('/select/:id', checkUser, async (req, res) => {
     try {
         const id = req.params.id;
         const store = await Vendor.findById(id);
-        if (store == null) {
-            return res.redirect('/404');
-        }
+        if (store == null) { return res.redirect('/404'); }
         // create cart
         if (req.user) {
             const cartExist = await Cart.findOne({ userId: req.user.id, vendorId: id });
-            // console.log(cartExist);
             if (!cartExist) {
                 const cart = new Cart({
                     userId: req.user.id,
@@ -66,7 +62,6 @@ router.get('/select/:id', checkUser, async (req, res) => {
                     products: []
                 })
                 await cart.save();
-                // console.log(cart);
             }
         }
         res.cookie("selectStore", id, {

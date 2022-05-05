@@ -209,7 +209,10 @@ router.post("/product/edit/:id", checkAdmin, async (req, res) => {
         }
         await product.save();
         req.flash('success', 'Product edited successfully.')
-        res.redirect('/admin/product');
+        // res.redirect('/admin/product');
+        const redirect = req.session.redirectToUrl;
+        req.session.redirectToUrl = undefined;
+        res.redirect(redirect || '/admin');
     } catch (error) {
         if (error.name === 'CastError') {
             console.log(error);
@@ -257,7 +260,7 @@ router.get("/offer", checkAdmin, async (req, res) => {
     });
 });
 
-// GET offer detail
+// GET offer details
 router.get("/offer/detail/:id", checkAdmin, async (req, res) => {
     try {
         const id = req.params.id;

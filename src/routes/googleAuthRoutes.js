@@ -43,14 +43,14 @@ router.get('/callback', passport.authenticate('google', { failureRedirect: '/fai
                         let itemIndex = cart.products.findIndex(p => p.productId == value[i].productId);
 
                         if (itemIndex > -1) {
-                            //product exists in the cart, update the quantity
+                            // product exists in the cart, update the quantity
                             let productItem = cart.products[itemIndex];
                             productItem.quantity = value[i].quantity;
                             // console.log(value[i]);
                             // productItem.quantity = productItem.quantity + value[i].quantity;
                             cart.products[itemIndex] = productItem;
                         } else {
-                            //product does not exists in cart, add new item
+                            // product does not exists in cart, add new item
                             cart.products.push({
                                 productId: value[i].productId,
                                 quantity: value[i].quantity,

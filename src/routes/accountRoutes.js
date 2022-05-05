@@ -8,6 +8,7 @@ const checkStore = require('../middleware/selectedStore');
 const Cart = require('../models/cartModel');
 const Order = require('../models/orderModel');
 
+// signup page
 router.get("/signup", checkUser, checkStore, async (req, res) => {
     if (req.user) {
         return res.redirect('/account');
@@ -22,6 +23,7 @@ router.get("/signup", checkUser, checkStore, async (req, res) => {
     });
 });
 
+// my account page
 router.get("/account", checkUser, checkStore, async (req, res) => {
     if (!req.user) {
         return res.redirect('/signup');

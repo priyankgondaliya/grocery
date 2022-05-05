@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-//Category schema
+// Category schema
 const CategorySchema = mongoose.Schema({
     name: {
         type: String,
@@ -23,15 +23,5 @@ const CategorySchema = mongoose.Schema({
         required: true
     }
 });
-
-// CategorySchema.pre('save', function (next) {
-//     var t1 = Date.now();
-//     mongoose.model('Category').count({}, (err, c) => {
-//         console.log('count', c);
-//         next();
-//         var t2 = Date.now();
-//         console.log(t2-t1);
-//     })
-// });
 
 module.exports = mongoose.model('Category', CategorySchema);

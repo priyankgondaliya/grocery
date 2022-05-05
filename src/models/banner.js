@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-//banner schema
+// banner schema
 const BannerSchema = mongoose.Schema({
     image: {
         type: String,

@@ -20,6 +20,7 @@ searchBar.addEventListener('keyup', (e) => {
         for (let i = 0; i < cards.length; i++) {
             let name = document.getElementsByClassName('card')[i].childNodes[1].childNodes[3].childNodes[1].innerText.toLowerCase();
             if (name.includes(searchString)) {
+                document.getElementsByClassName('card')[i].style.display = "block";
             } else {
                 document.getElementsByClassName('card')[i].style.display = "none";
             }

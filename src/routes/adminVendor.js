@@ -24,8 +24,11 @@ const upload = multer({
     fileFilter: fileFilter
 });
 
-const Vendor = require('../models/vendorModel');
 const Product = require('../models/productModel');
+const Category = require('../models/category');
+const Subcategory = require('../models/subcategory');
+const Unit = require('../models/unitModel');
+const Vendor = require('../models/vendorModel');
 
 // GET vendors
 router.get("/", checkAdmin, async (req, res) => {
@@ -41,7 +44,7 @@ router.get("/", checkAdmin, async (req, res) => {
     }
 });
 
-// GET add vendors
+// GET add vendor
 router.get("/add", checkAdmin, async (req, res) => {
     try {
         res.status(201).render("admin/add_vendor", {
@@ -268,6 +271,42 @@ router.get("/products/:id", checkAdmin, async (req, res) => {
     }
 });
 
+// GET vendor product detail
+router.get("/product/detail/:id", checkAdmin, async (req, res) => {
+    try {
+        const id = req.params.id;
+        const product = await Product.findById(id);
+        if (product == null) {
+            req.flash('danger', `Product not found!`);
+            const redirect = req.session.redirectToUrl;
+            req.session.redirectToUrl = undefined;
+            return res.redirect(redirect || '/admin');
+        }
+        const category = await Category.findById(product.category);
+        const subcategory = await Subcategory.findById(product.subcategory);
+        const unit = await Unit.findById(product.unit);
+        const vendor = await Vendor.findById(product.vendor);
+        res.status(201).render("admin/vendor_product_detail", {
+            title: 'Product Details',
+            product,
+            cat: category.name,
+            subcat: subcategory.name,
+            unit: unit ? unit.name : "",
+            store: vendor.storename
+        });
+    } catch (error) {
+        if (error.name === 'CastError') {
+            req.flash('danger', `Product not found!`);
+            const redirect = req.session.redirectToUrl;
+            req.session.redirectToUrl = undefined;
+            return res.redirect(redirect || '/admin');
+        } else {
+            console.log(error);
+            res.send(error)
+        }
+    }
+});
+
 // block vendor
 router.get('/block/:id', checkAdmin, async (req, res) => {
     try {
@@ -315,6 +354,7 @@ router.get("/:id/:action", checkAdmin, async (req, res) => {
             await Vendor.findByIdAndUpdate(id, { status: 'Rejected' });
         } else {
             req.flash('danger', 'Invalid action!');
+            return res.redirect('/admin/vendor');
         }
         req.flash('success', `Vendor updated successfully.`);
         res.redirect('/admin/vendor');

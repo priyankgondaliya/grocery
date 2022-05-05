@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-//Contact schema
+// Contact schema
 const ContactSchema = mongoose.Schema({
     phone: {
         type: String,

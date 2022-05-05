@@ -36,7 +36,7 @@ router.get("/", checkAdmin, async (req, res) => {
     });
 });
 
-// Get add driver 
+// Get add driver
 router.get("/add", checkAdmin, (req, res) => {
     res.status(201).render("admin/add_driver", {
         title: 'Add Driver'
@@ -280,7 +280,7 @@ router.get("/transaction", checkAdmin, (req, res) => {
     });
 });
 
-// GET admin commission
+// GET driver charge
 router.get('/charge', checkAdmin, async (req, res) => {
     const commission = await AdminCommission.findOne();
     res.status(201).render("admin/driver_charge", {
@@ -289,7 +289,7 @@ router.get('/charge', checkAdmin, async (req, res) => {
     });
 })
 
-// POST admin commission
+// POST driver charge
 router.post('/charge', checkAdmin, async (req, res) => {
     try {
         await AdminCommission.findOneAndUpdate({ driverCharge: req.body.driverCharge });

@@ -5,10 +5,6 @@ const orderSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: 'Vendor',
     },
-    // orderId: {
-    //     type: String,
-    //     required:true
-    // },
     products: [{
         productId: {
             type: mongoose.Schema.Types.ObjectId,
