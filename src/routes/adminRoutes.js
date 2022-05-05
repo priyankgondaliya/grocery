@@ -128,7 +128,7 @@ router.post("/login", [
             return res.redirect('/admin/login');
         }
         const { email, password } = req.body;
-        const userExist = await User.findOne({ email });
+        const userExist = await User.findOne({ email, isAdmin: true });
         if (!userExist) {
             req.flash('danger', 'Invalid email or password!');
             return res.redirect('/admin/login');

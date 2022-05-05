@@ -148,7 +148,7 @@ router.post("/login", [
             })
         }
         const { email, password } = req.body;
-        const userExist = await User.findOne({ email });
+        const userExist = await User.findOne({ email, isAdmin: false });
         if (!userExist) {
             return res.status(201).render("account", {
                 title: 'My account',
