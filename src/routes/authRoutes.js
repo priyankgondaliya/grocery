@@ -328,7 +328,6 @@ router.post("/changepass", checkUser, [
             alert: [{ msg: 'Password and confirm password does not match!' }]
         });
     }
-    // await User.findOneAndUpdate({email: user.email}, {password: newpass})
     user.password = newpass;
     await user.save();
     return res.status(201).render("my_account", {

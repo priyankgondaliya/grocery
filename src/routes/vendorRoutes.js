@@ -301,6 +301,56 @@ router.post("/register", upload.fields([
     }
 })
 
+// GET Change Pass
+router.get("/changepass", checkVendor, async (req, res) => {
+    res.render("vendor/changepass", {
+        title: "Change Password",
+        vendor: req.vendor,
+    });
+})
+
+// POST Change Pass
+router.post("/changepass", checkVendor, async (req, res) => {
+    try {
+        const { currentpass, newpass, cfnewpass } = req.body;
+        if (!currentpass || currentpass.length < 6) {
+            req.flash('danger', 'Invalid current password.');
+            return res.redirect('/vendor/changepass');
+        }
+        if (!newpass || newpass.length < 6) {
+            req.flash('danger', 'Invalid new password.');
+            return res.redirect('/vendor/changepass');
+        }
+        if (!cfnewpass || cfnewpass.length < 6) {
+            req.flash('danger', 'Invalid confirm new password.');
+            return res.redirect('/vendor/changepass');
+        }
+        const isMatch = await bcrypt.compare(currentpass, req.vendor.password);
+        if (!isMatch) {
+            req.flash('danger', 'Wrong current password.');
+            return res.redirect('/vendor/changepass');
+        }
+        if (currentpass == newpass) {
+            req.flash('danger', 'New password can not be same as current password.');
+            return res.redirect('/vendor/changepass');
+        }
+        if (newpass != cfnewpass) {
+            req.flash('danger', 'Password and confirm password does not match!');
+            return res.redirect('/vendor/changepass');
+        }
+        const vendor = await Vendor.findById(req.vendor.id);
+        vendor.password = newpass;
+        await vendor.save();
+        req.flash('success', 'Password updated.');
+        return res.redirect('/vendor/changepass');
+    } catch (error) {
+        if (error) {
+            console.log(error);
+            res.json(error)
+        }
+    }
+})
+
 // GET Forgot Pass
 router.get("/forgot", async (req, res) => {
     res.render("vendor/forgot", {
