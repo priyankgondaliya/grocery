@@ -5,6 +5,7 @@ const { check, validationResult } = require('express-validator');
 const { sendForgotPassMail } = require('../helpers/sendmail')
 
 const checkUser = require('../middleware/authMiddleware');
+const checkStore = require('../middleware/selectedStore');
 
 const User = require('../models/userModel');
 const Cart = require('../models/cartModel');
@@ -270,9 +271,9 @@ router.post("/changepass", checkUser, [
     check('currentpass', 'Please enter current password!').notEmpty(),
     check('newpass', 'Please enter new password!').notEmpty(),
     check('cfnewpass', 'Please enter confirm new password!').notEmpty(),
-], checkUser, async (req, res) => {
+], checkUser, checkStore, async (req, res) => {
     if (req.user) {
-        var cart = await Cart.findOne({ userId: req.user.id });
+        var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
         var cartLength = cart.products.length;
     } else {
         const storeId = req.store;
@@ -340,9 +341,9 @@ router.post("/changepass", checkUser, [
 })
 
 // Forgot Pass
-router.get("/forgot_pass", checkUser, async (req, res) => {
+router.get("/forgot_pass", checkUser, checkStore, async (req, res) => {
     if (req.user) {
-        var cart = await Cart.findOne({ userId: req.user.id });
+        var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
         var cartLength = cart.products.length;
     } else {
         const storeId = req.store;
@@ -355,10 +356,10 @@ router.get("/forgot_pass", checkUser, async (req, res) => {
     });
 })
 
-router.post("/forgot_pass", checkUser, async (req, res) => {
+router.post("/forgot_pass", checkUser, checkStore, async (req, res) => {
     try {
         if (req.user) {
-            var cart = await Cart.findOne({ userId: req.user.id });
+            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
             var cartLength = cart.products.length;
         } else {
             const storeId = req.store;
@@ -373,7 +374,7 @@ router.post("/forgot_pass", checkUser, async (req, res) => {
         if (!user) {
             return res.render("forgot_pass", {
                 title: "Forgot password",
-                usre: req.user,
+                user: req.user,
                 cartLength,
                 alert: [{ msg: 'Please enter registered email id.' }]
             });
