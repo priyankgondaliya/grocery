@@ -31,7 +31,7 @@
                 <div class="white-box">
                     <div class="product-img">
                         <a href="/admin/offer/detail/<%= offers[i].id %>">
-                            <img src="<%= offers[i].image %>" class="img-responsive" />
+                            <img src="<%= offers[i].image %>" class="img-responsive" onerror="this.onerror=null; this.src='/images/no_image_available_2.jpg';" />
                         </a>
                     </div>
                     <div class="product-text">

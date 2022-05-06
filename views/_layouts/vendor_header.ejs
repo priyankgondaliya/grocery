@@ -35,9 +35,9 @@
 <body class="mini-sidebar">
     <!-- ===== Main-Wrapper ===== -->
     <div id="wrapper">
-        <!-- <div class="preloader">
+        <div class="preloader">
             <div class="cssload-speeding-wheel"></div>
-        </div> -->
+        </div>
         <!-- ===== Top-Navigation ===== -->
         <nav class="navbar navbar-default navbar-static-top m-b-0">
             <div class="navbar-header">
@@ -74,7 +74,7 @@
                 <div class="user-profile">
                     <div class="dropdown user-pro-body">
                         <div class="profile-image">
-                            <img src="<%= vendor.image %>" alt="user-img" class="img-circle">
+                            <img src="<%= vendor.image %>" alt="user-img" class="img-circle" onerror="this.onerror=null; this.src='/images/no_image_available.jpg';" >
                             <a href="javascript:void(0);" class="dropdown-toggle u-dropdown text-blue" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                 <span class="badge badge-danger">
                                     <i class="fa fa-angle-down"></i>
@@ -86,9 +86,9 @@
                                 <li role="separator" class="divider"></li>
                                 <li><a href="javascript:void(0);"><i class="fa fa-cog"></i> Account Settings</a></li>
                                 <li role="separator" class="divider"></li> -->
-                                <li><a href="/vendor/profile"><i class="fa fa-user"></i>Profile</a></li>
-                                <li><a href="/vendor/changepass"><i class="fa fa-user"></i>Change Password</a></li>
-                                <li><a href="/vendor/logout"><i class="fa fa-power-off"></i>Logout</a></li>
+                                <li><a href="/vendor/profile"><i class="fa fa-user"></i> Profile</a></li>
+                                <li><a href="/vendor/changepass"><i class="fa fa-unlock-alt"></i> Change Password</a></li>
+                                <li><a href="/vendor/logout"><i class="fa fa-power-off"></i> Logout</a></li>
                             </ul>
                         </div>
                         <p class="profile-text m-t-15 font-16"><a href="javascript:void(0);"><%= vendor.storename %></a></p>

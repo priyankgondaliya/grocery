@@ -308,13 +308,12 @@ router.get('/cancel/:id', checkUser, async (req, res) => {
 router.get('/detail/:id', checkUser, checkStore, async (req, res) => {
     try {
         if (req.user) {
-            var cart = await Cart.findOne({ userId: req.user.id });
+            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
             var cartLength = cart.products.length;
         } else {
             var cartLength = req.session.cart.products.length;
         }
-        const id = req.params.id;
-        const order = await Order.findOne({ _id: id, user: req.user.id });
+        const order = await Order.findOne({ _id: req.params.id, user: req.user.id });
         let updated = [];
         for (let i = 0; i < order.products.length; i++) {
             let product = await Product.findById(order.products[i].productId);

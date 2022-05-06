@@ -55,7 +55,7 @@
 											<div class="block1">
 												<div class="block1-bg wrap-pic-w bo-all-1 bocl12 hov3 trans-04">
 													<div>
-														<img src="<%= searchCats[i].image %>" alt="IMG" width="230px" style="margin: 20px;">
+														<img src="<%= searchCats[i].image %>" alt="IMG" width="230px" style="margin: 20px;" onerror="this.onerror=null; this.src='/images/no_image_available_2.jpg';">
 													</div>
 		
 													<div class="block1-content flex-col-c-m p-b-20">
@@ -85,7 +85,7 @@
 						<div class="col-sm-6 col-md-4 col-lg-3 p-b-30 single-prod">
 							<div class="block1">
 								<div class="block1-bg wrap-pic-w bo-all-1 bocl12 hov3 trans-04">
-									<img src="<%= searchProds[i].image %>" class="product_img_set" alt="IMG" width="200px">
+									<img src="<%= searchProds[i].image %>" class="product_img_set" alt="IMG" width="200px" onerror="this.onerror=null; this.src='/images/no_image_available_2.jpg';">
 
 									<div class="block1-content flex-col-c-m p-b-46">
 										<a href="/products/detail/<%= searchProds[i].id %>" class="txt-m-103 cl3 txt-center hov-cl10 trans-04 js-name-b1">

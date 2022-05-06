@@ -104,7 +104,7 @@ router.get("/api/add/:id", checkUser, async (req, res) => {
         const p = await Product.findById(req.params.id);
         if (p == null) {
             // given id is not a product
-            console.log("Invalid product id");
+            console.log(`Invalid product id: ${id}`);
             return res.json({ status: "fail" })
         }
         const user = await User.findById(req.user.id);

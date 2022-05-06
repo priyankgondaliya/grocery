@@ -32,6 +32,7 @@ router.get("/", checkUser, checkStore, async (req, res) => {
         res.render("search", {
             title: `Search for ${searchString}`,
             user: req.user,
+            storename: req.storename,
             cartLength,
             cats,
             allcats,

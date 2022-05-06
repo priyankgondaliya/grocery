@@ -42,9 +42,9 @@
                                                 <td><%= vendors[i].email %></td>
                                                 <td><%= vendors[i].deliveryrange %></td>
                                                 <td><%= vendors[i].address %></td>
-                                                <td><img src="<%= vendors[i].image %>" alt="<%= vendors[i].ownername %>" width="100" height="100"></td>
-                                                <td><img src="<%= vendors[i].idimage %>" alt="<%= vendors[i].ownername %>" width="100" height="100"></td>
-                                                <td><img src="<%= vendors[i].addressimage %>" alt="<%= vendors[i].ownername %>" width="100" height="100"></td>
+                                                <td><img src="<%= vendors[i].image %>" alt="<%= vendors[i].ownername %>" width="100" height="100" onerror="this.onerror=null; this.src='/images/no_image_available.jpg';"></td>
+                                                <td><img src="<%= vendors[i].idimage %>" alt="<%= vendors[i].ownername %>" width="100" height="100" onerror="this.onerror=null; this.src='/images/no_image_available.jpg';"></td>
+                                                <td><img src="<%= vendors[i].addressimage %>" alt="<%= vendors[i].ownername %>" width="100" height="100" onerror="this.onerror=null; this.src='/images/no_image_available.jpg';"></td>
                                                 <td>
                                                     <a href="/admin/vendor/edit/<%= vendors[i].id %>"><i class="icon-pencil" style="font-size: 120%;"></i></a>
                                                 </td>

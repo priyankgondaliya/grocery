@@ -288,6 +288,7 @@
                 if (status == 'success') {
                     swal(data.name, data.msg, data.status);
                     if (data.cartLength) {
+                        console.log(data.cartLength);
                         $('#cartlength1').attr('data-notify', data.cartLength);
                         $('#cartlength2').attr('data-notify', data.cartLength);
                     }
@@ -570,6 +571,7 @@
                             $("#clearCart").hide();
                         }
                         if (data.cartLength != undefined) {
+                            console.log(data.cartLength);
                             $('#cartlength1').attr('data-notify', data.cartLength);
                             $('#cartlength2').attr('data-notify', data.cartLength);
                         }
