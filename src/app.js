@@ -49,7 +49,7 @@ app.use(require('cookie-session')({
     saveUninitialized: true,
 }));
 
-//Express Messages middleware
+// Express Messages middleware
 app.use(require('connect-flash')());
 app.use(function (req, res, next) {
     res.locals.messages = require('express-messages')(req, res);
@@ -59,7 +59,7 @@ app.use(function (req, res, next) {
 // require passport
 require('./helpers/googleAuth')
 
-//Passport middleware
+// Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
 
