@@ -1,7 +1,7 @@
 const searchBar = document.getElementById('searchBar');
 const cards = document.getElementsByClassName('card');
 
-// hide search bar is no cards on page
+// hide search bar if no cards on page
 window.onload = function () {
     let cards = document.getElementsByClassName('card');
     if (cards.length > 0) {

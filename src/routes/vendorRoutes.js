@@ -419,9 +419,7 @@ router.get("/order/detail/:id", checkVendor, async (req, res) => {
         for (let i = 0; i < order.products.length; i++) {
             let product = await Product.findById(order.products[i].productId);
             let unit = null;
-            if (product) {
-                unit = await Unit.findById(product.unit);
-            }
+            if (product) { unit = await Unit.findById(product.unit); }
             let e = {
                 image: product ? product.image : "",
                 name: order.products[i].name,
