@@ -2,13 +2,16 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const { check, validationResult } = require('express-validator');
-const { sendForgotPassMail } = require('../helpers/sendmail')
+const crypto = require('crypto')
+// const { sendForgotPassMail } = require('../helpers/sendmail');
+const { sendResetLinkMail } = require('../helpers/sendmail');
 
 const checkUser = require('../middleware/authMiddleware');
 const checkStore = require('../middleware/selectedStore');
 
 const User = require('../models/userModel');
 const Cart = require('../models/cartModel');
+const Token = require('../models/tokenModel');
 // const Vendor = require('../models/vendorModel');
 
 // POST register
@@ -340,7 +343,7 @@ router.post("/changepass", checkUser, [
     });
 })
 
-// Forgot Pass
+// GET forgot Pass
 router.get("/forgot_pass", checkUser, checkStore, async (req, res) => {
     if (req.user) {
         var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
@@ -356,45 +359,159 @@ router.get("/forgot_pass", checkUser, checkStore, async (req, res) => {
     });
 })
 
-router.post("/forgot_pass", checkUser, checkStore, async (req, res) => {
+// POST forgot Pass
+router.post("/forgot_pass", async (req, res) => {
     try {
-        if (req.user) {
-            var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
-            var cartLength = cart.products.length;
-        } else {
-            const storeId = req.store;
-            var cartLength = req.session.cart ? (req.session.cart[storeId] ? req.session.cart[storeId].length : 0) : 0;
-        }
-        // generate pass
-        let pass = (Math.random() + 1).toString(36).substring(5);
-
-        // set pass
-        const email = req.body.email
-        const user = await User.findOne({ email })
+        // reset pass link
+        const user = await User.findOne({ email: req.body.email });
         if (!user) {
-            return res.render("forgot_pass", {
-                title: "Forgot password",
-                user: req.user,
-                cartLength,
-                alert: [{ msg: 'Please enter registered email id.' }]
+            return res.status(201).render("account", {
+                title: 'My account',
+                user: null,
+                cartLength: 0,
+                alert: [{ msg: `user with given email doesn't exist.`}],
             });
         }
-        user.password = pass;
-        await user.save();
-
+        let token = await Token.findOne({ userId: user._id });
+        if (!token) {
+            token = await new Token({
+                userId: user.id,
+                token: crypto.randomBytes(32).toString("hex"),
+            }).save();
+        }
+        const link = `http://localhost:3000/reset/${user.id}/${token.token}`
         // send mail
-        sendForgotPassMail(email, pass)
+        sendResetLinkMail(user.email, link)
         res.status(201).render("account", {
             title: 'My account',
-            user: req.user,
-            cartLength,
-            alert: [{ msg: 'A new password sent to your mail. Check your mail and Try logging in.' }],
+            user: null,
+            cartLength: 0,
+            alert: [{ msg: 'A password reset link is sent to your mail. Check your mail.' }],
         });
     } catch (error) {
         console.log(error);
         res.send(error.message)
     }
 })
+
+// GET reset pass
+router.get("/reset/:user/:token", async (req, res) => {
+    const userId = req.params.user;
+    const token = req.params.token;
+    // console.log(token);
+    res.render("reset_pass", {
+        title: "Reset password",
+        token,
+        userId, 
+        user: null,
+        cartLength: 0
+    });
+})
+
+// POST reset pass
+router.post("/reset", async (req, res) => {
+    try {
+        const { newpass, cfpass } = req.body;
+        if (!newpass || !cfpass) {
+            return res.render("forgot_pass", {
+                title: "Forgot password",
+                user: req.user,
+                cartLength,
+                alert: [{ msg: 'Please provide password and confirm password.' }]
+            });
+        }
+        if (newpass.length < 6) {
+            return res.render("forgot_pass", {
+                title: "Forgot password",
+                user: req.user,
+                cartLength,
+                alert: [{ msg: 'Password should atleast 6 characters long.' }]
+            });
+        }
+        if (newpass != cfpass) {
+            return res.render("forgot_pass", {
+                title: "Forgot password",
+                user: req.user,
+                cartLength,
+                alert: [{ msg: 'Password and confirm password do not match.' }]
+            });
+        }
+        // set pass
+        const userId = req.body.userId
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.render("forgot_pass", {
+                title: "Forgot password",
+                user: null,
+                cartLength: 0,
+                alert: [{ msg: 'No user with this email.' }]
+            });
+        }
+        const token = await Token.findOne({
+            userId: user._id,
+            token: req.body.token,
+        });
+        if (!token) {
+            return res.render("forgot_pass", {
+                title: "Forgot password",
+                user: null,
+                cartLength: 0,
+                alert: [{ msg: 'Invalid link or expired.' }]
+            });
+        }
+        user.password = newpass;
+        await user.save();
+        res.status(201).render("account", {
+            title: 'My account',
+            user: null,
+            cartLength: 0,
+            alert: [{ msg: 'Password changed, Try logging in.' }],
+        });
+    } catch (error) {
+        console.log(error);
+        res.send(error.message)
+    }
+})
+
+// router.post("/forgot_pass", checkUser, checkStore, async (req, res) => {
+//     try {
+//         if (req.user) {
+//             var cart = await Cart.findOne({ userId: req.user.id, vendorId: req.store });
+//             var cartLength = cart.products.length;
+//         } else {
+//             const storeId = req.store;
+//             var cartLength = req.session.cart ? (req.session.cart[storeId] ? req.session.cart[storeId].length : 0) : 0;
+//         }
+//         // generate pass
+//         let pass = (Math.random() + 1).toString(36).substring(5);
+
+//         // set pass
+//         const email = req.body.email
+//         const user = await User.findOne({ email })
+//         if (!user) {
+//             return res.render("forgot_pass", {
+//                 title: "Forgot password",
+//                 user: req.user,
+//                 cartLength,
+//                 alert: [{ msg: 'Please enter registered email id.' }]
+//             });
+//         }
+//         user.password = pass;
+//         await user.save();
+
+//         // send mail
+//         sendForgotPassMail(email, pass)
+//         res.status(201).render("account", {
+//             title: 'My account',
+//             user: req.user,
+//             cartLength,
+//             alert: [{ msg: 'A new password sent to your mail. Check your mail and Try logging in.' }],
+//         });
+//     } catch (error) {
+//         console.log(error);
+//         res.send(error.message)
+//     }
+// })
 
 // post address
 router.post("/address", [

@@ -24,6 +24,27 @@ const sendForgotPassMail = function (to, pass) {
         })
 }
 
+const sendResetLinkMail = function (to, link) {
+    const sgMail = require('@sendgrid/mail')
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+    const msg = {
+        to,
+        from: 'nik.theappideas@gmail.com',
+        subject: 'Reset Password',
+        html: `<h5>click in this <a href="${link}">link</a> to reset password</h5>`,
+    }
+    sgMail
+        .send(msg)
+        .then(() => {
+            // console.log('Email sent & token: ' + token)
+            console.log('Email sent')
+        })
+        .catch((error) => {
+            console.error(error)
+        })
+}
+
 module.exports = {
     sendForgotPassMail,
+    sendResetLinkMail
 }
