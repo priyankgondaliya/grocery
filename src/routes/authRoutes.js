@@ -379,7 +379,7 @@ router.post("/forgot_pass", async (req, res) => {
                 token: crypto.randomBytes(32).toString("hex"),
             }).save();
         }
-        const link = `http://localhost:3000/reset/${user.id}/${token.token}`
+        const link = `${process.env.DOMAIN}reset/${user.id}/${token.token}`
         // send mail
         sendResetLinkMail(user.email, link)
         res.status(201).render("account", {
