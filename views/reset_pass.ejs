@@ -5,7 +5,7 @@
 		<div class="container">
 			<div class="txt-center p-t-160 p-b-165">
 				<h2 class="txt-l-101 cl0 txt-center p-b-14 respon1">
-					My Account
+					Reset password
 				</h2>
 
 				<span class="txt-m-201 cl0 flex-c-m flex-w">
@@ -14,7 +14,7 @@
 					</a>
 
 					<span>
-						/ My Account
+						/ Reset password
 					</span>
 				</span>
 			</div>
@@ -64,8 +64,8 @@
 					</div>
 				</div>
 				
-				<input class="txt-s-101 cl3 size-a-41 bo-all-1 bocl15 p-rl-15 focus1" type="text" name="userId" value="<%= userId %>" hidden>
-				<input class="txt-s-101 cl3 size-a-41 bo-all-1 bocl15 p-rl-15 focus1" type="text" name="token" value="<%= token %>" hidden>
+				<input type="text" name="userId" value="<%= userId %>" hidden>
+				<input type="text" name="token" value="<%= token %>" hidden>
 				<div class="flex-w">
 					<button type="submit" class="flex-c-m txt-s-105 cl0 bg10 size-a-40 hov-btn2 trans-04 p-rl-10 m-r-18">
 						reset password
@@ -98,7 +98,7 @@
 			}
 
 			if (cfpass == '') {
-				setError('errcfpass', 'Please enter confirm password.')
+				setError('errcfpass', 'Please enter confirm new password.')
 				returnVal = false;
 			} else if (cfpass !== newpass) {
 				setError('errcfpass','Password and confirm password do not match.')

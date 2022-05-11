@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const { check, validationResult } = require('express-validator');
-const crypto = require('crypto')
+const crypto = require('crypto');
 // const { sendForgotPassMail } = require('../helpers/sendmail');
 const { sendResetLinkMail } = require('../helpers/sendmail');
 
@@ -365,11 +365,11 @@ router.post("/forgot_pass", async (req, res) => {
         // reset pass link
         const user = await User.findOne({ email: req.body.email });
         if (!user) {
-            return res.status(201).render("account", {
-                title: 'My account',
+            return res.status(201).render("forgot_pass", {
+                title: 'Forgot password',
                 user: null,
                 cartLength: 0,
-                alert: [{ msg: `user with given email doesn't exist.`}],
+                alert: [{ msg: `user with given email doesn't exist.` }],
             });
         }
         let token = await Token.findOne({ userId: user._id });
@@ -396,13 +396,10 @@ router.post("/forgot_pass", async (req, res) => {
 
 // GET reset pass
 router.get("/reset/:user/:token", async (req, res) => {
-    const userId = req.params.user;
-    const token = req.params.token;
-    // console.log(token);
     res.render("reset_pass", {
         title: "Reset password",
-        token,
-        userId, 
+        token: req.params.user,
+        userId: req.params.user,
         user: null,
         cartLength: 0
     });
@@ -447,16 +444,13 @@ router.post("/reset", async (req, res) => {
                 alert: [{ msg: 'No user with this email.' }]
             });
         }
-        const token = await Token.findOne({
-            userId: user._id,
-            token: req.body.token,
-        });
+        const token = await Token.findOne({ userId: user._id, token: req.body.token });
         if (!token) {
             return res.render("forgot_pass", {
                 title: "Forgot password",
                 user: null,
                 cartLength: 0,
-                alert: [{ msg: 'Invalid link or expired.' }]
+                alert: [{ msg: 'Invalid link or expired, Request again.' }]
             });
         }
         user.password = newpass;
@@ -473,6 +467,7 @@ router.post("/reset", async (req, res) => {
     }
 })
 
+// POST forgot pass
 // router.post("/forgot_pass", checkUser, checkStore, async (req, res) => {
 //     try {
 //         if (req.user) {
