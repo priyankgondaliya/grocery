@@ -34,7 +34,7 @@ router.post('/about_us', checkAdmin, [
         const page = await Page.findOne({ title: 'About Us' })
         page.content = req.body.content;
         await page.save()
-        req.flash('success', 'Contact us details updated successfully.')
+        req.flash('success', 'About us details updated successfully.')
         res.redirect('/admin/about_us')
     } catch (error) {
         console.log(error);
