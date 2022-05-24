@@ -5872,12 +5872,10 @@ ul#searchResult {
 	display: inline-block;
 	position: relative;
 	background: #fff;
-	padding: 20px;
-}
-
-ul#searchResult>li {
-	border: #e8e8e8;
-
+	/* padding: 20px; */
+	/* transition: all 3s ease-in-out; */
+	-webkit-transition: opacity 1s, visibility 1s;
+	transition: opacity 1s, visibility 1s;
 }
 
 .new_banner_wrapper input#search {
@@ -5927,4 +5925,28 @@ ul#searchResult>li {
 	padding: 5px 10px;
 	color: #ff0033;
 	text-align: center;
+}
+
+#searchResult li {
+	height: 40px;
+	border: 2px solid #81b03f;
+	border-top: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-family: Lato-Regular;
+	font-size: 17px;
+	color: #333;
+}
+
+#searchResult li a {
+	font-family: Lato-Regular;
+	font-size: 17px;
+	color: #333;
+	text-decoration: none;
+	transition: all 500ms ease-in-out;
+}
+
+#searchResult li a:hover {
+	color: #81b03f;
 }

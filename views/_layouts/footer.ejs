@@ -465,7 +465,7 @@
                                 $("#searchResult").append(`<li>No Products Found!</li>`);
                             }
                             for (let i = 0; i < data.length; i++) {
-                                $("#searchResult").append(`<a href="/products/detail/${data[i]._id}"><li>${data[i].productname}</li></a>`);
+                                $("#searchResult").append(`<li><a href="/products/detail/${data[i]._id}">${data[i].productname}</a></li>`);
                             }
                         },
                         error: function (xhr) {
