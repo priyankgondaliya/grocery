@@ -404,7 +404,7 @@
     </script>
     <!-- pagination subcats -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/simplePagination.js/1.6/jquery.simplePagination.js"></script>
-    <!-- <script>
+    <script>
         var items = $(".subcats .single-sub");
         var numItems = items.length;
         var perPage = 3;
@@ -422,7 +422,7 @@
                 items.hide().slice(showFrom, showTo).show();
             }
         });
-    </script> -->
+    </script>
     <script src="https://code.jquery.com/ui/1.10.2/jquery-ui.js" ></script>
     <!-- autocomplete search -->
     <script type="text/javascript">
@@ -465,7 +465,7 @@
                                 $("#searchResult").append(`<li>No Products Found!</li>`);
                             }
                             for (let i = 0; i < data.length; i++) {
-                                $("#searchResult").append(`<a href="/products/detail/${data[i]._id}"><li>${data[i].productname}</li></a>`);
+                                $("#searchResult").append(`<li><a href="/products/detail/${data[i]._id}">${data[i].productname}</a></li>`);
                             }
                         },
                         error: function (xhr) {
